@@ -1,3 +1,5 @@
 # microservice specific routes
 
 GET        /hello-world             uk.gov.hmrc.alcoholdutycalculator.controllers.MicroserviceHelloWorldController.hello
+
+GET        /rates                           uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rates()

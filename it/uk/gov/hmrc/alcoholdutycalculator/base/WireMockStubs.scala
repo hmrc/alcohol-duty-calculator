@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.alcoholdutycalculator.config
+package uk.gov.hmrc.alcoholdutycalculator.base
 
-import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import uk.gov.hmrc.alcoholdutycalculator.common.AlcoholDutyTestData
 
-@Singleton
-class AppConfig @Inject() (config: Configuration) {
-
-  val appName: String = config.get[String]("appName")
-
-  lazy val alcoholDutyRatesFile = config.get[String]("alcohol-duty-rates-file")
-}
+trait WireMockStubs extends AlcoholDutyTestData with AuthStubs
