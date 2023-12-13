@@ -32,9 +32,8 @@ class RatesIntegrationSpec extends ISpecBase {
         callRoute(FakeRequest(routes.RatesController.rates()))
 
       status(result) shouldBe OK
-      val ratePeriodList = (Json.parse(contentAsString(result))).as[Seq[RatePeriod]]
-      ratePeriodList shouldBe a[Seq[RatePeriod]]
-      ratePeriodList   should not be empty
+      val ratePeriodList = Json.parse(contentAsString(result)).as[Seq[RatePeriod]]
+      ratePeriodList should not be empty
     }
   }
 }

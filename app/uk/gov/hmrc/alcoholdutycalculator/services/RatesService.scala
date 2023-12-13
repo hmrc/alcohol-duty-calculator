@@ -33,6 +33,6 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
       .resourceAsStream(appConfig.alcoholDutyRatesFile)
       .fold(throw new Exception("Could not open Alcohol Duty Rate file"))(Source.fromInputStream)
       .mkString
-    (Json.parse(rateFileContent) \ "periods").as[Seq[RatePeriod]]
+    Json.parse(rateFileContent).as[Seq[RatePeriod]]
   }
 }

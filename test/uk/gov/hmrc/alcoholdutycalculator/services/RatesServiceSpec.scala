@@ -37,38 +37,36 @@ class RatesServiceSpec extends SpecBase {
       val mockConfig = mock[AppConfig]
       when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
 
-      val ratePeriods = Json
-        .obj(
-          "periods" -> JsArray(
-            Seq(
-              Json.obj(
-                "name"              -> "2023-1",
-                "isLatest"          -> true,
-                "validityStartDate" -> "2023-01",
-                "validityEndDate"   -> "2024-01",
-                "rateBands"         -> JsArray(
-                  Seq(
-                    Json.obj(
-                      "taxType"       -> "301",
-                      "description"   -> "Low Alcohol - not exc 1.2%",
-                      "rateType"      -> "Core",
-                      "alcoholRegime" -> Seq(
-                        "Beer",
-                        "Wine",
-                        "Cider",
-                        "Spirits"
-                      ),
-                      "minABV"        -> 3,
-                      "maxABV"        -> 9.9,
-                      "rate"          -> 100.99
-                    )
+      val ratePeriods =
+        JsArray(
+          Seq(
+            Json.obj(
+              "name"              -> "2023-1",
+              "isLatest"          -> true,
+              "validityStartDate" -> "2023-01",
+              "validityEndDate"   -> "2024-01",
+              "rateBands"         -> JsArray(
+                Seq(
+                  Json.obj(
+                    "taxType"       -> "301",
+                    "description"   -> "Low Alcohol - not exc 1.2%",
+                    "rateType"      -> "Core",
+                    "alcoholRegime" -> Seq(
+                      "Beer",
+                      "Wine",
+                      "Cider",
+                      "Spirits"
+                    ),
+                    "minABV"        -> 3,
+                    "maxABV"        -> 9.9,
+                    "rate"          -> 100.99
                   )
                 )
               )
             )
           )
         )
-        .toString()
+          .toString()
 
       when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(ratePeriods.getBytes)))
 

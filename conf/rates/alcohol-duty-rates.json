@@ -1,125 +1,123 @@
-{
-  "periods": [
-    {
-      "name": "2023-1",
-      "isLatest": true,
-      "validityStartDate": "2023-01",
-      "validityEndDate": "2024-01",
-      "rateBands": [
-        {
-          "taxType": "301",
-          "description": "Low Alcohol - not exc 1.2%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Beer",
-            "Cider",
-            "Wine",
-            "Spirits"
-          ],
-          "minABV": 0,
-          "maxABV": 1.2,
-          "rate": 0
-        },
-        {
-          "taxType": "311",
-          "description": "Beer from 1.2% to 3.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Beer"
-          ],
-          "minABV": 1.2,
-          "maxABV": 3.5,
-          "rate": 9.27
-        },
-        {
-          "taxType": "312",
-          "description": "Cider or Perry from 1.2% to 3.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Cider"
-          ],
-          "minABV": 1.2,
-          "maxABV": 3.5,
-          "rate": 9.27
-        },
-        {
-          "taxType": "313",
-          "description": "Wine from 1.2% to 3.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Wine"
-          ],
-          "minABV": 1.2,
-          "maxABV": 3.5,
-          "rate": 9.27
-        },
-        {
-          "taxType": "314",
-          "description": "Other fermented products from 1.2% to 3.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Wine"
-          ],
-          "minABV": 1.2,
-          "maxABV": 3.5,
-          "rate": 9.27
-        },
-        {
-          "taxType": "315",
-          "description": "Spirits from 1.2% to 3.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Spirits"
-          ],
-          "minABV": 1.2,
-          "maxABV": 3.5,
-          "rate": 9.27
-        },
-        {
-          "taxType": "321",
-          "description": "Beer from 3.5% to 8.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Beer"
-          ],
-          "minABV": 3.5,
-          "maxABV": 8.5,
-          "rate": 21.01
-        },
-        {
-          "taxType": "322",
-          "description": "Cider or Perry from 3.5% to 8.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Cider"
-          ],
-          "minABV": 3.5,
-          "maxABV": 8.5,
-          "rate": 9.67
-        },
-        {
-          "taxType": "322",
-          "description": "Sparkling Cider from 3.5% <= 5.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Cider"
-          ],
-          "minABV": 3.5,
-          "maxABV": 5.5,
-          "rate": 9.67
-        },
-        {
-          "taxType": "323",
-          "description": "Wine from 3.5% to 8.5%",
-          "rateType": "Core",
-          "alcoholRegime": [
-            "Wine"
-          ],
-          "minABV": 3.5,
-          "maxABV": 8.5,
-          "rate": 24.77
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "name": "2023-1",
+    "isLatest": true,
+    "validityStartDate": "2023-01",
+    "validityEndDate": "2024-01",
+    "rateBands": [
+      {
+        "taxType": "301",
+        "description": "Low Alcohol - not exc 1.2%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Beer",
+          "Cider",
+          "Wine",
+          "Spirits"
+        ],
+        "minABV": 0,
+        "maxABV": 1.2,
+        "rate": 0
+      },
+      {
+        "taxType": "311",
+        "description": "Beer from 1.2% to 3.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Beer"
+        ],
+        "minABV": 1.2,
+        "maxABV": 3.5,
+        "rate": 9.27
+      },
+      {
+        "taxType": "312",
+        "description": "Cider or Perry from 1.2% to 3.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Cider"
+        ],
+        "minABV": 1.2,
+        "maxABV": 3.5,
+        "rate": 9.27
+      },
+      {
+        "taxType": "313",
+        "description": "Wine from 1.2% to 3.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Wine"
+        ],
+        "minABV": 1.2,
+        "maxABV": 3.5,
+        "rate": 9.27
+      },
+      {
+        "taxType": "314",
+        "description": "Other fermented products from 1.2% to 3.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Wine"
+        ],
+        "minABV": 1.2,
+        "maxABV": 3.5,
+        "rate": 9.27
+      },
+      {
+        "taxType": "315",
+        "description": "Spirits from 1.2% to 3.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Spirits"
+        ],
+        "minABV": 1.2,
+        "maxABV": 3.5,
+        "rate": 9.27
+      },
+      {
+        "taxType": "321",
+        "description": "Beer from 3.5% to 8.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Beer"
+        ],
+        "minABV": 3.5,
+        "maxABV": 8.5,
+        "rate": 21.01
+      },
+      {
+        "taxType": "322",
+        "description": "Cider or Perry from 3.5% to 8.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Cider"
+        ],
+        "minABV": 3.5,
+        "maxABV": 8.5,
+        "rate": 9.67
+      },
+      {
+        "taxType": "322",
+        "description": "Sparkling Cider from 3.5% <= 5.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Cider"
+        ],
+        "minABV": 3.5,
+        "maxABV": 5.5,
+        "rate": 9.67
+      },
+      {
+        "taxType": "323",
+        "description": "Wine from 3.5% to 8.5%",
+        "rateType": "Core",
+        "alcoholRegime": [
+          "Wine"
+        ],
+        "minABV": 3.5,
+        "maxABV": 8.5,
+        "rate": 24.77
+      }
+    ]
+  }
+]
