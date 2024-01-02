@@ -87,7 +87,7 @@ class RatesServiceSpec extends SpecBase {
               Set(Beer, Wine, Cider, Spirits),
               AlcoholByVolume(3),
               AlcoholByVolume(9.9),
-              BigDecimal(100.99)
+              Some(BigDecimal(100.99))
             )
           )
         )

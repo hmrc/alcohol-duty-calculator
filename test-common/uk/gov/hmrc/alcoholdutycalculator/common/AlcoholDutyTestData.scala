@@ -35,7 +35,12 @@ trait AlcoholDutyTestData {
   }
 
   implicit val arbitraryRateType: Arbitrary[RateType] = Arbitrary {
-    Gen.oneOf(RateType.Core, RateType.DraughtRelief)
+    Gen.oneOf(
+      RateType.Core,
+      RateType.DraughtRelief,
+      RateType.SmallProducerRelief,
+      RateType.DraughtAndSmallProducerRelief
+    )
   }
 
   implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime] = Arbitrary {
@@ -87,7 +92,7 @@ trait AlcoholDutyTestData {
       alcoholRegime <- Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
       minABV        <- arbitraryAlcoholByVolume.arbitrary
       maxABV        <- arbitraryAlcoholByVolume.arbitrary
-      rate          <- Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_))
+      rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
     } yield RateBand(taxType, description, rateType, alcoholRegime, minABV, maxABV, rate)
   }
 

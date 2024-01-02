@@ -26,14 +26,18 @@ class RatePeriodSpec extends SpecBase {
   "RateType" when {
     "writing to json"   should {
       "return the correct string representation" in {
-        Json.toJson[RateType](RateType.Core)          shouldBe JsString("Core")
-        Json.toJson[RateType](RateType.DraughtRelief) shouldBe JsString("DraughtRelief")
+        Json.toJson[RateType](RateType.Core)                          shouldBe JsString("Core")
+        Json.toJson[RateType](RateType.DraughtRelief)                 shouldBe JsString("DraughtRelief")
+        Json.toJson[RateType](RateType.SmallProducerRelief)           shouldBe JsString("SmallProducerRelief")
+        Json.toJson[RateType](RateType.DraughtAndSmallProducerRelief) shouldBe JsString("DraughtAndSmallProducerRelief")
       }
     }
     "reading from json" should {
       "translate from the string rep, to the correct case object" in {
-        JsString("Core").as[RateType]          shouldBe RateType.Core
-        JsString("DraughtRelief").as[RateType] shouldBe RateType.DraughtRelief
+        JsString("Core").as[RateType]                          shouldBe RateType.Core
+        JsString("DraughtRelief").as[RateType]                 shouldBe RateType.DraughtRelief
+        JsString("SmallProducerRelief").as[RateType]           shouldBe RateType.SmallProducerRelief
+        JsString("DraughtAndSmallProducerRelief").as[RateType] shouldBe RateType.DraughtAndSmallProducerRelief
       }
       "return an exception in response to an unrecognised string" in {
         JsString("some-other").validate[RateType] shouldBe JsError("some-other is not a valid RateType")
