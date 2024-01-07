@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.alcoholdutycalculator.config
+package uk.gov.hmrc.alcoholdutycalculator.controllers.actions
 
-import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import play.api.mvc._
 
-@Singleton
-class AppConfig @Inject() (config: Configuration) {
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-  val appName: String = config.get[String]("appName")
+class FakeAuthorisedAction @Inject() (bodyParsers: PlayBodyParsers) extends AuthorisedAction {
 
-  lazy val alcoholDutyRatesFile = config.get[String]("alcohol-duty-rates-file")
+  override def parser: BodyParser[AnyContent] = bodyParsers.defaultBodyParser
+
+  override def invokeBlock[A](request: Request[A], block: Request[A] => Future[Result]): Future[Result] =
+    block(request)
+
+  override protected def executionContext: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
 }
