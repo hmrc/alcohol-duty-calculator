@@ -19,8 +19,9 @@ package uk.gov.hmrc.alcoholdutycalculator.services
 import play.api.Environment
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
-import uk.gov.hmrc.alcoholdutycalculator.models.RatePeriod
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
 
+import java.time.YearMonth
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import scala.io.Source
@@ -35,4 +36,25 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
       .mkString
     Json.parse(rateFileContent).as[Seq[RatePeriod]]
   }
+
+  def rateBands(
+    ratePeriodYearMonth: YearMonth,
+    rateType: RateType,
+    abv: AlcoholByVolume,
+    alcoholRegimes: Set[AlcoholRegime]
+  ): Seq[RateBand] =
+    alcoholDutyRates
+      .filter(rp =>
+        !ratePeriodYearMonth.isBefore(rp.validityStartDate) &&
+          rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
+      )
+      .flatMap { ratePeriod =>
+        ratePeriod.rateBands
+          .filter(rb =>
+            rb.rateType == rateType &&
+              rb.minABV.value <= abv.value &&
+              rb.maxABV.value >= abv.value &&
+              rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
+          )
+      }
 }

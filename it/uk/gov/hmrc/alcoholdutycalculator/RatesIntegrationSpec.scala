@@ -20,7 +20,11 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
-import uk.gov.hmrc.alcoholdutycalculator.models.RatePeriod
+import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, Wine}
+import uk.gov.hmrc.alcoholdutycalculator.models.RateType.Core
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateType}
+
+import java.time.YearMonth
 
 class RatesIntegrationSpec extends ISpecBase {
 
@@ -28,12 +32,19 @@ class RatesIntegrationSpec extends ISpecBase {
     "respond with 200 status" in {
       stubAuthorised()
 
+      val urlParams =
+        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
+          .toJson[RateType](Core)
+          .toString}&abv=${Json.toJson(3).toString}&alcoholRegimes=${Json
+          .toJson(Set(Json.toJson[AlcoholRegime](Beer), Json.toJson[AlcoholRegime](Wine)))
+          .toString()}"
+
       lazy val result =
-        callRoute(FakeRequest(routes.RatesController.rates()))
+        callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
 
       status(result) shouldBe OK
-      val ratePeriodList = Json.parse(contentAsString(result)).as[Seq[RatePeriod]]
-      ratePeriodList should not be empty
+      val rateBandList = Json.parse(contentAsString(result)).as[Seq[RateBand]]
+      rateBandList should have size 3
     }
   }
 }

@@ -96,6 +96,10 @@ trait AlcoholDutyTestData {
     } yield RateBand(taxType, description, rateType, alcoholRegime, minABV, maxABV, rate)
   }
 
+  implicit val arbitraryListRateBand: Arbitrary[Seq[RateBand]] = Arbitrary {
+    Gen.nonEmptyListOf(arbitraryRateBand.arbitrary)
+  }
+
   implicit val arbitraryRatePeriod: Arbitrary[RatePeriod] = Arbitrary {
     for {
       name              <- Gen.alphaStr
@@ -107,7 +111,7 @@ trait AlcoholDutyTestData {
   }
 
   implicit val arbitraryListRatePeriod: Arbitrary[Seq[RatePeriod]] = Arbitrary {
-    Gen.listOf(arbitraryRatePeriod.arbitrary)
+    Gen.nonEmptyListOf(arbitraryRatePeriod.arbitrary)
   }
 
 }

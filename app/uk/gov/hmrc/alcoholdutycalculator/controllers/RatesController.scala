@@ -19,10 +19,13 @@ package uk.gov.hmrc.alcoholdutycalculator.controllers
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import java.time.YearMonth
 import javax.inject.Inject
+import scala.util.Try
 
 class RatesController @Inject() (
   authorise: AuthorisedAction,
@@ -31,7 +34,35 @@ class RatesController @Inject() (
 ) extends BackendController(controllerComponents) {
 
   def rates(): Action[AnyContent] =
-    authorise { _ =>
-      Ok(Json.toJson(ratesService.alcoholDutyRates))
+    authorise { implicit request =>
+      val queryParams = request.queryString
+
+      val result: Either[String, Seq[RateBand]] = for {
+        ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
+        rateType       <- extractParam[RateType]("rateType", queryParams, RateType.format)
+        abv            <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format)
+        alcoholRegimes <- extractParam[Set[AlcoholRegime]](
+                            "alcoholRegimes",
+                            queryParams,
+                            Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
+                          )
+      } yield ratesService.rateBands(ratePeriod, rateType, abv, alcoholRegimes)
+
+      result.fold(
+        error => BadRequest(error),
+        rateBands => Ok(Json.toJson(rateBands))
+      )
     }
+
+  private def extractParam[T](
+    paramName: String,
+    queryParams: Map[String, Seq[String]],
+    jsonFormat: Format[T]
+  ): Either[String, T] =
+    extractQueryParam(paramName, queryParams).flatMap(value =>
+      Try(Json.parse(value).as[T](jsonFormat)).toEither.left.map(_ => s"Invalid '$paramName' parameter")
+    )
+
+  private def extractQueryParam(paramName: String, queryParams: Map[String, Seq[String]]): Either[String, String] =
+    queryParams.get(paramName).flatMap(_.headOption).toRight(s"Missing or invalid '$paramName' parameter")
 }
