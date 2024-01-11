@@ -12,6 +12,7 @@
           "Beer",
           "Cider",
           "Wine",
+          "OtherFermentedProduct",
           "Spirits"
         ],
         "minABV": 0,
@@ -56,7 +57,7 @@
         "description": "Other fermented products like fruit ciders from 1.3% to 3.4%",
         "rateType": "Core",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 1.3,
         "maxABV": 3.4,
@@ -111,7 +112,7 @@
         "description": "Other fermented products like fruit ciders from 3.5% to 8.4% or Sparkling cider from 5.6% to 8.4%",
         "rateType": "Core",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 3.5,
         "maxABV": 8.4,
@@ -155,7 +156,7 @@
         "description": "Other fermented products like fruit ciders from 8.5% to 22%",
         "rateType": "Core",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 8.5,
         "maxABV": 22.0,
@@ -199,7 +200,7 @@
         "description": "Other fermented products like fruit ciders stronger than 22%",
         "rateType": "Core",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 22.1,
         "maxABV": 100.0,
@@ -254,7 +255,7 @@
         "description": "Other fermented products like fruit ciders to 3.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 0.0,
         "maxABV": 3.4,
@@ -309,7 +310,7 @@
         "description": "Other fermented products like fruit ciders from 3.5% to 8.4% or Sparkling cider from 5.6% to 8.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 3.5,
         "maxABV": 8.4,
@@ -361,7 +362,7 @@
         "description": "Other fermented products like fruit ciders to 3.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 0.0,
         "maxABV": 3.4
@@ -411,7 +412,7 @@
         "description": "Other fermented products like fruit ciders from 3.5% to 8.4% or sparkling cider from 5.6% to 8.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 3.5,
         "maxABV": 8.4
@@ -461,7 +462,7 @@
         "description": "Other fermented products like fruit ciders to 3.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 0.0,
         "maxABV": 3.4
@@ -511,7 +512,7 @@
         "description": "Other fermented products from 3.5% to 8.4% or Sparkling cider from 5.5% to 8.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
         "alcoholRegime": [
-          "Other"
+          "OtherFermentedProduct"
         ],
         "minABV": 3.5,
         "maxABV": 8.4
