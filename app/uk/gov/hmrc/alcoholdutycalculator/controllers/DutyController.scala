@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +16,34 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.controllers
 
-import play.api.libs.json._
-import play.api.mvc._
+import play.api.libs.json.{Format, Json, Reads, Writes}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
-import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
+import uk.gov.hmrc.alcoholdutycalculator.models.TaxDuty
+import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import java.time.YearMonth
 import javax.inject.Inject
 
-class RatesController @Inject() (
+class DutyController @Inject() (
   authorise: AuthorisedAction,
-  ratesService: RatesService,
+  dutyService: DutyService,
   override val controllerComponents: ControllerComponents
 ) extends BackendController(controllerComponents)
     with BaseCalculatorController {
-
-  def rates(): Action[AnyContent] =
+  def calculateDuty(): Action[AnyContent] =
     authorise { implicit request =>
       val queryParams = request.queryString
 
-      val result: Either[String, Seq[RateBand]] = for {
-        ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        rateType       <- extractParam[RateType]("rateType", queryParams, RateType.format)
-        abv            <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format)
-        alcoholRegimes <- extractParam[Set[AlcoholRegime]](
-                            "alcoholRegimes",
-                            queryParams,
-                            Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
-                          )
-      } yield ratesService.rateBands(ratePeriod, rateType, abv, alcoholRegimes)
+      val result: Either[String, TaxDuty] = for {
+        abv    <- extractParam[BigDecimal]("abv", queryParams, Format(Reads.bigDecReads, Writes.BigDecimalWrites))
+        volume <- extractParam[BigDecimal]("volume", queryParams, Format(Reads.bigDecReads, Writes.BigDecimalWrites))
+        rate   <- extractParam[BigDecimal]("rate", queryParams, Format(Reads.bigDecReads, Writes.BigDecimalWrites))
+      } yield dutyService.calculateDuty(abv, volume, rate)
 
       result.fold(
         error => BadRequest(error),
         rateBands => Ok(Json.toJson(rateBands))
       )
     }
-
 }
