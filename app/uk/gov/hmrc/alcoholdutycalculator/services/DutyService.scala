@@ -16,16 +16,20 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.services
 
-import uk.gov.hmrc.alcoholdutycalculator.models.TaxDuty
+import uk.gov.hmrc.alcoholdutycalculator.models.{DutyCalculation, DutyCalculationRequest}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
 class DutyService @Inject() (implicit val ec: ExecutionContext) {
-  def calculateDuty(abv: BigDecimal, volume: BigDecimal, rate: BigDecimal): TaxDuty = {
-    val pureAlcoholVolume = abv * volume * BigDecimal(0.01)
-    val duty              = pureAlcoholVolume * rate
-    TaxDuty(pureAlcoholVolume, duty)
+  def calculateDuty(dutyCalculationRequest: DutyCalculationRequest): DutyCalculation = {
+    val pureAlcoholVolume =
+      dutyCalculationRequest.abv.value * dutyCalculationRequest.volume.value * BigDecimal(
+        0.01
+      )
+    val duty              =
+      (pureAlcoholVolume * dutyCalculationRequest.rate).setScale(2, BigDecimal.RoundingMode.DOWN)
+    DutyCalculation(pureAlcoholVolume, duty)
   }
 }

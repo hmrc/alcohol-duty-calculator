@@ -16,34 +16,33 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.controllers
 
-import play.api.libs.json.{Format, Json, Reads, Writes}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.Logging
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.TaxDuty
+import uk.gov.hmrc.alcoholdutycalculator.models.DutyCalculationRequest
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.Inject
+import uk.gov.hmrc.play.bootstrap.controller.WithJsonBody
 
-class DutyController @Inject() (
+import scala.concurrent.Future
+
+class DutyCalculationController @Inject() (
   authorise: AuthorisedAction,
   dutyService: DutyService,
   override val controllerComponents: ControllerComponents
 ) extends BackendController(controllerComponents)
-    with BaseCalculatorController {
-  def calculateDuty(): Action[AnyContent] =
-    authorise { implicit request =>
-      val queryParams = request.queryString
+    with WithJsonBody
+    with Logging {
 
-      val result: Either[String, TaxDuty] = for {
-        abv    <- extractParam[BigDecimal]("abv", queryParams, Format(Reads.bigDecReads, Writes.BigDecimalWrites))
-        volume <- extractParam[BigDecimal]("volume", queryParams, Format(Reads.bigDecReads, Writes.BigDecimalWrites))
-        rate   <- extractParam[BigDecimal]("rate", queryParams, Format(Reads.bigDecReads, Writes.BigDecimalWrites))
-      } yield dutyService.calculateDuty(abv, volume, rate)
-
-      result.fold(
-        error => BadRequest(error),
-        rateBands => Ok(Json.toJson(rateBands))
-      )
+  def calculateDuty(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
+    request.body.validate[DutyCalculationRequest] match {
+      case JsSuccess(value, _) => Future.successful(Ok(Json.toJson(dutyService.calculateDuty(value))))
+      case JsError(e)          =>
+        logger.error("Invalid JSON: " + e)
+        Future.successful(BadRequest("Invalid JSON"))
     }
+  }
 }

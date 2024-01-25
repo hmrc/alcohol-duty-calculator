@@ -25,13 +25,13 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import java.time.YearMonth
 import javax.inject.Inject
+import scala.util.Try
 
 class RatesController @Inject() (
   authorise: AuthorisedAction,
   ratesService: RatesService,
   override val controllerComponents: ControllerComponents
-) extends BackendController(controllerComponents)
-    with BaseCalculatorController {
+) extends BackendController(controllerComponents) {
 
   def rates(): Action[AnyContent] =
     authorise { implicit request =>
@@ -53,5 +53,17 @@ class RatesController @Inject() (
         rateBands => Ok(Json.toJson(rateBands))
       )
     }
+
+  private def extractParam[T](
+    paramName: String,
+    queryParams: Map[String, Seq[String]],
+    jsonFormat: Format[T]
+  ): Either[String, T] =
+    extractQueryParam(paramName, queryParams).flatMap(value =>
+      Try(Json.parse(value).as[T](jsonFormat)).toEither.left.map(_ => s"Invalid '$paramName' parameter")
+    )
+
+  private def extractQueryParam(paramName: String, queryParams: Map[String, Seq[String]]): Either[String, String] =
+    queryParams.get(paramName).flatMap(_.headOption).toRight(s"Missing or invalid '$paramName' parameter")
 
 }

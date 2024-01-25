@@ -17,15 +17,36 @@
 package uk.gov.hmrc.alcoholdutycalculator.services
 
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyCalculationRequest, Volume}
 
 class DutyServiceSpec extends SpecBase {
+  val dutyService = new DutyService()
 
   "dutyService" should {
-    "calculate duty" in {
-      val dutyService = new DutyService()
-      val result      = dutyService.calculateDuty(BigDecimal(5), BigDecimal(5), BigDecimal(5))
-      result.pureAlcoholVolume shouldBe BigDecimal(0.25)
-      result.duty              shouldBe BigDecimal(1.25)
+    "calculate pure alcohol volume and duty" in {
+      val dutyCalculationRequest =
+        DutyCalculationRequest(
+          AlcoholByVolume(40),
+          Volume(1),
+          BigDecimal(28.22)
+        )
+
+      val result = dutyService.calculateDuty(dutyCalculationRequest)
+      result.pureAlcoholVolume shouldBe BigDecimal(0.40)
+      result.duty              shouldBe BigDecimal(11.28)
+    }
+
+    "calculate duty rounding down to the nearest penny" in {
+      val dutyCalculationRequest =
+        DutyCalculationRequest(
+          AlcoholByVolume(1),
+          Volume(1.99),
+          BigDecimal(10.99)
+        )
+
+      val result = dutyService.calculateDuty(dutyCalculationRequest)
+      result.pureAlcoholVolume shouldBe BigDecimal(0.0199)
+      result.duty              shouldBe BigDecimal(0.21)
     }
   }
 
