@@ -28,7 +28,7 @@ import java.time.YearMonth
 
 class RatesIntegrationSpec extends ISpecBase {
 
-  "service health endpoint" should {
+  "service rates endpoint" should {
     "respond with 200 status" in {
       stubAuthorised()
 

@@ -65,4 +65,5 @@ class RatesController @Inject() (
 
   private def extractQueryParam(paramName: String, queryParams: Map[String, Seq[String]]): Either[String, String] =
     queryParams.get(paramName).flatMap(_.headOption).toRight(s"Missing or invalid '$paramName' parameter")
+
 }

@@ -1,3 +1,4 @@
 # microservice specific routes
 
 GET        /rates                           uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rates()
+POST       /calculate-duty                  uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateDuty()
