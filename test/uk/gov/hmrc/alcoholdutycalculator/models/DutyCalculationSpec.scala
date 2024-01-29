@@ -24,11 +24,23 @@ class DutyCalculationSpec extends SpecBase {
   "Volume" when {
 
     "creating a new Volume" should {
+
+      "return a Volume with a valid value" in {
+        Volume(1).value shouldBe BigDecimal(1)
+      }
+
       "throw an exception when the value is greater than 999999999.99" in {
         intercept[IllegalArgumentException] {
           Volume(1000000000.0)
         }
       }
+
+      "throw an exception when the value is less than 0" in {
+        intercept[IllegalArgumentException] {
+          Volume(-1.0)
+        }
+      }
+
       "throw an exception when the value has more than 4 decimal places" in {
         intercept[IllegalArgumentException] {
           Volume(1.12345)

@@ -23,17 +23,44 @@ class DutyServiceSpec extends SpecBase {
   val dutyService = new DutyService()
 
   "dutyService" should {
+
     "calculate pure alcohol volume and duty" in {
       val dutyCalculationRequest =
         DutyCalculationRequest(
-          AlcoholByVolume(40),
-          Volume(1),
-          BigDecimal(28.22)
+          AlcoholByVolume(1),
+          Volume(2),
+          BigDecimal(3)
         )
 
       val result = dutyService.calculateDuty(dutyCalculationRequest)
-      result.pureAlcoholVolume shouldBe BigDecimal(0.40)
-      result.duty              shouldBe BigDecimal(11.28)
+      result.pureAlcoholVolume shouldBe BigDecimal(0.02)
+      result.duty              shouldBe BigDecimal(0.06)
+    }
+
+    "calculate pure alcohol volume and duty with decimal values" in {
+      val dutyCalculationRequest =
+        DutyCalculationRequest(
+          AlcoholByVolume(10.0),
+          Volume(1.1),
+          BigDecimal(28.0)
+        )
+
+      val result = dutyService.calculateDuty(dutyCalculationRequest)
+      result.pureAlcoholVolume shouldBe BigDecimal(0.11)
+      result.duty              shouldBe BigDecimal(3.08)
+    }
+
+    "calculate pure alcohol volume and duty with negative values" in {
+      val dutyCalculationRequest =
+        DutyCalculationRequest(
+          AlcoholByVolume(1),
+          Volume(2),
+          BigDecimal(-3)
+        )
+
+      val result = dutyService.calculateDuty(dutyCalculationRequest)
+      result.pureAlcoholVolume shouldBe BigDecimal(0.02)
+      result.duty              shouldBe BigDecimal(-0.06)
     }
 
     "calculate duty rounding down to the nearest penny" in {
@@ -45,9 +72,19 @@ class DutyServiceSpec extends SpecBase {
         )
 
       val result = dutyService.calculateDuty(dutyCalculationRequest)
-      result.pureAlcoholVolume shouldBe BigDecimal(0.0199)
-      result.duty              shouldBe BigDecimal(0.21)
+      result.duty shouldBe BigDecimal(0.21)
+    }
+
+    "calculate duty rounding down to the nearest penny with large decimals" in {
+      val dutyCalculationRequest =
+        DutyCalculationRequest(
+          AlcoholByVolume(1),
+          Volume(1.9999),
+          BigDecimal(10.999999)
+        )
+
+      val result = dutyService.calculateDuty(dutyCalculationRequest)
+      result.duty shouldBe BigDecimal(0.21)
     }
   }
-
 }

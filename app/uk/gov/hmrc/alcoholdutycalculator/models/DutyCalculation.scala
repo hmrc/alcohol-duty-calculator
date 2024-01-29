@@ -27,7 +27,7 @@ object DutyCalculation {
 }
 
 case class Volume(value: BigDecimal) {
-  require(value <= BigDecimal(999999999.99), "Volume must be less than 999999999.99 liters")
+  require(value > BigDecimal(0) && value <= BigDecimal(999999999.99), "Volume must be between 0 and 999999999.99")
 }
 
 object Volume {
