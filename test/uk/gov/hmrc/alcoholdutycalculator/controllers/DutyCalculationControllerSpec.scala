@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.controllers
 
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import org.mockito.ArgumentMatchers.any
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
@@ -26,7 +27,7 @@ import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 
 class DutyCalculationControllerSpec extends SpecBase {
 
-  implicit lazy val materializer = NoMaterializer
+  implicit lazy val materializer: Materializer = NoMaterializer
 
   val mockDutyService = mock[DutyService]
 
