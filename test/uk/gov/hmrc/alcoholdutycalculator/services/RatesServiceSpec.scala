@@ -157,7 +157,7 @@ class RatesServiceSpec extends SpecBase {
         validityStartDate = YearMonth.of(2025, 1),
         validityEndDate = None,
         rateBands = List(
-          baseRateBand.copy(taxType = "2025-1", alcoholRegime = Set(Beer)),
+          baseRateBand.copy(taxType = "2025-1", alcoholRegime = Set(Beer), rateType = DraughtRelief),
           baseRateBand.copy(taxType = "2025-2", alcoholRegime = Set(Beer, Wine)),
           baseRateBand.copy(taxType = "2025-3", alcoholRegime = Set(Beer, Wine, Cider)),
           baseRateBand.copy(taxType = "2025-4", alcoholRegime = Set(Beer, Wine, Cider, Spirits))
@@ -196,17 +196,17 @@ class RatesServiceSpec extends SpecBase {
         .taxType shouldBe "2024-1"
 
       service
-        .rateBands(YearMonth.of(2025, 1), Core, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2025, 1), DraughtRelief, AlcoholByVolume(5), Set(Beer))
         .head
         .taxType shouldBe "2025-1"
 
       service
-        .rateBands(YearMonth.of(2025, 12), Core, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2025, 12), DraughtRelief, AlcoholByVolume(5), Set(Beer))
         .head
         .taxType shouldBe "2025-1"
 
       service
-        .rateBands(YearMonth.of(2030, 6), Core, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2030, 6), DraughtRelief, AlcoholByVolume(5), Set(Beer))
         .head
         .taxType shouldBe "2025-1"
     }
@@ -322,7 +322,7 @@ class RatesServiceSpec extends SpecBase {
           Core,
           AlcoholByVolume(5),
           Set(Beer)
-        ) should have size 4
+        ) should have size 3
 
       service
         .rateBands(
@@ -346,8 +346,182 @@ class RatesServiceSpec extends SpecBase {
           Core,
           AlcoholByVolume(5),
           Set(Beer, Wine, Cider, Spirits)
-        ) should have size 4
+        ) should have size 3
     }
 
+    "filter rateBands by year for the rateType request" in {
+
+      val mockEnv    = mock[Environment]
+      val mockConfig = mock[AppConfig]
+      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
+
+      val rateFileContent = Json.toJson(ratePeriods).toString()
+      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
+
+      val service = new RatesService(mockEnv, mockConfig)
+
+      service
+        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2023, 12), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2024, 1), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe DraughtAndSmallProducerRelief
+
+      service
+        .rateTypes(YearMonth.of(2024, 12), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe DraughtAndSmallProducerRelief
+
+      service
+        .rateTypes(YearMonth.of(2025, 1), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe DraughtRelief
+
+      service
+        .rateTypes(YearMonth.of(2025, 12), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe DraughtRelief
+
+      service
+        .rateTypes(YearMonth.of(2030, 6), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe DraughtRelief
+    }
+
+    "filter rateBands by abv for the rateType request" in {
+
+      val mockEnv    = mock[Environment]
+      val mockConfig = mock[AppConfig]
+      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
+
+      val rateFileContent = Json.toJson(ratePeriods).toString()
+      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
+
+      val service = new RatesService(mockEnv, mockConfig)
+
+      service
+        .rateTypes(
+          YearMonth.of(2023, 1),
+          AlcoholByVolume(5),
+          Set(Beer)
+        )
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(0), Set(Beer))
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2024, 1), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe DraughtAndSmallProducerRelief
+
+      service
+        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(5.1), Set(Beer))
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2025, 1), AlcoholByVolume(7), Set(Beer))
+        .rateType shouldBe DraughtRelief
+
+      service
+        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(8), Set(Beer))
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(9), Set(Beer))
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(18), Set(Beer))
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(18.1), Set(Beer))
+        .rateType shouldBe Core
+    }
+
+    "filter rateBands by rateType for the rateType request" in {
+
+      val mockEnv    = mock[Environment]
+      val mockConfig = mock[AppConfig]
+      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
+
+      val rateFileContent = Json.toJson(ratePeriods).toString()
+      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
+
+      val service = new RatesService(mockEnv, mockConfig)
+
+      service
+        .rateTypes(
+          YearMonth.of(2024, 1),
+          AlcoholByVolume(5),
+          Set(Beer)
+        )
+        .rateType shouldBe DraughtAndSmallProducerRelief
+
+      service
+        .rateTypes(YearMonth.of(2025, 1), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe DraughtRelief
+
+      service
+        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(5), Set(Beer))
+        .rateType shouldBe Core
+    }
+
+    "filter rateBands by alcohol regimes for the rateType request" in {
+      val mockEnv    = mock[Environment]
+      val mockConfig = mock[AppConfig]
+      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
+
+      val rateFileContent = Json.toJson(ratePeriods).toString()
+      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
+
+      val service = new RatesService(mockEnv, mockConfig)
+
+      service
+        .rateTypes(
+          YearMonth.of(2025, 1),
+          AlcoholByVolume(5),
+          Set(Spirits)
+        )
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(YearMonth.of(2025, 1), AlcoholByVolume(5), Set(Spirits))
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(
+          YearMonth.of(2025, 1),
+          AlcoholByVolume(5),
+          Set(Beer)
+        )
+        .rateType shouldBe DraughtRelief
+
+      service
+        .rateTypes(
+          YearMonth.of(2025, 1),
+          AlcoholByVolume(5),
+          Set(Wine)
+        )
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(
+          YearMonth.of(2025, 1),
+          AlcoholByVolume(5),
+          Set(Wine, Cider, Spirits)
+        )
+        .rateType shouldBe Core
+
+      service
+        .rateTypes(
+          YearMonth.of(2025, 1),
+          AlcoholByVolume(5),
+          Set(Beer, Wine, Cider, Spirits)
+        )
+        .rateType shouldBe DraughtRelief
+    }
   }
 }
