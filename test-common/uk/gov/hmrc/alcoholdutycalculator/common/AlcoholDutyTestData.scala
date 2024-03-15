@@ -46,7 +46,7 @@ trait AlcoholDutyTestData {
     Gen.oneOf(
       RateTypeResponse(RateType.DraughtRelief),
       RateTypeResponse(RateType.SmallProducerRelief),
-      RateTypeResponse (RateType.DraughtAndSmallProducerRelief),
+      RateTypeResponse(RateType.DraughtAndSmallProducerRelief),
       RateTypeResponse(RateType.Core)
     )
   }
