@@ -57,4 +57,21 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
               rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
           )
       }
+  def taxType(
+               ratePeriodYearMonth: YearMonth,
+               taxCode: String,
+               abv: AlcoholByVolume,
+               alcoholRegimes: Set[AlcoholRegime]
+             ): Boolean =
+    alcoholDutyRates
+      .exists(rp =>
+        !ratePeriodYearMonth.isBefore(rp.validityStartDate) &&
+          rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
+        && rp.rateBands.exists(rb => rb.taxType == taxCode)
+      )
+        /*.flatMap { ratePeriod =>
+        //ratePeriod.rateBands.exists(_.taxType == taxCode)
+        }*/
+
+
 }

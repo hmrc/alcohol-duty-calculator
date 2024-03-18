@@ -53,6 +53,26 @@ class RatesController @Inject() (
         rateBands => Ok(Json.toJson(rateBands))
       )
     }
+  def validateTaxType(): Action[AnyContent] =
+    authorise { implicit request =>
+      val queryParams = request.queryString
+
+      val result: Either[String, Boolean] = for { //is either fine?
+        ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
+        taxCode        <- extractParam("taxType", queryParams, Json.format[String]) //is it fine to have extractparam without [] type and Strig format
+        abv            <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format) //need to check abv and regime?
+        alcoholRegimes <- extractParam[Set[AlcoholRegime]](
+          "alcoholRegimes",
+          queryParams,
+          Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
+        )
+      } yield ratesService.taxType(ratePeriod, taxCode, abv, alcoholRegimes)
+
+      result.fold(
+        error => BadRequest(error),
+        validTaxCode => Ok(Json.toJson(validTaxCode))
+      )
+    }
 
   private def extractParam[T](
     paramName: String,
