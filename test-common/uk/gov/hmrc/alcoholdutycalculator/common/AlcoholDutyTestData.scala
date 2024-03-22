@@ -34,7 +34,7 @@ trait AlcoholDutyTestData {
     } yield YearMonth.of(year, month)
   }
 
-  implicit val arbitraryRateType: Arbitrary[RateType] = Arbitrary {
+  implicit val arbitraryRateType: Arbitrary[RateType]                 = Arbitrary {
     Gen.oneOf(
       RateType.Core,
       RateType.DraughtRelief,
@@ -42,8 +42,15 @@ trait AlcoholDutyTestData {
       RateType.DraughtAndSmallProducerRelief
     )
   }
-
-  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime] = Arbitrary {
+  implicit val arbitraryRateTypeResponse: Arbitrary[RateTypeResponse] = Arbitrary {
+    Gen.oneOf(
+      RateTypeResponse(RateType.DraughtRelief),
+      RateTypeResponse(RateType.SmallProducerRelief),
+      RateTypeResponse(RateType.DraughtAndSmallProducerRelief),
+      RateTypeResponse(RateType.Core)
+    )
+  }
+  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime]       = Arbitrary {
     Gen.oneOf(
       AlcoholRegime.Beer,
       AlcoholRegime.Cider,

@@ -20,7 +20,8 @@ import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, TaxType}
+
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType,RateTypeResponse, TaxType}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -54,6 +55,26 @@ class RatesController @Inject() (
         rateBands => Ok(Json.toJson(rateBands))
       )
     }
+
+  def rateType(): Action[AnyContent] =
+    authorise { implicit request =>
+      val queryParams = request.queryString
+      val result: Either[String, RateTypeResponse] = for {
+        ratePeriod <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
+        abv <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format)
+        alcoholRegimes <- extractParam[Set[AlcoholRegime]](
+          "alcoholRegimes",
+          queryParams,
+          Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
+        )
+      } yield ratesService.rateTypes(ratePeriod, abv, alcoholRegimes)
+
+      result.fold(
+        error => BadRequest(error),
+        rateTypes => Ok(Json.toJson(rateTypes))
+      )
+    }
+
   def validateTaxType(): Action[AnyContent] =
     authorise { implicit request =>
       val queryParams = request.queryString
