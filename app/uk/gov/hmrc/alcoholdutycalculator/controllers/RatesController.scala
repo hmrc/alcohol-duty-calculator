@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.controllers
 
+import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, TaxType}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -33,7 +34,7 @@ class RatesController @Inject() (
   override val controllerComponents: ControllerComponents
 ) extends BackendController(controllerComponents) {
 
-  def rates(): Action[AnyContent] =
+  def rates(): Action[AnyContent]           =
     authorise { implicit request =>
       val queryParams = request.queryString
 
@@ -57,20 +58,18 @@ class RatesController @Inject() (
     authorise { implicit request =>
       val queryParams = request.queryString
 
-      val result: Either[String, Boolean] = for { //is either fine?
-        ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        taxCode        <- extractParam("taxType", queryParams, Json.format[String]) //is it fine to have extractparam without [] type and Strig format
-        abv            <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format) //need to check abv and regime?
-        alcoholRegimes <- extractParam[Set[AlcoholRegime]](
-          "alcoholRegimes",
-          queryParams,
-          Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
-        )
-      } yield ratesService.taxType(ratePeriod, taxCode, abv, alcoholRegimes)
-
+      val result: Either[String, RateBand] = for { //is either fine?
+        ratePeriod <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
+        taxCode    <- extractParam[TaxType](
+                        "taxType",
+                        queryParams,
+                        TaxType.format
+                      ) //is it fine to have extractparam without [] type and String format
+        rateBand   <- ratesService.taxType(ratePeriod, taxCode)
+      } yield rateBand
       result.fold(
-        error => BadRequest(error),
-        validTaxCode => Ok(Json.toJson(validTaxCode))
+        error => NotFound(error),
+        rateBand => Ok(Json.toJson(rateBand))
       )
     }
 

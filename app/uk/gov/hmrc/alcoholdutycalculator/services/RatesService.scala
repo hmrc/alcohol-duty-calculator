@@ -19,7 +19,7 @@ package uk.gov.hmrc.alcoholdutycalculator.services
 import play.api.Environment
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, TaxType}
 
 import java.time.YearMonth
 import javax.inject.{Inject, Singleton}
@@ -57,21 +57,20 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
               rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
           )
       }
+
   def taxType(
-               ratePeriodYearMonth: YearMonth,
-               taxCode: String,
-               abv: AlcoholByVolume,
-               alcoholRegimes: Set[AlcoholRegime]
-             ): Boolean =
+    ratePeriodYearMonth: YearMonth,
+    taxCode: TaxType
+  ): Either[String, RateBand] =
     alcoholDutyRates
-      .exists(rp =>
+      .filter(rp =>
         !ratePeriodYearMonth.isBefore(rp.validityStartDate) &&
           rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
-        && rp.rateBands.exists(rb => rb.taxType == taxCode)
       )
-        /*.flatMap { ratePeriod =>
-        //ratePeriod.rateBands.exists(_.taxType == taxCode)
-        }*/
-
+      .flatMap(_.rateBands)
+      .find(rb => rb.taxType == taxCode.value) match {
+      case Some(rateBand) => Right(rateBand)
+      case None           => Left("RateBand not found")
+    }
 
 }
