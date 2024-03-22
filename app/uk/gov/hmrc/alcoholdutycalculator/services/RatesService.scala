@@ -59,33 +59,32 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
               rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
           )
       }
-<<<<<<< HEAD
 
   def taxType(
     ratePeriodYearMonth: YearMonth,
     taxCode: TaxType
   ): Either[String, RateBand] =
     alcoholDutyRates
-=======
-  def rateTypes(
-    ratePeriodYearMonth: YearMonth,
-    abv: AlcoholByVolume,
-    alcoholRegimes: Set[AlcoholRegime]
-  ): RateTypeResponse = {
-    val rateTypes     = alcoholDutyRates
->>>>>>> origin/main
       .filter(rp =>
         !ratePeriodYearMonth.isBefore(rp.validityStartDate) &&
           rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
       )
-<<<<<<< HEAD
       .flatMap(_.rateBands)
       .find(rb => rb.taxType == taxCode.value) match {
       case Some(rateBand) => Right(rateBand)
       case None           => Left("RateBand not found")
     }
 
-=======
+  def rateTypes(
+    ratePeriodYearMonth: YearMonth,
+    abv: AlcoholByVolume,
+    alcoholRegimes: Set[AlcoholRegime]
+  ): RateTypeResponse = {
+    val rateTypes     = alcoholDutyRates
+      .filter(rp =>
+        !ratePeriodYearMonth.isBefore(rp.validityStartDate) &&
+          rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
+      )
       .flatMap { ratePeriod =>
         ratePeriod.rateBands
           .filter(rb =>
@@ -99,5 +98,5 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
     val rateTypesList = List(DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief)
     RateTypeResponse(rateTypesList.find(rateTypes.contains).getOrElse(Core))
   }
->>>>>>> origin/main
+
 }

@@ -21,7 +21,7 @@ import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
 
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType,RateTypeResponse, TaxType}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse, TaxType}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -35,7 +35,7 @@ class RatesController @Inject() (
   override val controllerComponents: ControllerComponents
 ) extends BackendController(controllerComponents) {
 
-  def rates(): Action[AnyContent]           =
+  def rates(): Action[AnyContent] =
     authorise { implicit request =>
       val queryParams = request.queryString
 
@@ -58,15 +58,15 @@ class RatesController @Inject() (
 
   def rateType(): Action[AnyContent] =
     authorise { implicit request =>
-      val queryParams = request.queryString
+      val queryParams                              = request.queryString
       val result: Either[String, RateTypeResponse] = for {
-        ratePeriod <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        abv <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format)
+        ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
+        abv            <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format)
         alcoholRegimes <- extractParam[Set[AlcoholRegime]](
-          "alcoholRegimes",
-          queryParams,
-          Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
-        )
+                            "alcoholRegimes",
+                            queryParams,
+                            Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
+                          )
       } yield ratesService.rateTypes(ratePeriod, abv, alcoholRegimes)
 
       result.fold(
