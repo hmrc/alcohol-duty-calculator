@@ -156,4 +156,17 @@ class RatePeriodSpec extends SpecBase {
       }
     }
   }
+
+  "TaxType" when {
+    "reading from json" should {
+      "translate from the String representation when it is a valid Tax Type value" in {
+        JsString("322").as[TaxType] shouldBe TaxType("322")
+      }
+    }
+    "writing to json"   should {
+      "return the correct representation" in {
+        Json.toJson(TaxType("322")) shouldBe JsString("322")
+      }
+    }
+  }
 }

@@ -23,7 +23,7 @@ import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, Cider, Spirits, Wine}
 import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, RateBand, RatePeriod}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, RateBand, RatePeriod, TaxType}
 
 import java.io.ByteArrayInputStream
 import java.time.YearMonth
@@ -522,6 +522,48 @@ class RatesServiceSpec extends SpecBase {
           Set(Beer, Wine, Cider, Spirits)
         )
         .rateType shouldBe DraughtRelief
+    }
+
+    "filter rateBands by year for the taxType request" in {
+      val mockEnv    = mock[Environment]
+      val mockConfig = mock[AppConfig]
+      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
+
+      val rateFileContent = Json.toJson(ratePeriods).toString()
+      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
+
+      val service = new RatesService(mockEnv, mockConfig)
+
+      service
+        .taxType(YearMonth.of(2023, 1), TaxType("2023-1")) shouldBe Right(ratePeriods.head.rateBands.head)
+      service
+        .taxType(YearMonth.of(2024, 1), TaxType("2024-1")) shouldBe Right(ratePeriods(1).rateBands.head)
+      service
+        .taxType(YearMonth.of(2099, 1), TaxType("2024-1")) shouldBe Left("RateBand not found")
+      service
+        .taxType(YearMonth.of(2025, 1), TaxType("2025-1")) shouldBe Right(ratePeriods(2).rateBands.head)
+      service
+        .taxType(YearMonth.of(2025, 1), TaxType("2025-3")) shouldBe Right(ratePeriods(2).rateBands(2))
+
+    }
+
+    "filter rateBands by taxType for the taxType request" in {
+
+      val mockEnv    = mock[Environment]
+      val mockConfig = mock[AppConfig]
+      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
+
+      val rateFileContent = Json.toJson(ratePeriods).toString()
+      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
+
+      val service = new RatesService(mockEnv, mockConfig)
+
+      service
+        .taxType(YearMonth.of(2023, 1), TaxType("2023-1")) shouldBe Right(ratePeriods.head.rateBands.head)
+
+      service
+        .taxType(YearMonth.of(2023, 1), TaxType("2023-2")) shouldBe Right(ratePeriods.head.rateBands(1))
+
     }
   }
 }

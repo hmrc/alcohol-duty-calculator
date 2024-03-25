@@ -79,13 +79,13 @@ class RatesController @Inject() (
     authorise { implicit request =>
       val queryParams = request.queryString
 
-      val result: Either[String, RateBand] = for { //is either fine?
+      val result: Either[String, RateBand] = for {
         ratePeriod <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
         taxCode    <- extractParam[TaxType](
                         "taxType",
                         queryParams,
                         TaxType.format
-                      ) //is it fine to have extractparam without [] type and String format
+                      )
         rateBand   <- ratesService.taxType(ratePeriod, taxCode)
       } yield rateBand
       result.fold(
