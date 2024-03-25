@@ -211,7 +211,7 @@ class RatesControllerSpec extends SpecBase {
         taxType: TaxType
       ) =>
         val urlWithParams                =
-          s"/rates?ratePeriod=1234&taxType=${Json.toJson(taxType).toString}"
+          s"/tax-type?ratePeriod=1234&taxType=${Json.toJson(taxType).toString}"
         val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
         val result: Future[Result]       = controller.validateTaxType()(requestWithMissingRatePeriod)
 
