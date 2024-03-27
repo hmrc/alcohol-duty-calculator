@@ -104,11 +104,7 @@ class RatesController @Inject() (
       Try(Json.parse(value).as[T](jsonFormat)).toEither.left.map(_ => s"Invalid '$paramName' parameter")
     )
 
-  private def extractQueryParam(paramName: String, queryParams: Map[String, Seq[String]]): Either[String, String] = {
-    println(queryParams)
-    val result = queryParams.get(paramName).flatMap(_.headOption).toRight(s"Missing or invalid '$paramName' parameter")
-    println(result)
-    result
-  }
+  private def extractQueryParam(paramName: String, queryParams: Map[String, Seq[String]]): Either[String, String] =
+    queryParams.get(paramName).flatMap(_.headOption).toRight(s"Missing or invalid '$paramName' parameter")
 
 }
