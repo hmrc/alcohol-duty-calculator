@@ -107,14 +107,6 @@ trait AlcoholDutyTestData {
     Gen.nonEmptyListOf(arbitraryRateBand.arbitrary)
   }
 
-  implicit val arbitraryTaxType: Arbitrary[TaxType] = Arbitrary {
-    Gen.oneOf(
-      TaxType("301"),
-      TaxType("322"),
-      TaxType("333")
-    )
-  }
-
   implicit val arbitraryRatePeriod: Arbitrary[RatePeriod] = Arbitrary {
     for {
       name              <- Gen.alphaStr

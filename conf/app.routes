@@ -3,4 +3,4 @@
 GET        /rates                           uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rates()
 POST       /calculate-duty                  uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateDuty()
 GET        /rate-type                       uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rateType()
-GET        /tax-type                        uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.validateTaxType()
+GET        /rate-band                        uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rateBand()

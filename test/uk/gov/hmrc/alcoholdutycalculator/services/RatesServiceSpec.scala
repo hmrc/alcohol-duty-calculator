@@ -23,7 +23,7 @@ import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, Cider, Spirits, Wine}
 import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, RateBand, RatePeriod, TaxType}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, RateBand, RatePeriod}
 
 import java.io.ByteArrayInputStream
 import java.time.YearMonth
@@ -535,15 +535,15 @@ class RatesServiceSpec extends SpecBase {
       val service = new RatesService(mockEnv, mockConfig)
 
       service
-        .taxType(YearMonth.of(2023, 1), TaxType("2023-1")) shouldBe Right(ratePeriods.head.rateBands.head)
+        .taxType(YearMonth.of(2023, 1), "2023-1") shouldBe Some(ratePeriods.head.rateBands.head)
       service
-        .taxType(YearMonth.of(2024, 1), TaxType("2024-1")) shouldBe Right(ratePeriods(1).rateBands.head)
+        .taxType(YearMonth.of(2024, 1), "2024-1") shouldBe Some(ratePeriods(1).rateBands.head)
       service
-        .taxType(YearMonth.of(2099, 1), TaxType("2024-1")) shouldBe Left("RateBand not found")
+        .taxType(YearMonth.of(2099, 1), "2024-1") shouldBe None
       service
-        .taxType(YearMonth.of(2025, 1), TaxType("2025-1")) shouldBe Right(ratePeriods(2).rateBands.head)
+        .taxType(YearMonth.of(2025, 1), "2025-1") shouldBe Some(ratePeriods(2).rateBands.head)
       service
-        .taxType(YearMonth.of(2025, 1), TaxType("2025-3")) shouldBe Right(ratePeriods(2).rateBands(2))
+        .taxType(YearMonth.of(2025, 1), "2025-3") shouldBe Some(ratePeriods(2).rateBands(2))
 
     }
 
@@ -559,10 +559,10 @@ class RatesServiceSpec extends SpecBase {
       val service = new RatesService(mockEnv, mockConfig)
 
       service
-        .taxType(YearMonth.of(2023, 1), TaxType("2023-1")) shouldBe Right(ratePeriods.head.rateBands.head)
+        .taxType(YearMonth.of(2023, 1), "2023-1") shouldBe Some(ratePeriods.head.rateBands.head)
 
       service
-        .taxType(YearMonth.of(2023, 1), TaxType("2023-2")) shouldBe Right(ratePeriods.head.rateBands(1))
+        .taxType(YearMonth.of(2023, 1), "2023-2") shouldBe Some(ratePeriods.head.rateBands(1))
 
     }
   }

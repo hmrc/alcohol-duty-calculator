@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse, TaxType}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 
 import scala.concurrent.Future
@@ -93,41 +93,39 @@ class RatesControllerSpec extends SpecBase {
     "return 200 OK with rate band based on query parameters" in forAll {
       (
         ratePeriod: YearMonth,
-        taxCode: TaxType,
         rateBand: RateBand
       ) =>
-        when(mockRatesService.taxType(any(), any())).thenReturn(Right(rateBand))
+        when(mockRatesService.taxType(any(), any())).thenReturn(Some(rateBand))
 
         val urlWithParams =
-          s"/tax-type?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=${Json.toJson(taxCode)(TaxType.format).toString}"
+          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=${Json.toJson(312).toString}"
 
         val requestWithParams = FakeRequest("GET", urlWithParams)
 
-        val result: Future[Result] = controller.validateTaxType()(requestWithParams)
+        val result: Future[Result] = controller.rateBand()(requestWithParams)
 
         status(result)        shouldBe OK
         contentAsJson(result) shouldBe Json.toJson(rateBand)
 
-        verify(mockRatesService).taxType(ratePeriod, taxCode)
+        verify(mockRatesService).taxType(ratePeriod, "312")
     }
     "return 404 NOT FOUND based on query parameters" in forAll {
       (
         ratePeriod: YearMonth,
-        taxCode: TaxType,
         rateBand: RateBand
       ) =>
-        when(mockRatesService.taxType(any(), any())).thenReturn(Left("RateBand not found"))
+        when(mockRatesService.taxType(any(), any())).thenReturn(None)
 
         val urlWithParams =
-          s"/tax-type?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=${Json.toJson(taxCode)(TaxType.format).toString}"
+          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=${Json.toJson(312).toString}"
 
         val requestWithParams = FakeRequest("GET", urlWithParams)
 
-        val result: Future[Result] = controller.validateTaxType()(requestWithParams)
+        val result: Future[Result] = controller.rateBand()(requestWithParams)
 
         status(result) shouldBe NOT_FOUND
 
-        verify(mockRatesService).taxType(ratePeriod, taxCode)
+        verify(mockRatesService).taxType(ratePeriod, "312")
     }
   }
 
@@ -165,14 +163,14 @@ class RatesControllerSpec extends SpecBase {
 
     "'ratePeriod' parameter is missing in taxType" in forAll {
       (
-        taxType: TaxType
+        taxType: String
       ) =>
         val urlWithParams                =
-          s"/tax-type?taxType=${Json.toJson(taxType).toString}"
+          s"/rate-band?taxType=${Json.toJson(taxType).toString}"
         val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
-        val result: Future[Result]       = controller.validateTaxType()(requestWithMissingRatePeriod)
+        val result: Future[Result]       = controller.rateBand()(requestWithMissingRatePeriod)
 
-        status(result)        shouldBe NOT_FOUND
+        status(result)        shouldBe BAD_REQUEST
         contentAsString(result) should include("Missing or invalid 'ratePeriod' parameter")
     }
 
@@ -208,14 +206,14 @@ class RatesControllerSpec extends SpecBase {
     }
     "'ratePeriod' parameter is invalid in taxType" in forAll {
       (
-        taxType: TaxType
+        taxType: String
       ) =>
         val urlWithParams                =
-          s"/tax-type?ratePeriod=1234&taxType=${Json.toJson(taxType).toString}"
+          s"/rate-band?ratePeriod=1234&taxType=${Json.toJson(taxType).toString}"
         val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
-        val result: Future[Result]       = controller.validateTaxType()(requestWithMissingRatePeriod)
+        val result: Future[Result]       = controller.rateBand()(requestWithMissingRatePeriod)
 
-        status(result)        shouldBe NOT_FOUND
+        status(result)        shouldBe BAD_REQUEST
         contentAsString(result) should include("Invalid 'ratePeriod' parameter")
     }
 
@@ -395,13 +393,13 @@ class RatesControllerSpec extends SpecBase {
         ratePeriod: YearMonth
       ) =>
         val urlWithParams =
-          s"/tax-type?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}"
+          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}"
 
         val requestWithInvalidTaxType =
           FakeRequest("GET", urlWithParams)
-        val result: Future[Result]    = controller.validateTaxType()(requestWithInvalidTaxType)
+        val result: Future[Result]    = controller.rateBand()(requestWithInvalidTaxType)
 
-        status(result)        shouldBe NOT_FOUND
+        status(result)        shouldBe BAD_REQUEST
         contentAsString(result) should include("Missing or invalid 'taxType' parameter")
     }
     "'taxType' parameter is invalid in taxType request" in forAll {
@@ -409,14 +407,14 @@ class RatesControllerSpec extends SpecBase {
         ratePeriod: YearMonth
       ) =>
         val urlWithParams =
-          s"/tax-type?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=1234"
+          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=abcd"
 
         val requestWithInvalidTaxType =
           FakeRequest("GET", urlWithParams)
-        val result: Future[Result]    = controller.validateTaxType()(requestWithInvalidTaxType)
+        val result: Future[Result]    = controller.rateBand()(requestWithInvalidTaxType)
 
         status(result)        shouldBe NOT_FOUND
-        contentAsString(result) should include("Invalid 'taxType' parameter")
+        contentAsString(result) should include("RateBand not found")
     }
   }
 }
