@@ -323,7 +323,7 @@ class RatesControllerSpec extends SpecBase {
         when(mockRatesService.taxType(any(), any())).thenReturn(Some(rateBand))
 
         val urlWithParams =
-          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=${Json.toJson(312).toString}"
+          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=312"
 
         val requestWithParams = FakeRequest("GET", urlWithParams)
 
@@ -342,7 +342,7 @@ class RatesControllerSpec extends SpecBase {
         when(mockRatesService.taxType(any(), any())).thenReturn(None)
 
         val urlWithParams =
-          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=${Json.toJson(312).toString}"
+          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=312"
 
         val requestWithParams = FakeRequest("GET", urlWithParams)
 
@@ -358,7 +358,7 @@ class RatesControllerSpec extends SpecBase {
           taxType: String
         ) =>
           val urlWithParams                =
-            s"/rate-band?taxType=${Json.toJson(taxType).toString}"
+            s"/rate-band?taxType=$taxType"
           val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
           val result: Future[Result]       = controller.rateBand()(requestWithMissingRatePeriod)
 
@@ -370,7 +370,7 @@ class RatesControllerSpec extends SpecBase {
           taxType: String
         ) =>
           val urlWithParams                =
-            s"/rate-band?ratePeriod=1234&taxType=${Json.toJson(taxType).toString}"
+            s"/rate-band?ratePeriod=1234&taxType=$taxType"
           val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
           val result: Future[Result]       = controller.rateBand()(requestWithMissingRatePeriod)
 

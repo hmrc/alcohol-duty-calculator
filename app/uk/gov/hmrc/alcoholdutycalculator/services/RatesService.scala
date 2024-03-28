@@ -70,7 +70,7 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
           rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
       )
       .flatMap(_.rateBands)
-      .find(rb => rb.taxType == extractValue(taxType))
+      .find(rb => rb.taxType == taxType)
 
   def rateTypes(
     ratePeriodYearMonth: YearMonth,
@@ -95,8 +95,5 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
     val rateTypesList = List(DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief)
     RateTypeResponse(rateTypesList.find(rateTypes.contains).getOrElse(Core))
   }
-
-  def extractValue(value: String): String =
-    value.stripPrefix("\"").stripSuffix("\"")
 
 }

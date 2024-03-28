@@ -79,13 +79,13 @@ class RatesController @Inject() (
       val queryParams = request.queryString
 
       val result: Either[String, Option[RateBand]] = for {
+
         ratePeriod <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
         taxType    <- extractQueryParam(
                         "taxType",
                         queryParams
                       )
-
-        rateBand <- Right(ratesService.taxType(ratePeriod, taxType))
+        rateBand   <- Right(ratesService.taxType(ratePeriod, taxType))
       } yield rateBand
 
       result match {
