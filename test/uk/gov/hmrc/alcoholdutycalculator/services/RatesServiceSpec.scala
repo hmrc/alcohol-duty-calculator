@@ -523,5 +523,47 @@ class RatesServiceSpec extends SpecBase {
         )
         .rateType shouldBe DraughtRelief
     }
+
+    "filter rateBands by year for the taxType request" in {
+      val mockEnv    = mock[Environment]
+      val mockConfig = mock[AppConfig]
+      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
+
+      val rateFileContent = Json.toJson(ratePeriods).toString()
+      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
+
+      val service = new RatesService(mockEnv, mockConfig)
+
+      service
+        .taxType(YearMonth.of(2023, 1), "2023-1") shouldBe Some(ratePeriods.head.rateBands.head)
+      service
+        .taxType(YearMonth.of(2024, 1), "2024-1") shouldBe Some(ratePeriods(1).rateBands.head)
+      service
+        .taxType(YearMonth.of(2099, 1), "2024-1") shouldBe None
+      service
+        .taxType(YearMonth.of(2025, 1), "2025-1") shouldBe Some(ratePeriods(2).rateBands.head)
+      service
+        .taxType(YearMonth.of(2025, 1), "2025-3") shouldBe Some(ratePeriods(2).rateBands(2))
+
+    }
+
+    "filter rateBands by taxType for the taxType request" in {
+
+      val mockEnv    = mock[Environment]
+      val mockConfig = mock[AppConfig]
+      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
+
+      val rateFileContent = Json.toJson(ratePeriods).toString()
+      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
+
+      val service = new RatesService(mockEnv, mockConfig)
+
+      service
+        .taxType(YearMonth.of(2023, 1), "2023-1") shouldBe Some(ratePeriods.head.rateBands.head)
+
+      service
+        .taxType(YearMonth.of(2023, 1), "2023-2") shouldBe Some(ratePeriods.head.rateBands(1))
+
+    }
   }
 }

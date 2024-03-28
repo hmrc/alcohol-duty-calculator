@@ -31,11 +31,7 @@ lazy val it = project
   .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
   .settings(DefaultBuildSettings.itSettings())
   .settings(
-    libraryDependencies ++= AppDependencies.test,
-    Test / unmanagedSourceDirectories := Seq(
-      baseDirectory.value / "it" / "test",
-      baseDirectory.value / "test-common"
-    ),
+    libraryDependencies ++= AppDependencies.itDependencies,
     Test / parallelExecution := false,
     Test / fork := true,
     Test / scalafmtOnCompile := true,
