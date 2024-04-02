@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.controllers
 
+import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
@@ -71,6 +72,27 @@ class RatesController @Inject() (
         error => BadRequest(error),
         rateTypes => Ok(Json.toJson(rateTypes))
       )
+    }
+
+  def rateBand(): Action[AnyContent] =
+    authorise { implicit request =>
+      val queryParams = request.queryString
+
+      val result: Either[String, Option[RateBand]] = for {
+
+        ratePeriod <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
+        taxType    <- extractQueryParam(
+                        "taxType",
+                        queryParams
+                      )
+        rateBand   <- Right(ratesService.taxType(ratePeriod, taxType))
+      } yield rateBand
+
+      result match {
+        case Right(Some(rateBand)) => Ok(Json.toJson(rateBand))
+        case Right(None)           => NotFound("RateBand not found")
+        case Left(error)           => BadRequest(error)
+      }
     }
 
   private def extractParam[T](

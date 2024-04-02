@@ -156,4 +156,5 @@ class RatePeriodSpec extends SpecBase {
       }
     }
   }
+
 }

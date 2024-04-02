@@ -19,8 +19,9 @@ package uk.gov.hmrc.alcoholdutycalculator.services
 import play.api.Environment
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
-import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
+
 import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 
 import java.time.YearMonth
 import javax.inject.{Inject, Singleton}
@@ -58,6 +59,19 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
               rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
           )
       }
+
+  def taxType(
+    ratePeriodYearMonth: YearMonth,
+    taxType: String
+  ): Option[RateBand] =
+    alcoholDutyRates
+      .filter(rp =>
+        !ratePeriodYearMonth.isBefore(rp.validityStartDate) &&
+          rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
+      )
+      .flatMap(_.rateBands)
+      .find(rb => rb.taxType == taxType)
+
   def rateTypes(
     ratePeriodYearMonth: YearMonth,
     abv: AlcoholByVolume,
@@ -81,4 +95,5 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
     val rateTypesList = List(DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief)
     RateTypeResponse(rateTypesList.find(rateTypes.contains).getOrElse(Core))
   }
+
 }
