@@ -41,8 +41,6 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
 
   def rateBands(
     ratePeriodYearMonth: YearMonth,
-    rateType: RateType,
-    abv: AlcoholByVolume,
     alcoholRegimes: Set[AlcoholRegime]
   ): Seq[RateBand] =
     alcoholDutyRates
@@ -52,12 +50,7 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
       )
       .flatMap { ratePeriod =>
         ratePeriod.rateBands
-          .filter(rb =>
-            rb.rateType == rateType &&
-              rb.minABV.value <= abv.value &&
-              rb.maxABV.value >= abv.value &&
-              rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
-          )
+          .filter(rb => rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty)
       }
 
   def taxType(

@@ -40,14 +40,12 @@ class RatesController @Inject() (
 
       val result: Either[String, Seq[RateBand]] = for {
         ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        rateType       <- extractParam[RateType]("rateType", queryParams, RateType.format)
-        abv            <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format)
         alcoholRegimes <- extractParam[Set[AlcoholRegime]](
                             "alcoholRegimes",
                             queryParams,
                             Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
                           )
-      } yield ratesService.rateBands(ratePeriod, rateType, abv, alcoholRegimes)
+      } yield ratesService.rateBands(ratePeriod, alcoholRegimes)
 
       result.fold(
         error => BadRequest(error),
