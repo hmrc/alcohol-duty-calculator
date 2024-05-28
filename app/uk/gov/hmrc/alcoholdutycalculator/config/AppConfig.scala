@@ -25,4 +25,6 @@ class AppConfig @Inject() (config: Configuration) {
   val appName: String = config.get[String]("appName")
 
   lazy val alcoholDutyRatesFile = config.get[String]("alcohol-duty-rates-file")
+
+  val enrolmentServiceName: String = config.get[String]("enrolment.serviceName")
 }
