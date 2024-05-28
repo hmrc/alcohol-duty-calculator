@@ -31,6 +31,7 @@ import play.api.mvc._
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeHeaders, FakeRequest, ResultExtractors}
 import uk.gov.hmrc.alcoholdutycalculator.common.AlcoholDutyTestData
+import uk.gov.hmrc.alcoholdutycalculator.common.generators.ModelGenerators
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.FakeAuthorisedAction
 import uk.gov.hmrc.http.HeaderCarrier
@@ -52,6 +53,7 @@ trait SpecBase
     with MockitoSugar
     with ScalaCheckPropertyChecks
     with BeforeAndAfterEach
+    with ModelGenerators
     with AlcoholDutyTestData {
 
   def configOverrides: Map[String, Any] = Map()
