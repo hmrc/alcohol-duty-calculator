@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.alcoholdutycalculator.config
+package uk.gov.hmrc.alcoholdutycalculator.common.generators
 
-import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import org.scalacheck.Gen
 
-@Singleton
-class AppConfig @Inject() (config: Configuration) {
+trait ModelGenerators {
 
-  val appName: String = config.get[String]("appName")
+  def periodKeyGen: Gen[String] = for {
+    year  <- Gen.chooseNum(23, 50)
+    month <- Gen.chooseNum(0, 11)
+  } yield s"${year}A${(month + 'A').toChar}"
 
-  lazy val alcoholDutyRatesFile = config.get[String]("alcohol-duty-rates-file")
+  def appaIdGen: Gen[String] = Gen.listOfN(10, Gen.numChar).map(id => s"XMADP${id.mkString}")
 
-  val enrolmentServiceName: String = config.get[String]("enrolment.serviceName")
 }
