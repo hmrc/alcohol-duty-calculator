@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.services
 
-import uk.gov.hmrc.alcoholdutycalculator.models.{DutyCalculation, DutyCalculationRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.{DutyByTaxType, DutyCalculation, DutyCalculationByTaxTypeResponse, DutyCalculationRequest, DutyTotalCalculationResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -31,5 +31,19 @@ class DutyService @Inject() (implicit val ec: ExecutionContext) {
     val duty              =
       (pureAlcoholVolume * dutyCalculationRequest.rate).setScale(2, BigDecimal.RoundingMode.DOWN)
     DutyCalculation(pureAlcoholVolume, duty)
+  }
+
+  def calculateTotalDuty(dutyRates: Seq[DutyByTaxType]): DutyTotalCalculationResponse = {
+    val totalsByTaxType = dutyRates.map(dutyRate =>
+      DutyCalculationByTaxTypeResponse(
+        taxType = dutyRate.taxType,
+        pureAlcoholVolume = dutyRate.pureAlcoholVolume,
+        dutyRate = dutyRate.rate,
+        amount = (dutyRate.rate * dutyRate.pureAlcoholVolume).setScale(2, BigDecimal.RoundingMode.DOWN)
+      )
+    )
+
+    val total = totalsByTaxType.map(_.amount).sum
+    DutyTotalCalculationResponse(totalAmount = total, totalsByTaxType = totalsByTaxType)
   }
 }
