@@ -18,21 +18,15 @@ package uk.gov.hmrc.alcoholdutycalculator.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class DutyByTaxType(taxType: String, pureAlcoholVolume: BigDecimal, rate: BigDecimal)
+case class DutyByTaxType(
+  taxType: String,
+  totalLitres: BigDecimal,
+  pureAlcohol: BigDecimal,
+  dutyRate: BigDecimal
+)
 
 object DutyByTaxType {
   implicit val formats: OFormat[DutyByTaxType] = Json.format[DutyByTaxType]
-}
-case class DutyCalculationByTaxTypeResponse(taxType: String, pureAlcoholVolume: BigDecimal, dutyRate: BigDecimal, amount: BigDecimal)
-
-object DutyCalculationByTaxTypeResponse {
-  implicit val formats: OFormat[DutyCalculationByTaxTypeResponse] = Json.format[DutyCalculationByTaxTypeResponse]
-}
-
-case class DutyTotalCalculationResponse(totalAmount: BigDecimal, totalsByTaxType: Seq[DutyCalculationByTaxTypeResponse])
-
-object DutyTotalCalculationResponse {
-  implicit val formats: OFormat[DutyTotalCalculationResponse] = Json.format[DutyTotalCalculationResponse]
 }
 
 case class DutyTotalCalculationRequest(dutiesByTaxType: Seq[DutyByTaxType])
@@ -41,4 +35,23 @@ object DutyTotalCalculationRequest {
   implicit val formats: OFormat[DutyTotalCalculationRequest] = Json.format[DutyTotalCalculationRequest]
 }
 
+case class DutyCalculationByTaxTypeResponse(
+  taxType: String,
+  totalLitres: BigDecimal,
+  pureAlcohol: BigDecimal,
+  dutyRate: BigDecimal,
+  dutyDue: BigDecimal
+)
 
+object DutyCalculationByTaxTypeResponse {
+  implicit val formats: OFormat[DutyCalculationByTaxTypeResponse] = Json.format[DutyCalculationByTaxTypeResponse]
+}
+
+case class DutyTotalCalculationResponse(
+  totalDuty: BigDecimal,
+  dutiesByTaxType: Seq[DutyCalculationByTaxTypeResponse]
+)
+
+object DutyTotalCalculationResponse {
+  implicit val formats: OFormat[DutyTotalCalculationResponse] = Json.format[DutyTotalCalculationResponse]
+}

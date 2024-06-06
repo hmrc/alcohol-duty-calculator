@@ -37,13 +37,14 @@ class DutyService @Inject() (implicit val ec: ExecutionContext) {
     val totalsByTaxType = dutyRates.map(dutyRate =>
       DutyCalculationByTaxTypeResponse(
         taxType = dutyRate.taxType,
-        pureAlcoholVolume = dutyRate.pureAlcoholVolume,
-        dutyRate = dutyRate.rate,
-        amount = (dutyRate.rate * dutyRate.pureAlcoholVolume).setScale(2, BigDecimal.RoundingMode.DOWN)
+        totalLitres = dutyRate.totalLitres,
+        pureAlcohol = dutyRate.pureAlcohol,
+        dutyRate = dutyRate.dutyRate,
+        dutyDue = (dutyRate.dutyRate * dutyRate.pureAlcohol).setScale(2, BigDecimal.RoundingMode.DOWN)
       )
     )
 
-    val total = totalsByTaxType.map(_.amount).sum
-    DutyTotalCalculationResponse(totalAmount = total, totalsByTaxType = totalsByTaxType)
+    val total = totalsByTaxType.map(_.dutyDue).sum
+    DutyTotalCalculationResponse(totalDuty = total, dutiesByTaxType = totalsByTaxType)
   }
 }
