@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.services
 
-import uk.gov.hmrc.alcoholdutycalculator.models.{DutyByTaxType, DutyCalculation, DutyCalculationByTaxTypeResponse, DutyCalculationRequest, DutyTotalCalculationResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext

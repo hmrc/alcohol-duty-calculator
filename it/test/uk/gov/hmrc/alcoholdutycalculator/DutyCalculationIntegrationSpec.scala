@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyCalculation, DutyCalculationRequest, Volume}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyByTaxType, DutyCalculation, DutyCalculationByTaxTypeResponse, DutyCalculationRequest, DutyTotalCalculationRequest, DutyTotalCalculationResponse, Volume}
 
 class DutyCalculationIntegrationSpec extends ISpecBase {
 
@@ -37,6 +37,35 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
       val dutyCalculation = Json.parse(contentAsString(result)).as[DutyCalculation]
       dutyCalculation.pureAlcoholVolume shouldBe BigDecimal(0.01)
       dutyCalculation.duty              shouldBe BigDecimal(0.01)
+    }
+  }
+
+  "service total duties calculation endpoint" should {
+    "respond with 200 status" in {
+      stubAuthorised()
+
+      lazy val result = callRoute(
+        FakeRequest("POST", routes.DutyCalculationController.calculateTotalDuty().url)
+          .withBody(
+            Json.toJson(
+              DutyTotalCalculationRequest(
+                Seq(
+                  DutyByTaxType("taxType", BigDecimal(1), BigDecimal(1), BigDecimal(1)),
+                  DutyByTaxType("taxType2", BigDecimal(2), BigDecimal(2), BigDecimal(2))
+                )
+              )
+            )
+          )
+      )
+
+      status(result) shouldBe OK
+      val dutyCalculation = Json.parse(contentAsString(result)).as[DutyTotalCalculationResponse]
+      dutyCalculation.totalDuty            shouldBe BigDecimal(5.0)
+      dutyCalculation.dutiesByTaxType.size shouldBe 2
+      dutyCalculation.dutiesByTaxType      shouldBe Seq(
+        DutyCalculationByTaxTypeResponse("taxType", BigDecimal(1), BigDecimal(1), BigDecimal(1), BigDecimal(1.0)),
+        DutyCalculationByTaxTypeResponse("taxType2", BigDecimal(2), BigDecimal(2), BigDecimal(2), BigDecimal(4.0))
+      )
     }
   }
 }

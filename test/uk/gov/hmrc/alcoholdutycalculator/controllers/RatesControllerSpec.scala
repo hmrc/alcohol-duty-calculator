@@ -46,7 +46,7 @@ class RatesControllerSpec extends SpecBase {
         abv: AlcoholByVolume,
         alcoholRegimes: Set[AlcoholRegime]
       ) =>
-        when(mockRatesService.rateBands(any(), any(), any(), any())).thenReturn(rateBandList)
+        when(mockRatesService.rateBands(any(), any())).thenReturn(rateBandList)
 
         val urlWithParams =
           s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
@@ -60,7 +60,7 @@ class RatesControllerSpec extends SpecBase {
         status(result)        shouldBe OK
         contentAsJson(result) shouldBe Json.toJson(rateBandList)
 
-        verify(mockRatesService).rateBands(ratePeriod, rateType, abv, alcoholRegimes)
+        verify(mockRatesService).rateBands(ratePeriod, alcoholRegimes)
     }
 
     "return BadRequest" when {
@@ -95,74 +95,6 @@ class RatesControllerSpec extends SpecBase {
 
           status(result)        shouldBe BAD_REQUEST
           contentAsString(result) should include("Invalid 'ratePeriod' parameter")
-      }
-      "'rateType' parameter is missing" in forAll {
-        (
-          ratePeriod: YearMonth,
-          abv: AlcoholByVolume,
-          alcoholRegimes: Set[AlcoholRegime]
-        ) =>
-          val urlWithParams              =
-            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&abv=${Json
-              .toJson(abv)
-              .toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-          val requestWithInvalidRateType =
-            FakeRequest("GET", urlWithParams)
-          val result: Future[Result]     = controller.rates()(requestWithInvalidRateType)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Missing or invalid 'rateType' parameter")
-      }
-      "'rateType' parameter is invalid" in forAll {
-        (
-          ratePeriod: YearMonth,
-          abv: AlcoholByVolume,
-          alcoholRegimes: Set[AlcoholRegime]
-        ) =>
-          val urlWithParams              =
-            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&rateType=1234&abv=${Json
-              .toJson(abv)
-              .toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-          val requestWithInvalidRateType =
-            FakeRequest("GET", urlWithParams)
-          val result: Future[Result]     = controller.rates()(requestWithInvalidRateType)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Invalid 'rateType' parameter")
-      }
-      "'abv' parameter is missing" in forAll {
-        (
-          ratePeriod: YearMonth,
-          rateType: RateType,
-          alcoholRegimes: Set[AlcoholRegime]
-        ) =>
-          val urlWithParams =
-            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
-              .toJson(rateType)
-              .toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-
-          val requestWithMissingAbv  = FakeRequest("GET", urlWithParams)
-          val result: Future[Result] = controller.rates()(requestWithMissingAbv)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Missing or invalid 'abv' parameter")
-      }
-      "'abv' parameter is invalid" in forAll {
-        (
-          ratePeriod: YearMonth,
-          rateType: RateType,
-          alcoholRegimes: Set[AlcoholRegime]
-        ) =>
-          val urlWithParams =
-            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
-              .toJson(rateType)
-              .toString}&abv=abcd&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-
-          val requestWithMissingAbv  = FakeRequest("GET", urlWithParams)
-          val result: Future[Result] = controller.rates()(requestWithMissingAbv)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Invalid 'abv' parameter")
       }
       "'alcoholRegimes' parameter is missing" in forAll {
         (

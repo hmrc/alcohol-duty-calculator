@@ -20,7 +20,7 @@ import play.api.Environment
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateTypeResponse}
 import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 
 import java.time.YearMonth
