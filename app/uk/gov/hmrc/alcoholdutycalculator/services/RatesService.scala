@@ -36,7 +36,11 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
       .resourceAsStream(appConfig.alcoholDutyRatesFile)
       .fold(throw new Exception("Could not open Alcohol Duty Rate file"))(Source.fromInputStream)
       .mkString
-    Json.parse(rateFileContent).as[Seq[RatePeriod]]
+    val res                     = Json.parse(rateFileContent).as[Seq[RatePeriod]]
+
+    println(res)
+
+    res
   }
 
   def rateBands(
@@ -67,7 +71,6 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
 
   def rateTypes(
     ratePeriodYearMonth: YearMonth,
-    abv: AlcoholByVolume,
     alcoholRegimes: Set[AlcoholRegime]
   ): RateTypeResponse = {
     val rateTypes     = alcoholDutyRates
@@ -77,11 +80,7 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
       )
       .flatMap { ratePeriod =>
         ratePeriod.rateBands
-          .filter(rb =>
-            rb.minABV.value <= abv.value &&
-              rb.maxABV.value >= abv.value &&
-              rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
-          )
+          .filter(rb => rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty)
           .map(_.rateType)
           .toSet
       }

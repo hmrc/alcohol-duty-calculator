@@ -11,8 +11,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 9.27
       },
       {
@@ -22,8 +27,13 @@
         "alcoholRegime": [
           "Cider"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "Cider",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 9.27
       },
       {
@@ -33,8 +43,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 9.27
       },
       {
@@ -44,8 +59,13 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 9.27
       },
       {
@@ -55,8 +75,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 9.27
       },
       {
@@ -66,8 +91,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ],
         "rate": 21.01
       },
       {
@@ -77,8 +107,18 @@
         "alcoholRegime": [
           "Cider"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "Cider",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "label": "SparklingCider",
+            "minABV": 3.5,
+            "maxABV": 5.5
+          }
+        ],
         "rate": 9.67
       },
       {
@@ -88,8 +128,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ],
         "rate": 24.77
       },
       {
@@ -99,8 +144,18 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "label": "SparklingCider",
+            "minABV": 5.6,
+            "maxABV": 8.4
+          }
+        ],
         "rate": 24.77
       },
       {
@@ -110,8 +165,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ],
         "rate": 24.77
       },
       {
@@ -121,8 +181,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 8.5,
-        "maxABV": 22.0,
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 8.5,
+            "maxABV": 22.0
+          }
+        ],
         "rate": 28.50
       },
       {
@@ -132,8 +197,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 8.5,
-        "maxABV": 22.0,
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 8.5,
+            "maxABV": 22.0
+          }
+        ],
         "rate": 28.50
       },
       {
@@ -143,8 +213,13 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 8.5,
-        "maxABV": 22.0,
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 8.5,
+            "maxABV": 22.0
+          }
+        ],
         "rate": 28.50
       },
       {
@@ -154,8 +229,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 8.5,
-        "maxABV": 22.0,
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 8.5,
+            "maxABV": 22.0
+          }
+        ],
         "rate": 28.50
       },
       {
@@ -165,8 +245,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 22.1,
-        "maxABV": 100.0,
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 22.1,
+            "maxABV": 100.0
+          }
+        ],
         "rate": 31.64
       },
       {
@@ -176,8 +261,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 22.1,
-        "maxABV": 100.0,
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 22.1,
+            "maxABV": 100.0
+          }
+        ],
         "rate": 31.64
       },
       {
@@ -187,8 +277,13 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 22.1,
-        "maxABV": 100.0,
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 22.1,
+            "maxABV": 100.0
+          }
+        ],
         "rate": 31.64
       },
       {
@@ -198,8 +293,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 22.1,
-        "maxABV": 100.0,
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 22.1,
+            "maxABV": 100.0
+          }
+        ],
         "rate": 31.64
       },
       {
@@ -209,8 +309,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 8.42
       },
       {
@@ -220,8 +325,13 @@
         "alcoholRegime": [
           "Cider"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "Cider",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 8.42
       },
       {
@@ -231,8 +341,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 8.42
       },
       {
@@ -242,8 +357,13 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 8.42
       },
       {
@@ -253,8 +373,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4,
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ],
         "rate": 8.42
       },
       {
@@ -264,8 +389,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ],
         "rate": 19.08
       },
       {
@@ -275,8 +405,18 @@
         "alcoholRegime": [
           "Cider"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "Cider",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "label": "SparklingCider",
+            "minABV": 3.5,
+            "maxABV": 5.5
+          }
+        ],
         "rate": 8.78
       },
       {
@@ -286,8 +426,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ],
         "rate": 19.08
       },
       {
@@ -297,8 +442,18 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "label": "SparklingCider",
+            "minABV": 5.6,
+            "maxABV": 8.4
+          }
+        ],
         "rate": 19.08
       },
       {
@@ -308,8 +463,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4,
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ],
         "rate": 19.08
       },
       {
@@ -319,8 +479,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "362",
@@ -329,8 +494,13 @@
         "alcoholRegime": [
           "Cider"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "Cider",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "363",
@@ -339,8 +509,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "364",
@@ -349,8 +524,13 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "365",
@@ -359,8 +539,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "366",
@@ -369,8 +554,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ]
       },
       {
         "taxType": "367",
@@ -379,8 +569,18 @@
         "alcoholRegime": [
           "Cider"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "Cider",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "label": "SparklingCider",
+            "minABV": 3.5,
+            "maxABV": 5.5
+          }
+        ]
       },
       {
         "taxType": "368",
@@ -389,8 +589,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ]
       },
       {
         "taxType": "369",
@@ -399,8 +604,18 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "label": "SparklingCider",
+            "minABV": 5.6,
+            "maxABV": 8.4
+          }
+        ]
       },
       {
         "taxType": "370",
@@ -409,8 +624,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ]
       },
       {
         "taxType": "371",
@@ -419,8 +639,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "372",
@@ -429,8 +654,13 @@
         "alcoholRegime": [
           "Cider"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "Cider",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "373",
@@ -439,8 +669,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "374",
@@ -449,8 +684,13 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "375",
@@ -459,8 +699,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 1.3,
-        "maxABV": 3.4
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 1.3,
+            "maxABV": 3.4
+          }
+        ]
       },
       {
         "taxType": "376",
@@ -469,8 +714,13 @@
         "alcoholRegime": [
           "Beer"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "Beer",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ]
       },
       {
         "taxType": "377",
@@ -479,8 +729,18 @@
         "alcoholRegime": [
           "Cider"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "Cider",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "label": "SparklingCider",
+            "minABV": 3.5,
+            "maxABV": 5.4
+          }
+        ]
       },
       {
         "taxType": "378",
@@ -489,8 +749,13 @@
         "alcoholRegime": [
           "Wine"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "Wine",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ]
       },
       {
         "taxType": "379",
@@ -499,8 +764,18 @@
         "alcoholRegime": [
           "OtherFermentedProduct"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "OtherFermentedProduct",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "label": "SparklingCider",
+            "minABV": 5.5,
+            "maxABV": 8.4
+          }
+        ]
       },
       {
         "taxType": "380",
@@ -509,8 +784,13 @@
         "alcoholRegime": [
           "Spirits"
         ],
-        "minABV": 3.5,
-        "maxABV": 8.4
+        "intervals": [
+          {
+            "label": "Spirits",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          }
+        ]
       }
     ]
   }

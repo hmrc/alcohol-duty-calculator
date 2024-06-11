@@ -103,13 +103,18 @@ object AlcoholByVolume {
   }
 }
 
+case class ABVInterval(label: String, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
+
+object ABVInterval {
+  implicit val format: OFormat[ABVInterval] = Json.format[ABVInterval]
+}
+
 case class RateBand(
   taxType: String,
   description: String,
   rateType: RateType,
   alcoholRegime: Set[AlcoholRegime],
-  minABV: AlcoholByVolume,
-  maxABV: AlcoholByVolume,
+  intervals: Seq[ABVInterval],
   rate: Option[BigDecimal]
 )
 
