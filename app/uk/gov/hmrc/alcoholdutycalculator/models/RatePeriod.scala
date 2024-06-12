@@ -52,17 +52,17 @@ case class RateTypeResponse(rateType: RateType)
 object RateTypeResponse {
   implicit val format: Format[RateTypeResponse] = Json.format[RateTypeResponse]
 }
-sealed trait AlcoholRegime
+sealed trait AlcoholRegimeName
 
-object AlcoholRegime {
-  case object Beer extends AlcoholRegime
-  case object Cider extends AlcoholRegime
-  case object Wine extends AlcoholRegime
-  case object Spirits extends AlcoholRegime
-  case object OtherFermentedProduct extends AlcoholRegime
+object AlcoholRegimeName {
+  case object Beer extends AlcoholRegimeName
+  case object Cider extends AlcoholRegimeName
+  case object Wine extends AlcoholRegimeName
+  case object Spirits extends AlcoholRegimeName
+  case object OtherFermentedProduct extends AlcoholRegimeName
 
-  implicit val format: Format[AlcoholRegime] = new Format[AlcoholRegime] {
-    override def reads(json: JsValue): JsResult[AlcoholRegime] = json.validate[String] match {
+  implicit val format: Format[AlcoholRegimeName] = new Format[AlcoholRegimeName] {
+    override def reads(json: JsValue): JsResult[AlcoholRegimeName] = json.validate[String] match {
       case JsSuccess(value, _) =>
         value match {
           case "Beer"                  => JsSuccess(Beer)
@@ -75,8 +75,14 @@ object AlcoholRegime {
       case e: JsError          => e
     }
 
-    override def writes(o: AlcoholRegime): JsValue = JsString(o.toString)
+    override def writes(o: AlcoholRegimeName): JsValue = JsString(o.toString)
   }
+}
+
+case class AlcoholRegime(name: AlcoholRegimeName, abvRanges: Seq[ABVInterval])
+
+object AlcoholRegime {
+  implicit val format: Format[AlcoholRegime] = Json.format[AlcoholRegime]
 }
 
 case class AlcoholByVolume private (value: BigDecimal) {
@@ -103,7 +109,7 @@ object AlcoholByVolume {
   }
 }
 
-case class ABVInterval(label: String, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
+case class ABVInterval(name: String, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
 
 object ABVInterval {
   implicit val format: OFormat[ABVInterval] = Json.format[ABVInterval]
@@ -113,8 +119,7 @@ case class RateBand(
   taxType: String,
   description: String,
   rateType: RateType,
-  alcoholRegime: Set[AlcoholRegime],
-  intervals: Seq[ABVInterval],
+  alcoholRegimes: Set[AlcoholRegime],
   rate: Option[BigDecimal]
 )
 

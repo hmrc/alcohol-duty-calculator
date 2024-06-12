@@ -20,7 +20,7 @@ import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateTypeResponse}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -40,10 +40,10 @@ class RatesController @Inject() (
 
       val result: Either[String, Seq[RateBand]] = for {
         ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        alcoholRegimes <- extractParam[Set[AlcoholRegime]](
+        alcoholRegimes <- extractParam[Set[AlcoholRegimeName]](
                             "alcoholRegimes",
                             queryParams,
-                            Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
+                            Format(Reads.set[AlcoholRegimeName], Writes.set[AlcoholRegimeName])
                           )
       } yield ratesService.rateBands(ratePeriod, alcoholRegimes)
 
@@ -58,10 +58,10 @@ class RatesController @Inject() (
       val queryParams                              = request.queryString
       val result: Either[String, RateTypeResponse] = for {
         ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        alcoholRegimes <- extractParam[Set[AlcoholRegime]](
+        alcoholRegimes <- extractParam[Set[AlcoholRegimeName]](
                             "alcoholRegimes",
                             queryParams,
-                            Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
+                            Format(Reads.set[AlcoholRegimeName], Writes.set[AlcoholRegimeName])
                           )
       } yield ratesService.rateTypes(ratePeriod, alcoholRegimes)
 

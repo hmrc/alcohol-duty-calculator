@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 
 import scala.concurrent.Future
@@ -44,7 +44,7 @@ class RatesControllerSpec extends SpecBase {
         ratePeriod: YearMonth,
         rateType: RateType,
         abv: AlcoholByVolume,
-        alcoholRegimes: Set[AlcoholRegime]
+        alcoholRegimes: Set[AlcoholRegimeName]
       ) =>
         when(mockRatesService.rateBands(any(), any())).thenReturn(rateBandList)
 
@@ -68,7 +68,7 @@ class RatesControllerSpec extends SpecBase {
         (
           rateType: RateType,
           abv: AlcoholByVolume,
-          alcoholRegimes: Set[AlcoholRegime]
+          alcoholRegimes: Set[AlcoholRegimeName]
         ) =>
           val urlWithParams                =
             s"/rates?rateType=${Json
@@ -84,7 +84,7 @@ class RatesControllerSpec extends SpecBase {
         (
           rateType: RateType,
           abv: AlcoholByVolume,
-          alcoholRegimes: Set[AlcoholRegime]
+          alcoholRegimes: Set[AlcoholRegimeName]
         ) =>
           val urlWithParams                =
             s"/rates?ratePeriod=1234&rateType=${Json
@@ -140,7 +140,7 @@ class RatesControllerSpec extends SpecBase {
       (
         ratePeriod: YearMonth,
         abv: AlcoholByVolume,
-        alcoholRegimes: Set[AlcoholRegime],
+        alcoholRegimes: Set[AlcoholRegimeName],
         rateType: RateTypeResponse
       ) =>
         when(mockRatesService.rateTypes(any(), any(), any())).thenReturn(rateType)
@@ -162,7 +162,7 @@ class RatesControllerSpec extends SpecBase {
       "'ratePeriod' parameter is missing" in forAll {
         (
           abv: AlcoholByVolume,
-          alcoholRegimes: Set[AlcoholRegime]
+          alcoholRegimes: Set[AlcoholRegimeName]
         ) =>
           val urlWithParams                =
             s"/rates?abv=${Json.toJson(abv).toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
@@ -175,7 +175,7 @@ class RatesControllerSpec extends SpecBase {
       "'ratePeriod' parameter is invalid" in forAll {
         (
           abv: AlcoholByVolume,
-          alcoholRegimes: Set[AlcoholRegime]
+          alcoholRegimes: Set[AlcoholRegimeName]
         ) =>
           val urlWithParams                =
             s"/rates?ratePeriod=1234&abv=${Json.toJson(abv).toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
@@ -188,7 +188,7 @@ class RatesControllerSpec extends SpecBase {
       "'abv' parameter is missing" in forAll {
         (
           ratePeriod: YearMonth,
-          alcoholRegimes: Set[AlcoholRegime]
+          alcoholRegimes: Set[AlcoholRegimeName]
         ) =>
           val urlWithParams =
             s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
@@ -202,7 +202,7 @@ class RatesControllerSpec extends SpecBase {
       "'abv' parameter is invalid" in forAll {
         (
           ratePeriod: YearMonth,
-          alcoholRegimes: Set[AlcoholRegime]
+          alcoholRegimes: Set[AlcoholRegimeName]
         ) =>
           val urlWithParams =
             s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&abv=abcd&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"

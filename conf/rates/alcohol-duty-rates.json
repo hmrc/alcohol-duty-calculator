@@ -8,14 +8,16 @@
         "taxType": "311",
         "description": "Beer from 1.3% to 3.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 9.27
@@ -24,14 +26,16 @@
         "taxType": "312",
         "description": "Cider (but not sparkling cider) from 1.3% to 3.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Cider"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Cider",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Cider",
+            "abvRanges": [
+              {
+                "name": "Cider",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 9.27
@@ -40,14 +44,16 @@
         "taxType": "313",
         "description": "Wine (including sparkling wine) from 1.3% to 3.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 9.27
@@ -56,14 +62,16 @@
         "taxType": "314",
         "description": "Other fermented products like fruit ciders from 1.3% to 3.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 9.27
@@ -72,14 +80,16 @@
         "taxType": "315",
         "description": "Spirits or spirit based products from 1.3% to 3.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 9.27
@@ -88,14 +98,16 @@
         "taxType": "321",
         "description": "Beer from 3.5% to 8.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name": "Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ],
         "rate": 21.01
@@ -104,35 +116,40 @@
         "taxType": "322",
         "description": "Cider (but not sparkling cider) from 3.5% to 8.4 or Sparkling cider from 3.5% to 5.5%%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Cider"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Cider",
-            "minABV": 3.5,
-            "maxABV": 8.4
-          },
-          {
-            "label": "SparklingCider",
-            "minABV": 3.5,
-            "maxABV": 5.5
+            "name": "Cider",
+            "abvRanges": [
+              {
+                "name": "Cider",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              },
+              {
+                "name": "SparklingCider",
+                "minABV": 3.5,
+                "maxABV": 5.5
+              }
+            ]
           }
         ],
+
         "rate": 9.67
       },
       {
         "taxType": "323",
         "description": "Wine (including sparkling wine) from 3.5% to 8.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name": "Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ],
         "rate": 24.77
@@ -141,19 +158,21 @@
         "taxType": "324",
         "description": "Other fermented products like fruit ciders from 3.5% to 8.4% or Sparkling cider from 5.6% to 8.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 3.5,
-            "maxABV": 8.4
-          },
-          {
-            "label": "SparklingCider",
-            "minABV": 5.6,
-            "maxABV": 8.4
+            "name": "OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              },
+              {
+                "name": "SparklingCider",
+                "minABV": 5.6,
+                "maxABV": 8.4
+              }
+            ]
           }
         ],
         "rate": 24.77
@@ -162,14 +181,16 @@
         "taxType": "325",
         "description": "Spirits or spirit based products from 3.5% to 8.4%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ],
         "rate": 24.77
@@ -178,14 +199,16 @@
         "taxType": "331",
         "description": "Beer from 8.5% to 22%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 8.5,
-            "maxABV": 22.0
+            "name":"Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 8.5,
+                "maxABV": 22.0
+              }
+            ]
           }
         ],
         "rate": 28.50
@@ -194,14 +217,16 @@
         "taxType": "333",
         "description": "Wine (including sparkling wine) from 8.5% to 22%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 8.5,
-            "maxABV": 22.0
+            "name":"Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 8.5,
+                "maxABV": 22.0
+              }
+            ]
           }
         ],
         "rate": 28.50
@@ -210,14 +235,16 @@
         "taxType": "334",
         "description": "Other fermented products like fruit ciders from 8.5% to 22%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 8.5,
-            "maxABV": 22.0
+            "name":"OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 8.5,
+                "maxABV": 22.0
+              }
+            ]
           }
         ],
         "rate": 28.50
@@ -226,14 +253,16 @@
         "taxType": "335",
         "description": "Spirits or spirit based products from 8.5% to 22%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 8.5,
-            "maxABV": 22.0
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 8.5,
+                "maxABV": 22.0
+              }
+            ]
           }
         ],
         "rate": 28.50
@@ -242,14 +271,16 @@
         "taxType": "341",
         "description": "Beer stronger than 22%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 22.1,
-            "maxABV": 100.0
+            "name":"Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 22.1,
+                "maxABV": 100.0
+              }
+            ]
           }
         ],
         "rate": 31.64
@@ -258,14 +289,16 @@
         "taxType": "343",
         "description": "Wine (including sparkling wine) stronger than 22%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 22.1,
-            "maxABV": 100.0
+            "name":"Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 22.1,
+                "maxABV": 100.0
+              }
+            ]
           }
         ],
         "rate": 31.64
@@ -274,14 +307,16 @@
         "taxType": "344",
         "description": "Other fermented products like fruit ciders stronger than 22%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 22.1,
-            "maxABV": 100.0
+            "name":"OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 22.1,
+                "maxABV": 100.0
+              }
+            ]
           }
         ],
         "rate": 31.64
@@ -290,14 +325,16 @@
         "taxType": "345",
         "description": "Spirits or spirit based products stronger than 22%",
         "rateType": "Core",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 22.1,
-            "maxABV": 100.0
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 22.1,
+                "maxABV": 100.0
+              }
+            ]
           }
         ],
         "rate": 31.64
@@ -306,14 +343,16 @@
         "taxType": "351",
         "description": "Beer to 3.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name": "Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 8.42
@@ -322,14 +361,16 @@
         "taxType": "352",
         "description": "Cider (but not sparkling cider) to 3.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "Cider"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Cider",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Cider",
+            "abvRanges": [
+              {
+                "name": "Cider",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 8.42
@@ -338,14 +379,16 @@
         "taxType": "353",
         "description": "Wine (including sparkling wine) to 3.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 8.42
@@ -354,14 +397,16 @@
         "taxType": "354",
         "description": "Other fermented products like fruit ciders to 3.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 8.42
@@ -370,14 +415,16 @@
         "taxType": "355",
         "description": "Spirits or spirit based products to 3.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name": "Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ],
         "rate": 8.42
@@ -386,14 +433,16 @@
         "taxType": "356",
         "description": "Beer from 3.5% to 8.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name": "Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ],
         "rate": 19.08
@@ -402,19 +451,21 @@
         "taxType": "357",
         "description": "Cider (but not sparkling cider) from 3.5% to 8.4% or Sparkling cider from 3.5% to 5.5%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "Cider"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Cider",
-            "minABV": 3.5,
-            "maxABV": 8.4
-          },
-          {
-            "label": "SparklingCider",
-            "minABV": 3.5,
-            "maxABV": 5.5
+            "name":"Cider",
+            "abvRanges": [
+              {
+                "name": "Cider",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              },
+              {
+                "name": "SparklingCider",
+                "minABV": 3.5,
+                "maxABV": 5.5
+              }
+            ]
           }
         ],
         "rate": 8.78
@@ -423,14 +474,16 @@
         "taxType": "358",
         "description": "Wine (including sparkling wine) from 3.5% to 8.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ],
         "rate": 19.08
@@ -439,19 +492,21 @@
         "taxType": "359",
         "description": "Other fermented products like fruit ciders from 3.5% to 8.4% or Sparkling cider from 5.6% to 8.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 3.5,
-            "maxABV": 8.4
-          },
-          {
-            "label": "SparklingCider",
-            "minABV": 5.6,
-            "maxABV": 8.4
+            "name":"OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              },
+              {
+                "name": "SparklingCider",
+                "minABV": 5.6,
+                "maxABV": 8.4
+              }
+            ]
           }
         ],
         "rate": 19.08
@@ -460,14 +515,16 @@
         "taxType": "360",
         "description": "Spirits or spirit based products from 3.5% to 8.4%, eligible for draught relief",
         "rateType": "DraughtRelief",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ],
         "rate": 19.08
@@ -476,14 +533,16 @@
         "taxType": "361",
         "description": "Beer to 3.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name": "Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -491,14 +550,16 @@
         "taxType": "362",
         "description": "Cider to 3.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "Cider"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Cider",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Cider",
+            "abvRanges": [
+              {
+                "name": "Cider",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -506,14 +567,16 @@
         "taxType": "363",
         "description": "Wine (including sparkling wine) to 3.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -521,14 +584,16 @@
         "taxType": "364",
         "description": "Other fermented products like fruit ciders to 3.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -536,14 +601,16 @@
         "taxType": "365",
         "description": "Spirits or spirit based products to 3.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -551,14 +618,16 @@
         "taxType": "366",
         "description": "Beer from 3.5% to 8.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ]
       },
@@ -566,19 +635,21 @@
         "taxType": "367",
         "description": "Still cider from 3.5% to 8.4% or Sparkling cider from 3.5% to 5.5%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "Cider"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Cider",
-            "minABV": 3.5,
-            "maxABV": 8.4
-          },
-          {
-            "label": "SparklingCider",
-            "minABV": 3.5,
-            "maxABV": 5.5
+            "name":"Cider",
+            "abvRanges": [
+              {
+                "name": "Cider",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              },
+              {
+                "name": "SparklingCider",
+                "minABV": 3.5,
+                "maxABV": 5.5
+              }
+            ]
           }
         ]
       },
@@ -586,14 +657,16 @@
         "taxType": "368",
         "description": "Wine (including sparkling wine) from 3.5% to 8.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ]
       },
@@ -601,19 +674,21 @@
         "taxType": "369",
         "description": "Other fermented products like fruit ciders from 3.5% to 8.4% or sparkling cider from 5.6% to 8.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 3.5,
-            "maxABV": 8.4
-          },
-          {
-            "label": "SparklingCider",
-            "minABV": 5.6,
-            "maxABV": 8.4
+            "name":"OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              },
+              {
+                "name": "SparklingCider",
+                "minABV": 5.6,
+                "maxABV": 8.4
+              }
+            ]
           }
         ]
       },
@@ -621,14 +696,16 @@
         "taxType": "370",
         "description": "Spirits or spirit based products from 3.5% to 8.4%, eligible for small producer relief",
         "rateType": "SmallProducerRelief",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ]
       },
@@ -636,14 +713,16 @@
         "taxType": "371",
         "description": "Beer to 3.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -651,14 +730,16 @@
         "taxType": "372",
         "description": "Cider to 3.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "Cider"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Cider",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Cider",
+            "abvRanges": [
+              {
+                "name": "Cider",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -666,14 +747,16 @@
         "taxType": "373",
         "description": "Wine (including sparkling wine) to 3.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name": "Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -681,14 +764,16 @@
         "taxType": "374",
         "description": "Other fermented products like fruit ciders to 3.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name": "OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -696,14 +781,16 @@
         "taxType": "375",
         "description": "Spirits to 3.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 1.3,
-            "maxABV": 3.4
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 1.3,
+                "maxABV": 3.4
+              }
+            ]
           }
         ]
       },
@@ -711,14 +798,16 @@
         "taxType": "376",
         "description": "Beer from 3.5% to 8.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "Beer"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Beer",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Beer",
+            "abvRanges": [
+              {
+                "name": "Beer",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ]
       },
@@ -726,19 +815,21 @@
         "taxType": "377",
         "description": "Still cider from 3.5% to 8.4% or Sparkling cider from 3.5% to 5.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "Cider"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Cider",
-            "minABV": 3.5,
-            "maxABV": 8.4
-          },
-          {
-            "label": "SparklingCider",
-            "minABV": 3.5,
-            "maxABV": 5.4
+            "name":"Cider",
+            "abvRanges": [
+              {
+                "name": "Cider",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              },
+              {
+                "name": "SparklingCider",
+                "minABV": 3.5,
+                "maxABV": 5.4
+              }
+            ]
           }
         ]
       },
@@ -746,14 +837,16 @@
         "taxType": "378",
         "description": "Wine (including sparkling wine) from 3.5% to 8.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "Wine"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Wine",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Wine",
+            "abvRanges": [
+              {
+                "name": "Wine",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ]
       },
@@ -761,19 +854,21 @@
         "taxType": "379",
         "description": "Other fermented products from 3.5% to 8.4% or Sparkling cider from 5.5% to 8.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "OtherFermentedProduct"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "OtherFermentedProduct",
-            "minABV": 3.5,
-            "maxABV": 8.4
-          },
-          {
-            "label": "SparklingCider",
-            "minABV": 5.5,
-            "maxABV": 8.4
+            "name": "OtherFermentedProduct",
+            "abvRanges": [
+              {
+                "name": "OtherFermentedProduct",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              },
+              {
+                "name": "SparklingCider",
+                "minABV": 5.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ]
       },
@@ -781,14 +876,16 @@
         "taxType": "380",
         "description": "Spirits from 3.5% to 8.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
-        "alcoholRegime": [
-          "Spirits"
-        ],
-        "intervals": [
+        "alcoholRegimes": [
           {
-            "label": "Spirits",
-            "minABV": 3.5,
-            "maxABV": 8.4
+            "name":"Spirits",
+            "abvRanges": [
+              {
+                "name": "Spirits",
+                "minABV": 3.5,
+                "maxABV": 8.4
+              }
+            ]
           }
         ]
       }

@@ -21,7 +21,7 @@ import play.api.Environment
 import play.api.libs.json.{JsArray, Json}
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
-import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, Cider, Spirits, Wine}
+import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegimeName.{Beer, Cider, Spirits, Wine}
 import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, RateBand, RatePeriod}
 
@@ -48,18 +48,18 @@ class RatesServiceSpec extends SpecBase {
               "rateBands"         -> JsArray(
                 Seq(
                   Json.obj(
-                    "taxType"       -> "301",
-                    "description"   -> "Low Alcohol - not exc 1.2%",
-                    "rateType"      -> "Core",
-                    "alcoholRegime" -> Seq(
+                    "taxType"        -> "301",
+                    "description"    -> "Low Alcohol - not exc 1.2%",
+                    "rateType"       -> "Core",
+                    "alcoholRegimes" -> Seq(
                       "Beer",
                       "Wine",
                       "Cider",
                       "Spirits"
                     ),
-                    "minABV"        -> 3,
-                    "maxABV"        -> 9.9,
-                    "rate"          -> 100.99
+                    "minABV"         -> 3,
+                    "maxABV"         -> 9.9,
+                    "rate"           -> 100.99
                   )
                 )
               )
@@ -157,10 +157,10 @@ class RatesServiceSpec extends SpecBase {
         validityStartDate = YearMonth.of(2025, 1),
         validityEndDate = None,
         rateBands = List(
-          baseRateBand.copy(taxType = "2025-1", alcoholRegime = Set(Beer), rateType = DraughtRelief),
-          baseRateBand.copy(taxType = "2025-2", alcoholRegime = Set(Beer, Wine)),
-          baseRateBand.copy(taxType = "2025-3", alcoholRegime = Set(Beer, Wine, Cider)),
-          baseRateBand.copy(taxType = "2025-4", alcoholRegime = Set(Beer, Wine, Cider, Spirits))
+          baseRateBand.copy(taxType = "2025-1", alcoholRegimes = Set(Beer), rateType = DraughtRelief),
+          baseRateBand.copy(taxType = "2025-2", alcoholRegimes = Set(Beer, Wine)),
+          baseRateBand.copy(taxType = "2025-3", alcoholRegimes = Set(Beer, Wine, Cider)),
+          baseRateBand.copy(taxType = "2025-4", alcoholRegimes = Set(Beer, Wine, Cider, Spirits))
         )
       )
     )

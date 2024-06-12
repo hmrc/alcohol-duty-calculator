@@ -50,12 +50,12 @@ trait AlcoholDutyTestData {
       RateTypeResponse(RateType.Core)
     )
   }
-  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime]       = Arbitrary {
+  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegimeName]   = Arbitrary {
     Gen.oneOf(
-      AlcoholRegime.Beer,
-      AlcoholRegime.Cider,
-      AlcoholRegime.Wine,
-      AlcoholRegime.Spirits
+      AlcoholRegimeName.Beer,
+      AlcoholRegimeName.Cider,
+      AlcoholRegimeName.Wine,
+      AlcoholRegimeName.Spirits
     )
   }
 
@@ -96,7 +96,7 @@ trait AlcoholDutyTestData {
       taxType       <- Gen.alphaStr
       description   <- Gen.alphaStr
       rateType      <- arbitraryRateType.arbitrary
-      alcoholRegime <- Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
+      alcoholRegime <- Gen.containerOf[Set, AlcoholRegimeName](arbitraryAlcoholRegime.arbitrary)
       minABV        <- arbitraryAlcoholByVolume.arbitrary
       maxABV        <- arbitraryAlcoholByVolume.arbitrary
       rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
