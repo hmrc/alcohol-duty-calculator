@@ -20,7 +20,7 @@ import play.api.libs.json.{Format, JsError, JsNumber, JsResult, JsSuccess, JsVal
 
 import scala.util.{Failure, Success, Try}
 
-case class DutyCalculation(pureAlcoholVolume: BigDecimal, duty: BigDecimal)
+case class DutyCalculation(duty: BigDecimal)
 
 object DutyCalculation {
   implicit val formats: OFormat[DutyCalculation] = Json.format[DutyCalculation]
@@ -52,11 +52,17 @@ object Volume {
 }
 
 case class DutyCalculationRequest(
-  abv: AlcoholByVolume,
-  volume: Volume,
-  rate: BigDecimal
+  pureAlcoholVolume: BigDecimal, //changed Volume to BigDecimal
+  rate: BigDecimal,
+  adjustmentType: String
 )
-
+case class AdjustmentDutyCalculationRequest(
+  newDuty: BigDecimal,
+  oldDuty: BigDecimal
+)
 object DutyCalculationRequest {
   implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
+}
+object AdjustmentDutyCalculationRequest {
+  implicit val formats: OFormat[AdjustmentDutyCalculationRequest] = Json.format[AdjustmentDutyCalculationRequest]
 }
