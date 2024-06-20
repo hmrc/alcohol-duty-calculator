@@ -20,7 +20,7 @@ import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegimeName, RateBand, RatePeriod, RateTypeResponse}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 

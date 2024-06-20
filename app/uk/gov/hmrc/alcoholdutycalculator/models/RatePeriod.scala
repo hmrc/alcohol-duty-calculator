@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.models
 
+import enumeratum.{Enum, EnumEntry, PlayEnum}
 import play.api.libs.json._
 
 import java.time.YearMonth
@@ -79,7 +80,25 @@ object AlcoholRegimeName {
   }
 }
 
-case class AlcoholRegime(name: AlcoholRegimeName, abvRanges: Seq[ABVInterval])
+sealed trait ABVRangeName extends EnumEntry
+object ABVRangeName extends Enum[ABVRangeName] with PlayEnum[ABVRangeName] {
+  val values = findValues
+
+  case object Beer extends ABVRangeName
+  case object Cider extends ABVRangeName
+  case object SparklingCider extends ABVRangeName
+  case object Wine extends ABVRangeName
+  case object Spirits extends ABVRangeName
+  case object OtherFermentedProduct extends ABVRangeName
+}
+
+case class ABVRange(name: ABVRangeName, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
+
+object ABVRange {
+  implicit val format: Format[ABVRange] = Json.format[ABVRange]
+}
+
+case class AlcoholRegime(name: AlcoholRegimeName, abvRanges: Seq[ABVRange])
 
 object AlcoholRegime {
   implicit val format: Format[AlcoholRegime] = Json.format[AlcoholRegime]
@@ -107,12 +126,6 @@ object AlcoholByVolume {
 
     override def writes(o: AlcoholByVolume): JsValue = JsNumber(o.value)
   }
-}
-
-case class ABVInterval(name: String, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
-
-object ABVInterval {
-  implicit val format: OFormat[ABVInterval] = Json.format[ABVInterval]
 }
 
 case class RateBand(

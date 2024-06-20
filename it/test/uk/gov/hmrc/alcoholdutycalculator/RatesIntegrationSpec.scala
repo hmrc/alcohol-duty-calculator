@@ -21,7 +21,6 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
 import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegimeName.{Beer, OtherFermentedProduct, Wine}
-import uk.gov.hmrc.alcoholdutycalculator.models.RateType.Core
 import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
 
 import java.time.YearMonth

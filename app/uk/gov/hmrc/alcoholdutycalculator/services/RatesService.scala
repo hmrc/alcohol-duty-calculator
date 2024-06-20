@@ -20,7 +20,7 @@ import play.api.Environment
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegimeName, RateBand, RatePeriod, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegimeName, RateBand, RatePeriod, RateTypeResponse}
 import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 
 import java.time.YearMonth
@@ -36,11 +36,7 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
       .resourceAsStream(appConfig.alcoholDutyRatesFile)
       .fold(throw new Exception("Could not open Alcohol Duty Rate file"))(Source.fromInputStream)
       .mkString
-    val res                     = Json.parse(rateFileContent).as[Seq[RatePeriod]]
-
-    println(res)
-
-    res
+    Json.parse(rateFileContent).as[Seq[RatePeriod]]
   }
 
   def rateBands(

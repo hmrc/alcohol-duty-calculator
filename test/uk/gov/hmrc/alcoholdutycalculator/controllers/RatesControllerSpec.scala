@@ -143,7 +143,7 @@ class RatesControllerSpec extends SpecBase {
         alcoholRegimes: Set[AlcoholRegimeName],
         rateType: RateTypeResponse
       ) =>
-        when(mockRatesService.rateTypes(any(), any(), any())).thenReturn(rateType)
+        when(mockRatesService.rateTypes(any(), any())).thenReturn(rateType)
 
         val urlWithParams =
           s"/rate-type?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&abv=${Json.toJson(abv).toString}" +
@@ -156,7 +156,7 @@ class RatesControllerSpec extends SpecBase {
         status(result)        shouldBe OK
         contentAsJson(result) shouldBe Json.toJson(rateType)
 
-        verify(mockRatesService).rateTypes(ratePeriod, abv, alcoholRegimes)
+        verify(mockRatesService).rateTypes(ratePeriod, alcoholRegimes)
     }
     "return BadRequest" when {
       "'ratePeriod' parameter is missing" in forAll {
@@ -184,34 +184,6 @@ class RatesControllerSpec extends SpecBase {
 
           status(result)        shouldBe BAD_REQUEST
           contentAsString(result) should include("Invalid 'ratePeriod' parameter")
-      }
-      "'abv' parameter is missing" in forAll {
-        (
-          ratePeriod: YearMonth,
-          alcoholRegimes: Set[AlcoholRegimeName]
-        ) =>
-          val urlWithParams =
-            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-
-          val requestWithMissingAbv  = FakeRequest("GET", urlWithParams)
-          val result: Future[Result] = controller.rateType()(requestWithMissingAbv)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Missing or invalid 'abv' parameter")
-      }
-      "'abv' parameter is invalid" in forAll {
-        (
-          ratePeriod: YearMonth,
-          alcoholRegimes: Set[AlcoholRegimeName]
-        ) =>
-          val urlWithParams =
-            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&abv=abcd&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-
-          val requestWithMissingAbv  = FakeRequest("GET", urlWithParams)
-          val result: Future[Result] = controller.rateType()(requestWithMissingAbv)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Invalid 'abv' parameter")
       }
       "'alcoholRegimes' parameter is missing" in forAll {
         (
