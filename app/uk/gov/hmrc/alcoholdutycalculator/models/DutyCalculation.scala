@@ -54,7 +54,7 @@ object Volume {
 case class DutyCalculationRequest(
   pureAlcoholVolume: BigDecimal, //changed Volume to BigDecimal
   rate: BigDecimal,
-  adjustmentType: String
+  adjustmentType: AdjustmentType
 )
 case class AdjustmentDutyCalculationRequest(
   newDuty: BigDecimal,
