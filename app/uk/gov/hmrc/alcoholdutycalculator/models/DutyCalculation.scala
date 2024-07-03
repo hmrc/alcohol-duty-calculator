@@ -52,9 +52,9 @@ object Volume {
 }
 
 case class DutyCalculationRequest(
-  pureAlcoholVolume: BigDecimal, //changed Volume to BigDecimal
-  rate: BigDecimal,
-  adjustmentType: AdjustmentType
+  adjustmentType: AdjustmentType,
+  pureAlcoholVolume: BigDecimal,
+  rate: BigDecimal
 )
 case class AdjustmentDutyCalculationRequest(
   newDuty: BigDecimal,
@@ -65,4 +65,10 @@ object DutyCalculationRequest {
 }
 object AdjustmentDutyCalculationRequest {
   implicit val formats: OFormat[AdjustmentDutyCalculationRequest] = Json.format[AdjustmentDutyCalculationRequest]
+}
+case class AdjustmentTotalCalculationRequest(
+  dutyList: Seq[BigDecimal]
+)
+object AdjustmentTotalCalculationRequest {
+  implicit val formats: OFormat[AdjustmentTotalCalculationRequest] = Json.format[AdjustmentTotalCalculationRequest]
 }

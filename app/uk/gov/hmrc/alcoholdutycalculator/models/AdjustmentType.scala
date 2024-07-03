@@ -15,11 +15,16 @@
  */
 
 package uk.gov.hmrc.alcoholdutycalculator.models
+import enumeratum.{Enum, EnumEntry, PlayEnum}
 import play.api.libs.json._
+import uk.gov.hmrc.alcoholdutycalculator.models.ABVRangeName.findValues
 
-sealed trait AdjustmentType
+sealed trait AdjustmentType extends EnumEntry
 
-object AdjustmentType {
+object AdjustmentType extends Enum[AdjustmentType] with PlayEnum[AdjustmentType] {
+
+  val values = findValues
+
   case object Underdeclaration extends AdjustmentType
 
   case object Overdeclaration extends AdjustmentType
@@ -30,20 +35,4 @@ object AdjustmentType {
 
   case object Drawback extends AdjustmentType
 
-  implicit val format: Format[AdjustmentType] = new Format[AdjustmentType] {
-    override def reads(json: JsValue): JsResult[AdjustmentType] = json.validate[String] match {
-      case JsSuccess(value, _) =>
-        value match {
-          case "under-declaration"                  => JsSuccess(Underdeclaration)
-          case "over-declaration"                 => JsSuccess(Overdeclaration)
-          case "spoilt"                  => JsSuccess(Spoilt)
-          case "repackaged-draught-products"               => JsSuccess(RepackagedDraughtProducts)
-          case "drawback" => JsSuccess(Drawback)
-          case s                       => JsError(s"$s is not a valid AdjustmentType")
-        }
-      case e: JsError          => e
-    }
-
-    override def writes(o: AdjustmentType): JsValue = JsString(o.toString)
-  }
 }

@@ -17,8 +17,8 @@
 package uk.gov.hmrc.alcoholdutycalculator.services
 
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyCalculationRequest, Volume}
-
+import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.{Underdeclaration}
+import uk.gov.hmrc.alcoholdutycalculator.models.DutyCalculationRequest
 class DutyServiceSpec extends SpecBase {
   val dutyService = new DutyService()
 
@@ -27,48 +27,45 @@ class DutyServiceSpec extends SpecBase {
     "calculate pure alcohol volume and duty" in {
       val dutyCalculationRequest =
         DutyCalculationRequest(
-          AlcoholByVolume(1),
-          Volume(2),
-          BigDecimal(3)
+          BigDecimal(0.03),
+          BigDecimal(2),
+          Underdeclaration
         )
 
       val result = dutyService.calculateDuty(dutyCalculationRequest)
-      result.pureAlcoholVolume shouldBe BigDecimal(0.02)
-      result.duty              shouldBe BigDecimal(0.06)
+      result.duty shouldBe BigDecimal(0.06)
     }
 
     "calculate pure alcohol volume and duty with decimal values" in {
       val dutyCalculationRequest =
         DutyCalculationRequest(
-          AlcoholByVolume(10.0),
-          Volume(1.1),
-          BigDecimal(28.0)
+          BigDecimal(2.8),
+          BigDecimal(1.1),
+          Underdeclaration
         )
 
       val result = dutyService.calculateDuty(dutyCalculationRequest)
-      result.pureAlcoholVolume shouldBe BigDecimal(0.11)
-      result.duty              shouldBe BigDecimal(3.08)
+      result.duty shouldBe BigDecimal(3.08)
     }
 
     "calculate pure alcohol volume and duty with negative values" in {
       val dutyCalculationRequest =
         DutyCalculationRequest(
-          AlcoholByVolume(1),
-          Volume(2),
-          BigDecimal(-3)
+          BigDecimal(0.02),
+          BigDecimal(-3),
+          Underdeclaration
         )
 
       val result = dutyService.calculateDuty(dutyCalculationRequest)
-      result.pureAlcoholVolume shouldBe BigDecimal(0.02)
-      result.duty              shouldBe BigDecimal(-0.06)
+      result.duty shouldBe BigDecimal(-0.06)
     }
 
     "calculate duty rounding down to the nearest penny" in {
       val dutyCalculationRequest =
         DutyCalculationRequest(
-          AlcoholByVolume(1),
-          Volume(1.99),
-          BigDecimal(10.99)
+          BigDecimal(0.10),
+          BigDecimal(2.1),
+          Underdeclaration
         )
 
       val result = dutyService.calculateDuty(dutyCalculationRequest)
@@ -78,13 +75,14 @@ class DutyServiceSpec extends SpecBase {
     "calculate duty rounding down to the nearest penny with large decimals" in {
       val dutyCalculationRequest =
         DutyCalculationRequest(
-          AlcoholByVolume(1),
-          Volume(1.9999),
-          BigDecimal(10.999999)
+          BigDecimal(0.105527),
+          BigDecimal(1.9999),
+          Underdeclaration
         )
 
       val result = dutyService.calculateDuty(dutyCalculationRequest)
       result.duty shouldBe BigDecimal(0.21)
     }
+
   }
 }
