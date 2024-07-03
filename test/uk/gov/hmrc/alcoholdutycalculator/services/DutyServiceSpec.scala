@@ -123,5 +123,28 @@ class DutyServiceSpec extends SpecBase {
         )
       )
     }
+
+    "calculate the correct alcohol duty rounded down to two decimals" in {
+      val dutyCalculationRequest = Seq(
+        DutyByTaxType(
+          taxType = "taxType",
+          totalLitres = BigDecimal(1.0),
+          pureAlcohol = BigDecimal(1.01),
+          dutyRate = BigDecimal(0.01)
+        ),
+        DutyByTaxType(
+          taxType = "taxType2",
+          totalLitres = BigDecimal(2.0),
+          pureAlcohol = BigDecimal(2.4),
+          dutyRate = BigDecimal(0.02)
+        )
+      )
+
+      val result = dutyService.calculateTotalDuty(dutyCalculationRequest)
+      result.totalDuty            shouldBe BigDecimal(5.0)
+      result.dutiesByTaxType.size shouldBe 2
+      result.dutiesByTaxType.head.dutyRate shouldBe BigDecimal(0.01)
+      result.dutiesByTaxType.last.dutyDue  shouldBe BigDecimal(0.04)
+    }
   }
 }
