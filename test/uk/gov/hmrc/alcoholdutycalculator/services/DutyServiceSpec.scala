@@ -141,8 +141,8 @@ class DutyServiceSpec extends SpecBase {
       )
 
       val result = dutyService.calculateTotalDuty(dutyCalculationRequest)
-      result.totalDuty            shouldBe BigDecimal(5.0)
-      result.dutiesByTaxType.size shouldBe 2
+      result.totalDuty                     shouldBe BigDecimal(0.05)
+      result.dutiesByTaxType.size          shouldBe 2
       result.dutiesByTaxType.head.dutyRate shouldBe BigDecimal(0.01)
       result.dutiesByTaxType.last.dutyDue  shouldBe BigDecimal(0.04)
     }

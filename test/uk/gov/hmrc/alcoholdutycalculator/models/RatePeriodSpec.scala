@@ -52,24 +52,24 @@ class RatePeriodSpec extends SpecBase {
   "AlcoholRegime" when {
     "writing to json"   should {
       "return the correct string representation" in {
-        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Beer)    shouldBe JsString("Beer")
-        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Cider)   shouldBe JsString("Cider")
-        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Wine)    shouldBe JsString("Wine")
-        Json.toJson[AlcoholRegimeName](AlcoholRegimeName.Spirits) shouldBe JsString("Spirits")
+        Json.toJson[AlcoholRegime](AlcoholRegime.Beer)    shouldBe JsString("Beer")
+        Json.toJson[AlcoholRegime](AlcoholRegime.Cider)   shouldBe JsString("Cider")
+        Json.toJson[AlcoholRegime](AlcoholRegime.Wine)    shouldBe JsString("Wine")
+        Json.toJson[AlcoholRegime](AlcoholRegime.Spirits) shouldBe JsString("Spirits")
       }
     }
     "reading from json" should {
       "translate from the string rep, to the correct case object" in {
-        JsString("Beer").as[AlcoholRegimeName]    shouldBe AlcoholRegimeName.Beer
-        JsString("Cider").as[AlcoholRegimeName]   shouldBe AlcoholRegimeName.Cider
-        JsString("Wine").as[AlcoholRegimeName]    shouldBe AlcoholRegimeName.Wine
-        JsString("Spirits").as[AlcoholRegimeName] shouldBe AlcoholRegimeName.Spirits
+        JsString("Beer").as[AlcoholRegime]    shouldBe AlcoholRegime.Beer
+        JsString("Cider").as[AlcoholRegime]   shouldBe AlcoholRegime.Cider
+        JsString("Wine").as[AlcoholRegime]    shouldBe AlcoholRegime.Wine
+        JsString("Spirits").as[AlcoholRegime] shouldBe AlcoholRegime.Spirits
       }
       "return an exception in response to an unrecognised string" in {
-        JsString("some-other").validate[AlcoholRegimeName] shouldBe JsError("some-other is not a valid AlcoholRegime")
+        JsString("some-other").validate[AlcoholRegime] shouldBe JsError("some-other is not a valid AlcoholRegime")
       }
       "return a JsError when passed a type that is not a string" in {
-        val result = Json.fromJson[AlcoholRegimeName](JsBoolean(true))
+        val result = Json.fromJson[AlcoholRegime](JsBoolean(true))
         result shouldBe a[JsError]
       }
     }
