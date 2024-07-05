@@ -812,7 +812,7 @@
       },
       {
         "taxTypeCode": "377",
-        "description": "Still cider from 3.5% to 8.4% or Sparkling cider from 3.5% to 5.4%, eligible for small producer relief and draught relief",
+        "description": "Still cider from 3.5% to 8.4% or Sparkling cider from 3.5% to 5.5%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
         "rangeDetails": [
           {
@@ -826,7 +826,7 @@
               {
                 "alcoholType": "SparklingCider",
                 "minABV": 3.5,
-                "maxABV": 5.4
+                "maxABV": 5.5
               }
             ]
           }
@@ -851,7 +851,7 @@
       },
       {
         "taxTypeCode": "379",
-        "description": "Other fermented products from 3.5% to 8.4% or Sparkling cider from 5.5% to 8.4%, eligible for small producer relief and draught relief",
+        "description": "Other fermented products from 3.5% to 8.4% or Sparkling cider from 5.6% to 8.4%, eligible for small producer relief and draught relief",
         "rateType": "DraughtAndSmallProducerRelief",
         "rangeDetails": [
           {
@@ -864,7 +864,7 @@
               },
               {
                 "alcoholType": "SparklingCider",
-                "minABV": 5.5,
+                "minABV": 5.6,
                 "maxABV": 8.4
               }
             ]
