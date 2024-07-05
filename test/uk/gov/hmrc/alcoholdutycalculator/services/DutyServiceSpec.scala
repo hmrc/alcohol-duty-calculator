@@ -17,7 +17,7 @@
 package uk.gov.hmrc.alcoholdutycalculator.services
 
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyCalculationRequest, Volume}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyByTaxType, DutyCalculationByTaxTypeResponse, DutyCalculationRequest, Volume}
 
 class DutyServiceSpec extends SpecBase {
   val dutyService = new DutyService()
@@ -85,6 +85,66 @@ class DutyServiceSpec extends SpecBase {
 
       val result = dutyService.calculateDuty(dutyCalculationRequest)
       result.duty shouldBe BigDecimal(0.21)
+    }
+
+    "calculate the correct alcohol duty" in {
+      val dutyCalculationRequest = Seq(
+        DutyByTaxType(
+          taxType = "taxType",
+          totalLitres = BigDecimal(1.0),
+          pureAlcohol = BigDecimal(1.0),
+          dutyRate = BigDecimal(1.0)
+        ),
+        DutyByTaxType(
+          taxType = "taxType2",
+          totalLitres = BigDecimal(2.0),
+          pureAlcohol = BigDecimal(2.0),
+          dutyRate = BigDecimal(2.0)
+        )
+      )
+
+      val result = dutyService.calculateTotalDuty(dutyCalculationRequest)
+      result.totalDuty            shouldBe BigDecimal(5.0)
+      result.dutiesByTaxType.size shouldBe 2
+      result.dutiesByTaxType      shouldBe Seq(
+        DutyCalculationByTaxTypeResponse(
+          taxType = "taxType",
+          totalLitres = BigDecimal(1.0),
+          pureAlcohol = BigDecimal(1.0),
+          dutyRate = BigDecimal(1.0),
+          dutyDue = BigDecimal(1.0)
+        ),
+        DutyCalculationByTaxTypeResponse(
+          taxType = "taxType2",
+          totalLitres = BigDecimal(2.0),
+          pureAlcohol = BigDecimal(2.0),
+          dutyRate = BigDecimal(2.0),
+          dutyDue = BigDecimal(4.0)
+        )
+      )
+    }
+
+    "calculate the correct alcohol duty rounded down to two decimals" in {
+      val dutyCalculationRequest = Seq(
+        DutyByTaxType(
+          taxType = "taxType",
+          totalLitres = BigDecimal(1.0),
+          pureAlcohol = BigDecimal(1.01),
+          dutyRate = BigDecimal(0.01)
+        ),
+        DutyByTaxType(
+          taxType = "taxType2",
+          totalLitres = BigDecimal(2.0),
+          pureAlcohol = BigDecimal(2.4),
+          dutyRate = BigDecimal(0.02)
+        )
+      )
+
+      val result = dutyService.calculateTotalDuty(dutyCalculationRequest)
+      result.totalDuty                     shouldBe BigDecimal(0.05)
+      result.dutiesByTaxType.size          shouldBe 2
+      result.dutiesByTaxType.head.dutyRate shouldBe BigDecimal(0.01)
+      result.dutiesByTaxType.last.dutyDue  shouldBe BigDecimal(0.04)
     }
   }
 }

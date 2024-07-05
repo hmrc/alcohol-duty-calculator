@@ -20,7 +20,7 @@ import play.api.Environment
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateTypeResponse}
 import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
 
 import java.time.YearMonth
@@ -41,8 +41,6 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
 
   def rateBands(
     ratePeriodYearMonth: YearMonth,
-    rateType: RateType,
-    abv: AlcoholByVolume,
     alcoholRegimes: Set[AlcoholRegime]
   ): Seq[RateBand] =
     alcoholDutyRates
@@ -52,12 +50,7 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
       )
       .flatMap { ratePeriod =>
         ratePeriod.rateBands
-          .filter(rb =>
-            rb.rateType == rateType &&
-              rb.minABV.value <= abv.value &&
-              rb.maxABV.value >= abv.value &&
-              rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
-          )
+          .filter(rb => rb.rangeDetails.map(_.alcoholRegime).intersect(alcoholRegimes).nonEmpty)
       }
 
   def taxType(
@@ -70,11 +63,10 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
           rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
       )
       .flatMap(_.rateBands)
-      .find(rb => rb.taxType == taxType)
+      .find(rb => rb.taxTypeCode == taxType)
 
   def rateTypes(
     ratePeriodYearMonth: YearMonth,
-    abv: AlcoholByVolume,
     alcoholRegimes: Set[AlcoholRegime]
   ): RateTypeResponse = {
     val rateTypes     = alcoholDutyRates
@@ -84,11 +76,7 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
       )
       .flatMap { ratePeriod =>
         ratePeriod.rateBands
-          .filter(rb =>
-            rb.minABV.value <= abv.value &&
-              rb.maxABV.value >= abv.value &&
-              rb.alcoholRegime.intersect(alcoholRegimes).nonEmpty
-          )
+          .filter(rb => rb.rangeDetails.map(_.alcoholRegime).intersect(alcoholRegimes).nonEmpty)
           .map(_.rateType)
           .toSet
       }

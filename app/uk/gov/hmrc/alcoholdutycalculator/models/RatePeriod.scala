@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.models
 
+import enumeratum.{Enum, EnumEntry, PlayEnum}
 import play.api.libs.json._
 
 import java.time.YearMonth
@@ -79,6 +80,30 @@ object AlcoholRegime {
   }
 }
 
+sealed trait AlcoholType extends EnumEntry
+object AlcoholType extends Enum[AlcoholType] with PlayEnum[AlcoholType] {
+  val values = findValues
+
+  case object Beer extends AlcoholType
+  case object Cider extends AlcoholType
+  case object SparklingCider extends AlcoholType
+  case object Wine extends AlcoholType
+  case object Spirits extends AlcoholType
+  case object OtherFermentedProduct extends AlcoholType
+}
+
+case class ABVRange(alcoholType: AlcoholType, minABV: AlcoholByVolume, maxABV: AlcoholByVolume)
+
+object ABVRange {
+  implicit val format: Format[ABVRange] = Json.format[ABVRange]
+}
+
+case class RangeDetailsByRegime(alcoholRegime: AlcoholRegime, abvRanges: Seq[ABVRange])
+
+object RangeDetailsByRegime {
+  implicit val format: Format[RangeDetailsByRegime] = Json.format[RangeDetailsByRegime]
+}
+
 case class AlcoholByVolume private (value: BigDecimal) {
   require(value >= 0 && value <= 100, "Percentage must be between 0 and 100")
 }
@@ -104,12 +129,10 @@ object AlcoholByVolume {
 }
 
 case class RateBand(
-  taxType: String,
+  taxTypeCode: String,
   description: String,
   rateType: RateType,
-  alcoholRegime: Set[AlcoholRegime],
-  minABV: AlcoholByVolume,
-  maxABV: AlcoholByVolume,
+  rangeDetails: Set[RangeDetailsByRegime],
   rate: Option[BigDecimal]
 )
 

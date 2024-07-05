@@ -34,7 +34,7 @@ trait AlcoholDutyTestData {
     } yield YearMonth.of(year, month)
   }
 
-  implicit val arbitraryRateType: Arbitrary[RateType]                 = Arbitrary {
+  implicit val arbitraryRateType: Arbitrary[RateType] = Arbitrary {
     Gen.oneOf(
       RateType.Core,
       RateType.DraughtRelief,
@@ -42,6 +42,7 @@ trait AlcoholDutyTestData {
       RateType.DraughtAndSmallProducerRelief
     )
   }
+
   implicit val arbitraryRateTypeResponse: Arbitrary[RateTypeResponse] = Arbitrary {
     Gen.oneOf(
       RateTypeResponse(RateType.DraughtRelief),
@@ -50,7 +51,8 @@ trait AlcoholDutyTestData {
       RateTypeResponse(RateType.Core)
     )
   }
-  implicit val arbitraryAlcoholRegime: Arbitrary[AlcoholRegime]       = Arbitrary {
+
+  implicit val arbitraryAlcoholRegimeName: Arbitrary[AlcoholRegime] = Arbitrary {
     Gen.oneOf(
       AlcoholRegime.Beer,
       AlcoholRegime.Cider,
@@ -91,16 +93,34 @@ trait AlcoholDutyTestData {
   implicit val chooseBigDecimal: Choose[BigDecimal] =
     Choose.xmap[Double, BigDecimal](d => BigDecimal(d), bd => bd.toDouble)(implicitly[Choose[Double]])
 
+  implicit val arbitraryABVRangeName: Arbitrary[AlcoholType] = Arbitrary {
+    Gen.oneOf(
+      AlcoholType.Beer,
+      AlcoholType.Cider,
+      AlcoholType.SparklingCider,
+      AlcoholType.Wine,
+      AlcoholType.Spirits,
+      AlcoholType.OtherFermentedProduct
+    )
+  }
+
   implicit val arbitraryRateBand: Arbitrary[RateBand] = Arbitrary {
     for {
       taxType       <- Gen.alphaStr
       description   <- Gen.alphaStr
       rateType      <- arbitraryRateType.arbitrary
-      alcoholRegime <- Gen.containerOf[Set, AlcoholRegime](arbitraryAlcoholRegime.arbitrary)
-      minABV        <- arbitraryAlcoholByVolume.arbitrary
-      maxABV        <- arbitraryAlcoholByVolume.arbitrary
+      name          <- arbitraryAlcoholRegimeName.arbitrary
+      alcoholRegime <- Gen
+                         .nonEmptyListOf(
+                           for {
+                             name   <- arbitraryABVRangeName.arbitrary
+                             minABV <- arbitraryAlcoholByVolume.arbitrary
+                             maxABV <- arbitraryAlcoholByVolume.arbitrary
+                           } yield ABVRange(name, minABV, maxABV)
+                         )
+                         .map(ranges => RangeDetailsByRegime(name, ranges))
       rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
-    } yield RateBand(taxType, description, rateType, alcoholRegime, minABV, maxABV, rate)
+    } yield RateBand(taxType, description, rateType, Set(alcoholRegime), rate)
   }
 
   implicit val arbitraryListRateBand: Arbitrary[Seq[RateBand]] = Arbitrary {

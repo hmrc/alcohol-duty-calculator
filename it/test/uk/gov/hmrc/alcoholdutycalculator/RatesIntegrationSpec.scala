@@ -21,7 +21,6 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
 import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, OtherFermentedProduct, Wine}
-import uk.gov.hmrc.alcoholdutycalculator.models.RateType.Core
 import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 
 import java.time.YearMonth
@@ -33,9 +32,7 @@ class RatesIntegrationSpec extends ISpecBase {
       stubAuthorised()
 
       val urlParams =
-        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
-          .toJson[RateType](Core)
-          .toString}&abv=${Json.toJson(3).toString}&alcoholRegimes=${Json
+        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=${Json
           .toJson(Set(Json.toJson[AlcoholRegime](Beer), Json.toJson[AlcoholRegime](Wine), Json.toJson[AlcoholRegime](OtherFermentedProduct)))
           .toString()}"
 
@@ -44,7 +41,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
       status(result) shouldBe OK
       val rateBandList = Json.parse(contentAsString(result)).as[Seq[RateBand]]
-      rateBandList should have size 3
+      rateBandList should have size 30
     }
   }
 

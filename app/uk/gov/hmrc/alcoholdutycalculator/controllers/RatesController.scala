@@ -20,7 +20,7 @@ import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateTypeResponse}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -40,14 +40,12 @@ class RatesController @Inject() (
 
       val result: Either[String, Seq[RateBand]] = for {
         ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        rateType       <- extractParam[RateType]("rateType", queryParams, RateType.format)
-        abv            <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format)
         alcoholRegimes <- extractParam[Set[AlcoholRegime]](
                             "alcoholRegimes",
                             queryParams,
                             Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
                           )
-      } yield ratesService.rateBands(ratePeriod, rateType, abv, alcoholRegimes)
+      } yield ratesService.rateBands(ratePeriod, alcoholRegimes)
 
       result.fold(
         error => BadRequest(error),
@@ -60,13 +58,12 @@ class RatesController @Inject() (
       val queryParams                              = request.queryString
       val result: Either[String, RateTypeResponse] = for {
         ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        abv            <- extractParam[AlcoholByVolume]("abv", queryParams, AlcoholByVolume.format)
         alcoholRegimes <- extractParam[Set[AlcoholRegime]](
                             "alcoholRegimes",
                             queryParams,
                             Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
                           )
-      } yield ratesService.rateTypes(ratePeriod, abv, alcoholRegimes)
+      } yield ratesService.rateTypes(ratePeriod, alcoholRegimes)
 
       result.fold(
         error => BadRequest(error),

@@ -23,7 +23,7 @@ import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, Cider, Spirits, Wine}
 import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, RateBand, RatePeriod}
+import uk.gov.hmrc.alcoholdutycalculator.models.{ABVRange, AlcoholByVolume, AlcoholRegime, AlcoholType, RangeDetailsByRegime, RateBand, RatePeriod}
 
 import java.io.ByteArrayInputStream
 import java.time.YearMonth
@@ -48,18 +48,26 @@ class RatesServiceSpec extends SpecBase {
               "rateBands"         -> JsArray(
                 Seq(
                   Json.obj(
-                    "taxType"       -> "301",
-                    "description"   -> "Low Alcohol - not exc 1.2%",
-                    "rateType"      -> "Core",
-                    "alcoholRegime" -> Seq(
-                      "Beer",
-                      "Wine",
-                      "Cider",
-                      "Spirits"
-                    ),
-                    "minABV"        -> 3,
-                    "maxABV"        -> 9.9,
-                    "rate"          -> 100.99
+                    "taxTypeCode"  -> "301",
+                    "description"  -> "Low Alcohol - not exc 1.2%",
+                    "rateType"     -> "Core",
+                    "rate"         -> 100.99,
+                    "rangeDetails" -> JsArray(
+                      Seq(
+                        Json.obj(
+                          "alcoholRegime" -> AlcoholRegime.Beer.toString,
+                          "abvRanges"     -> JsArray(
+                            Seq(
+                              Json.obj(
+                                "alcoholType" -> AlcoholType.Beer.toString,
+                                "minABV"      -> 3,
+                                "maxABV"      -> 9.9
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
                   )
                 )
               )
@@ -84,9 +92,18 @@ class RatesServiceSpec extends SpecBase {
               "301",
               "Low Alcohol - not exc 1.2%",
               Core,
-              Set(Beer, Wine, Cider, Spirits),
-              AlcoholByVolume(3),
-              AlcoholByVolume(9.9),
+              Set(
+                RangeDetailsByRegime(
+                  alcoholRegime = Beer,
+                  Seq(
+                    ABVRange(
+                      alcoholType = AlcoholType.Beer,
+                      minABV = AlcoholByVolume(3),
+                      maxABV = AlcoholByVolume(9.9)
+                    )
+                  )
+                )
+              ),
               Some(BigDecimal(100.99))
             )
           )
@@ -115,9 +132,18 @@ class RatesServiceSpec extends SpecBase {
       "taxTypeBase",
       "descriptionBase",
       Core,
-      Set(Beer),
-      AlcoholByVolume(3),
-      AlcoholByVolume(9.9),
+      Set(
+        RangeDetailsByRegime(
+          alcoholRegime = Beer,
+          Seq(
+            ABVRange(
+              alcoholType = AlcoholType.Beer,
+              maxABV = AlcoholByVolume(3),
+              minABV = AlcoholByVolume(9.9)
+            )
+          )
+        )
+      ),
       Some(BigDecimal(100.99))
     )
 
@@ -135,10 +161,50 @@ class RatesServiceSpec extends SpecBase {
         validityStartDate = YearMonth.of(2023, 1),
         validityEndDate = Some(YearMonth.of(2024, 1)),
         rateBands = List(
-          baseRateBand.copy(taxType = "2023-1", minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5)),
-          baseRateBand.copy(taxType = "2023-2", minABV = AlcoholByVolume(5.1), maxABV = AlcoholByVolume(7)),
-          baseRateBand.copy(taxType = "2023-3", minABV = AlcoholByVolume(7.1), maxABV = AlcoholByVolume(9)),
-          baseRateBand.copy(taxType = "2023-4", minABV = AlcoholByVolume(8), maxABV = AlcoholByVolume(18))
+          baseRateBand.copy(
+            taxTypeCode = "2023-1",
+            rangeDetails = Set(
+              RangeDetailsByRegime(
+                alcoholRegime = Beer,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Beer, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              )
+            )
+          ),
+          baseRateBand.copy(
+            taxTypeCode = "2023-2",
+            rangeDetails = Set(
+              RangeDetailsByRegime(
+                alcoholRegime = Beer,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Beer, minABV = AlcoholByVolume(5.1), maxABV = AlcoholByVolume(7))
+                )
+              )
+            )
+          ),
+          baseRateBand.copy(
+            taxTypeCode = "2023-3",
+            rangeDetails = Set(
+              RangeDetailsByRegime(
+                alcoholRegime = Beer,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Beer, minABV = AlcoholByVolume(7.1), maxABV = AlcoholByVolume(9))
+                )
+              )
+            )
+          ),
+          baseRateBand.copy(
+            taxTypeCode = "2023-4",
+            rangeDetails = Set(
+              RangeDetailsByRegime(
+                alcoholRegime = Beer,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Beer, minABV = AlcoholByVolume(8), maxABV = AlcoholByVolume(18))
+                )
+              )
+            )
+          )
         )
       ),
       baseRatePeriod.copy(
@@ -146,10 +212,10 @@ class RatesServiceSpec extends SpecBase {
         validityStartDate = YearMonth.of(2024, 1),
         validityEndDate = Some(YearMonth.of(2025, 1)),
         rateBands = List(
-          baseRateBand.copy(taxType = "2024-1"),
-          baseRateBand.copy(taxType = "2024-2", rateType = SmallProducerRelief),
-          baseRateBand.copy(taxType = "2024-3", rateType = DraughtRelief),
-          baseRateBand.copy(taxType = "2024-4", rateType = DraughtAndSmallProducerRelief)
+          baseRateBand.copy(taxTypeCode = "2024-1"),
+          baseRateBand.copy(taxTypeCode = "2024-2", rateType = SmallProducerRelief),
+          baseRateBand.copy(taxTypeCode = "2024-3", rateType = DraughtRelief),
+          baseRateBand.copy(taxTypeCode = "2024-4", rateType = DraughtAndSmallProducerRelief)
         )
       ),
       baseRatePeriod.copy(
@@ -157,10 +223,87 @@ class RatesServiceSpec extends SpecBase {
         validityStartDate = YearMonth.of(2025, 1),
         validityEndDate = None,
         rateBands = List(
-          baseRateBand.copy(taxType = "2025-1", alcoholRegime = Set(Beer), rateType = DraughtRelief),
-          baseRateBand.copy(taxType = "2025-2", alcoholRegime = Set(Beer, Wine)),
-          baseRateBand.copy(taxType = "2025-3", alcoholRegime = Set(Beer, Wine, Cider)),
-          baseRateBand.copy(taxType = "2025-4", alcoholRegime = Set(Beer, Wine, Cider, Spirits))
+          baseRateBand.copy(
+            taxTypeCode = "2025-1",
+            rangeDetails = Set(
+              RangeDetailsByRegime(
+                alcoholRegime = Beer,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Beer, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              )
+            ),
+            rateType = DraughtRelief
+          ),
+          baseRateBand.copy(
+            taxTypeCode = "2025-2",
+            rangeDetails = Set(
+              RangeDetailsByRegime(
+                alcoholRegime = Beer,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Beer, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              ),
+              RangeDetailsByRegime(
+                alcoholRegime = Wine,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Wine, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              )
+            )
+          ),
+          baseRateBand.copy(
+            taxTypeCode = "2025-3",
+            rangeDetails = Set(
+              RangeDetailsByRegime(
+                alcoholRegime = Beer,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Beer, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              ),
+              RangeDetailsByRegime(
+                alcoholRegime = Wine,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Wine, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              ),
+              RangeDetailsByRegime(
+                alcoholRegime = Cider,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Cider, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              )
+            )
+          ),
+          baseRateBand.copy(
+            taxTypeCode = "2025-4",
+            rangeDetails = Set(
+              RangeDetailsByRegime(
+                alcoholRegime = Beer,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Beer, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              ),
+              RangeDetailsByRegime(
+                alcoholRegime = Wine,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Wine, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              ),
+              RangeDetailsByRegime(
+                alcoholRegime = Cider,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Cider, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              ),
+              RangeDetailsByRegime(
+                alcoholRegime = Spirits,
+                abvRanges = Seq(
+                  ABVRange(alcoholType = AlcoholType.Spirits, minABV = AlcoholByVolume(0), maxABV = AlcoholByVolume(5))
+                )
+              )
+            )
+          )
         )
       )
     )
@@ -176,121 +319,39 @@ class RatesServiceSpec extends SpecBase {
       val service = new RatesService(mockEnv, mockConfig)
 
       service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2023, 1), Set(Beer))
         .head
-        .taxType shouldBe "2023-1"
+        .taxTypeCode shouldBe "2023-1"
 
       service
-        .rateBands(YearMonth.of(2023, 12), Core, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2023, 12), Set(Beer))
         .head
-        .taxType shouldBe "2023-1"
+        .taxTypeCode shouldBe "2023-1"
 
       service
-        .rateBands(YearMonth.of(2024, 1), Core, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2024, 1), Set(Beer))
         .head
-        .taxType shouldBe "2024-1"
+        .taxTypeCode shouldBe "2024-1"
 
       service
-        .rateBands(YearMonth.of(2024, 12), Core, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2024, 12), Set(Beer))
         .head
-        .taxType shouldBe "2024-1"
+        .taxTypeCode shouldBe "2024-1"
 
       service
-        .rateBands(YearMonth.of(2025, 1), DraughtRelief, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2025, 1), Set(Beer))
         .head
-        .taxType shouldBe "2025-1"
+        .taxTypeCode shouldBe "2025-1"
 
       service
-        .rateBands(YearMonth.of(2025, 12), DraughtRelief, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2025, 12), Set(Beer))
         .head
-        .taxType shouldBe "2025-1"
+        .taxTypeCode shouldBe "2025-1"
 
       service
-        .rateBands(YearMonth.of(2030, 6), DraughtRelief, AlcoholByVolume(5), Set(Beer))
+        .rateBands(YearMonth.of(2030, 6), Set(Beer))
         .head
-        .taxType shouldBe "2025-1"
-    }
-
-    "filter rateBands by abv" in {
-
-      val mockEnv    = mock[Environment]
-      val mockConfig = mock[AppConfig]
-      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
-
-      val rateFileContent = Json.toJson(ratePeriods).toString()
-      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
-
-      val service = new RatesService(mockEnv, mockConfig)
-
-      service
-        .rateBands(
-          YearMonth.of(2023, 1),
-          Core,
-          AlcoholByVolume(5),
-          Set(Beer)
-        ) should have size 1
-
-      service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(0), Set(Beer))
-        .head
-        .taxType shouldBe "2023-1"
-
-      service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(5), Set(Beer))
-        .head
-        .taxType shouldBe "2023-1"
-
-      service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(5.1), Set(Beer))
-        .head
-        .taxType shouldBe "2023-2"
-
-      service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(7), Set(Beer))
-        .head
-        .taxType shouldBe "2023-2"
-
-      service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(8), Set(Beer)) should have size 2
-
-      service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(9), Set(Beer)) should have size 2
-
-      service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(18), Set(Beer)) should have size 1
-
-      service
-        .rateBands(YearMonth.of(2023, 1), Core, AlcoholByVolume(18.1), Set(Beer)) should have size 0
-    }
-
-    "filter rateBands by rateType" in {
-
-      val mockEnv    = mock[Environment]
-      val mockConfig = mock[AppConfig]
-      when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
-
-      val rateFileContent = Json.toJson(ratePeriods).toString()
-      when(mockEnv.resourceAsStream(any())).thenReturn(Some(new ByteArrayInputStream(rateFileContent.getBytes)))
-
-      val service = new RatesService(mockEnv, mockConfig)
-
-      service
-        .rateBands(
-          YearMonth.of(2024, 1),
-          SmallProducerRelief,
-          AlcoholByVolume(5),
-          Set(Beer)
-        ) should have size 1
-
-      service
-        .rateBands(YearMonth.of(2024, 1), SmallProducerRelief, AlcoholByVolume(5), Set(Beer))
-        .head
-        .taxType shouldBe "2024-2"
-
-      service
-        .rateBands(YearMonth.of(2024, 1), SmallProducerRelief, AlcoholByVolume(5), Set(Beer))
-        .head
-        .rateType shouldBe SmallProducerRelief
+        .taxTypeCode shouldBe "2025-1"
     }
 
     "filter rateBands by alcohol regimes" in {
@@ -306,47 +367,37 @@ class RatesServiceSpec extends SpecBase {
       service
         .rateBands(
           YearMonth.of(2025, 1),
-          Core,
-          AlcoholByVolume(5),
           Set(Spirits)
         ) should have size 1
 
       service
-        .rateBands(YearMonth.of(2025, 1), Core, AlcoholByVolume(5), Set(Spirits))
+        .rateBands(YearMonth.of(2025, 1), Set(Spirits))
         .head
-        .taxType shouldBe "2025-4"
+        .taxTypeCode shouldBe "2025-4"
 
       service
         .rateBands(
           YearMonth.of(2025, 1),
-          Core,
-          AlcoholByVolume(5),
           Set(Beer)
-        ) should have size 3
+        ) should have size 4
 
       service
         .rateBands(
           YearMonth.of(2025, 1),
-          Core,
-          AlcoholByVolume(5),
           Set(Wine)
         ) should have size 3
 
       service
         .rateBands(
           YearMonth.of(2025, 1),
-          Core,
-          AlcoholByVolume(5),
           Set(Wine, Cider, Spirits)
         ) should have size 3
 
       service
         .rateBands(
           YearMonth.of(2025, 1),
-          Core,
-          AlcoholByVolume(5),
           Set(Beer, Wine, Cider, Spirits)
-        ) should have size 3
+        ) should have size 4
     }
 
     "filter rateBands by year for the rateType request" in {
@@ -361,31 +412,31 @@ class RatesServiceSpec extends SpecBase {
       val service = new RatesService(mockEnv, mockConfig)
 
       service
-        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 1), Set(Beer))
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2023, 12), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 12), Set(Beer))
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2024, 1), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2024, 1), Set(Beer))
         .rateType shouldBe DraughtAndSmallProducerRelief
 
       service
-        .rateTypes(YearMonth.of(2024, 12), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2024, 12), Set(Beer))
         .rateType shouldBe DraughtAndSmallProducerRelief
 
       service
-        .rateTypes(YearMonth.of(2025, 1), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2025, 1), Set(Beer))
         .rateType shouldBe DraughtRelief
 
       service
-        .rateTypes(YearMonth.of(2025, 12), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2025, 12), Set(Beer))
         .rateType shouldBe DraughtRelief
 
       service
-        .rateTypes(YearMonth.of(2030, 6), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2030, 6), Set(Beer))
         .rateType shouldBe DraughtRelief
     }
 
@@ -403,41 +454,40 @@ class RatesServiceSpec extends SpecBase {
       service
         .rateTypes(
           YearMonth.of(2023, 1),
-          AlcoholByVolume(5),
           Set(Beer)
         )
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(0), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 1), Set(Beer))
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2024, 1), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2024, 1), Set(Beer))
         .rateType shouldBe DraughtAndSmallProducerRelief
 
       service
-        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(5.1), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 1), Set(Beer))
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2025, 1), AlcoholByVolume(7), Set(Beer))
+        .rateTypes(YearMonth.of(2025, 1), Set(Beer))
         .rateType shouldBe DraughtRelief
 
       service
-        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(8), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 1), Set(Beer))
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(9), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 1), Set(Beer))
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(18), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 1), Set(Beer))
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(18.1), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 1), Set(Beer))
         .rateType shouldBe Core
     }
 
@@ -455,17 +505,16 @@ class RatesServiceSpec extends SpecBase {
       service
         .rateTypes(
           YearMonth.of(2024, 1),
-          AlcoholByVolume(5),
           Set(Beer)
         )
         .rateType shouldBe DraughtAndSmallProducerRelief
 
       service
-        .rateTypes(YearMonth.of(2025, 1), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2025, 1), Set(Beer))
         .rateType shouldBe DraughtRelief
 
       service
-        .rateTypes(YearMonth.of(2023, 1), AlcoholByVolume(5), Set(Beer))
+        .rateTypes(YearMonth.of(2023, 1), Set(Beer))
         .rateType shouldBe Core
     }
 
@@ -482,19 +531,17 @@ class RatesServiceSpec extends SpecBase {
       service
         .rateTypes(
           YearMonth.of(2025, 1),
-          AlcoholByVolume(5),
           Set(Spirits)
         )
         .rateType shouldBe Core
 
       service
-        .rateTypes(YearMonth.of(2025, 1), AlcoholByVolume(5), Set(Spirits))
+        .rateTypes(YearMonth.of(2025, 1), Set(Spirits))
         .rateType shouldBe Core
 
       service
         .rateTypes(
           YearMonth.of(2025, 1),
-          AlcoholByVolume(5),
           Set(Beer)
         )
         .rateType shouldBe DraughtRelief
@@ -502,7 +549,6 @@ class RatesServiceSpec extends SpecBase {
       service
         .rateTypes(
           YearMonth.of(2025, 1),
-          AlcoholByVolume(5),
           Set(Wine)
         )
         .rateType shouldBe Core
@@ -510,7 +556,6 @@ class RatesServiceSpec extends SpecBase {
       service
         .rateTypes(
           YearMonth.of(2025, 1),
-          AlcoholByVolume(5),
           Set(Wine, Cider, Spirits)
         )
         .rateType shouldBe Core
@@ -518,7 +563,6 @@ class RatesServiceSpec extends SpecBase {
       service
         .rateTypes(
           YearMonth.of(2025, 1),
-          AlcoholByVolume(5),
           Set(Beer, Wine, Cider, Spirits)
         )
         .rateType shouldBe DraughtRelief
