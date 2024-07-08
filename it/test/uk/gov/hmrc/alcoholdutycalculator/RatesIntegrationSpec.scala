@@ -20,8 +20,8 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
-import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegimeName.{Beer, OtherFermentedProduct, Wine}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegimeName, RateBand, RatePeriod, RateType, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, OtherFermentedProduct, Wine}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
 
 import java.time.YearMonth
 
@@ -33,7 +33,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
       val urlParams =
         s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=${Json
-          .toJson(Set(Json.toJson[AlcoholRegimeName](Beer), Json.toJson[AlcoholRegimeName](Wine), Json.toJson[AlcoholRegimeName](OtherFermentedProduct)))
+          .toJson(Set(Json.toJson[AlcoholRegime](Beer), Json.toJson[AlcoholRegime](Wine), Json.toJson[AlcoholRegime](OtherFermentedProduct)))
           .toString()}"
 
       lazy val result =

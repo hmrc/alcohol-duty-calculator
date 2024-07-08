@@ -21,22 +21,51 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.Underdeclaration
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyCalculation, DutyCalculationRequest, Volume}
+import uk.gov.hmrc.alcoholdutycalculator.models._
 
 class DutyCalculationIntegrationSpec extends ISpecBase {
-  /*
+
   "service duty calculation endpoint" should {
     "respond with 200 status" in {
       stubAuthorised()
 
       lazy val result = callRoute(
         FakeRequest("POST", routes.DutyCalculationController.calculateDuty().url)
-          .withBody(Json.toJson(DutyCalculationRequest(BigDecimal(1), BigDecimal(1), Underdeclaration)))
+          .withBody(Json.toJson(DutyCalculationRequest(Underdeclaration, BigDecimal(1), BigDecimal(1))))
       )
 
       status(result) shouldBe OK
       val dutyCalculation = Json.parse(contentAsString(result)).as[DutyCalculation]
-      dutyCalculation.duty shouldBe BigDecimal(0.01)
+      dutyCalculation.duty shouldBe BigDecimal(1)
     }
-  }*/
+  }
+
+  "service total duties calculation endpoint" should {
+    "respond with 200 status" in {
+      stubAuthorised()
+
+      lazy val result = callRoute(
+        FakeRequest("POST", routes.DutyCalculationController.calculateTotalDuty().url)
+          .withBody(
+            Json.toJson(
+              DutyTotalCalculationRequest(
+                Seq(
+                  DutyByTaxType("taxType", BigDecimal(1), BigDecimal(1), BigDecimal(1)),
+                  DutyByTaxType("taxType2", BigDecimal(2), BigDecimal(2), BigDecimal(2))
+                )
+              )
+            )
+          )
+      )
+
+      status(result) shouldBe OK
+      val dutyCalculation = Json.parse(contentAsString(result)).as[DutyTotalCalculationResponse]
+      dutyCalculation.totalDuty            shouldBe BigDecimal(5.0)
+      dutyCalculation.dutiesByTaxType.size shouldBe 2
+      dutyCalculation.dutiesByTaxType      shouldBe Seq(
+        DutyCalculationByTaxTypeResponse("taxType", BigDecimal(1), BigDecimal(1), BigDecimal(1), BigDecimal(1.0)),
+        DutyCalculationByTaxTypeResponse("taxType2", BigDecimal(2), BigDecimal(2), BigDecimal(2), BigDecimal(4.0))
+      )
+    }
+  }
 }

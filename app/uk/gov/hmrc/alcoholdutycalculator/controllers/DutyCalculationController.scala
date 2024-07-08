@@ -20,7 +20,8 @@ import play.api.Logging
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, DutyCalculationRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.{DutyCalculationRequest, DutyTotalCalculationRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest}
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -57,6 +58,16 @@ class DutyCalculationController @Inject() (
   def calculateAdjustmentTotal(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
     request.body.validate[AdjustmentTotalCalculationRequest] match {
       case JsSuccess(value, _) => Future.successful(Ok(Json.toJson(dutyService.calculateAdjustmentTotal(value))))
+      case JsError(e)          =>
+        logger.error("Invalid JSON: " + e)
+        Future.successful(BadRequest("Invalid JSON"))
+    }
+  }
+
+  def calculateTotalDuty(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
+    request.body.validate[DutyTotalCalculationRequest] match {
+      case JsSuccess(value, _) =>
+        Future.successful(Ok(Json.toJson(dutyService.calculateTotalDuty(value.dutiesByTaxType))))
       case JsError(e)          =>
         logger.error("Invalid JSON: " + e)
         Future.successful(BadRequest("Invalid JSON"))

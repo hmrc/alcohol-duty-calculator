@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.models
 import enumeratum.{Enum, EnumEntry, PlayEnum}
-import play.api.libs.json._
-import uk.gov.hmrc.alcoholdutycalculator.models.ABVRangeName.findValues
 
 sealed trait AdjustmentType extends EnumEntry
 

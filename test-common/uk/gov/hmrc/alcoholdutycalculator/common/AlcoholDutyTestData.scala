@@ -52,12 +52,12 @@ trait AlcoholDutyTestData {
     )
   }
 
-  implicit val arbitraryAlcoholRegimeName: Arbitrary[AlcoholRegimeName] = Arbitrary {
+  implicit val arbitraryAlcoholRegimeName: Arbitrary[AlcoholRegime] = Arbitrary {
     Gen.oneOf(
-      AlcoholRegimeName.Beer,
-      AlcoholRegimeName.Cider,
-      AlcoholRegimeName.Wine,
-      AlcoholRegimeName.Spirits
+      AlcoholRegime.Beer,
+      AlcoholRegime.Cider,
+      AlcoholRegime.Wine,
+      AlcoholRegime.Spirits
     )
   }
 
@@ -93,14 +93,14 @@ trait AlcoholDutyTestData {
   implicit val chooseBigDecimal: Choose[BigDecimal] =
     Choose.xmap[Double, BigDecimal](d => BigDecimal(d), bd => bd.toDouble)(implicitly[Choose[Double]])
 
-  implicit val arbitraryABVRangeName: Arbitrary[ABVRangeName] = Arbitrary {
+  implicit val arbitraryABVRangeName: Arbitrary[AlcoholType] = Arbitrary {
     Gen.oneOf(
-      ABVRangeName.Beer,
-      ABVRangeName.Cider,
-      ABVRangeName.SparklingCider,
-      ABVRangeName.Wine,
-      ABVRangeName.Spirits,
-      ABVRangeName.OtherFermentedProduct
+      AlcoholType.Beer,
+      AlcoholType.Cider,
+      AlcoholType.SparklingCider,
+      AlcoholType.Wine,
+      AlcoholType.Spirits,
+      AlcoholType.OtherFermentedProduct
     )
   }
 
@@ -118,7 +118,7 @@ trait AlcoholDutyTestData {
                              maxABV <- arbitraryAlcoholByVolume.arbitrary
                            } yield ABVRange(name, minABV, maxABV)
                          )
-                         .map(ranges => AlcoholRegime(name, ranges))
+                         .map(ranges => RangeDetailsByRegime(name, ranges))
       rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
     } yield RateBand(taxType, description, rateType, Set(alcoholRegime), rate)
   }

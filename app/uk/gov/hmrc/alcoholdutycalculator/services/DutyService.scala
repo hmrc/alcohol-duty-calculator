@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.services
 
+import uk.gov.hmrc.alcoholdutycalculator.models._
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.{RepackagedDraughtProducts, Underdeclaration}
 import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AdjustmentType, DutyCalculation, DutyCalculationRequest}
 
@@ -29,6 +30,21 @@ class DutyService @Inject() (implicit val ec: ExecutionContext) {
       (dutyCalculationRequest.pureAlcoholVolume * dutyCalculationRequest.rate).setScale(2, BigDecimal.RoundingMode.DOWN)
     val signedDuty = checkDutyValue(duty, dutyCalculationRequest.adjustmentType)
     DutyCalculation(signedDuty)
+  }
+
+  def calculateTotalDuty(dutyRates: Seq[DutyByTaxType]): DutyTotalCalculationResponse = {
+    val totalsByTaxType = dutyRates.map(dutyRate =>
+      DutyCalculationByTaxTypeResponse(
+        taxType = dutyRate.taxType,
+        totalLitres = dutyRate.totalLitres,
+        pureAlcohol = dutyRate.pureAlcohol,
+        dutyRate = dutyRate.dutyRate,
+        dutyDue = (dutyRate.dutyRate * dutyRate.pureAlcohol).setScale(2, BigDecimal.RoundingMode.DOWN)
+      )
+    )
+
+    val total = totalsByTaxType.map(_.dutyDue).sum
+    DutyTotalCalculationResponse(totalDuty = total, dutiesByTaxType = totalsByTaxType)
   }
 
   def calculateAdjustmentDuty(adjustmentDutyCalculationRequest: AdjustmentDutyCalculationRequest): DutyCalculation =
