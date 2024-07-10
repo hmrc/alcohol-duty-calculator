@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.Spoilt
-import uk.gov.hmrc.alcoholdutycalculator.models.{DutyByTaxType, DutyCalculation, DutyCalculationByTaxTypeResponse, DutyCalculationRequest, DutyTotalCalculationRequest, DutyTotalCalculationResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, DutyByTaxType, DutyCalculation, DutyCalculationByTaxTypeResponse, DutyTotalCalculationRequest, DutyTotalCalculationResponse}
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 
 class DutyCalculationControllerSpec extends SpecBase {
@@ -38,7 +38,7 @@ class DutyCalculationControllerSpec extends SpecBase {
     cc
   )
 
-  val dutyCalculationRequest = DutyCalculationRequest(
+  val dutyCalculationRequest = AdjustmentDutyCalculationRequest(
     Spoilt,
     pureAlcoholVolume = BigDecimal(1.0),
     rate = BigDecimal(1.0)

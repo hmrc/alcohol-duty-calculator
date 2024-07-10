@@ -1,10 +1,8 @@
 # microservice specific routes
 
 GET        /rates                           uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rates()
-GET        /rate-type                       uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rateType()
-GET        /rate-band                        uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rateBand()
 POST       /calculate-total-duty            uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateTotalDuty()
 GET        /rate-band                       uk.gov.hmrc.alcoholdutycalculator.controllers.RatesController.rateBand()
-POST       /calculate-duty                  uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateDuty()
-POST       /calculate-adjustment-duty       uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateAdjustmentDuty()
-POST       /calculate-adjustment-total       uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateAdjustmentTotal()
+POST       /calculate-adjustment-duty                  uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateAdjustmentDuty()
+POST       /calculate-repackaged-duty-change       uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateRepackagedDutyChange()
+POST       /calculate-total-adjustment                uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateTotalAdjustment()

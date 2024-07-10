@@ -18,17 +18,18 @@ package uk.gov.hmrc.alcoholdutycalculator.services
 
 import uk.gov.hmrc.alcoholdutycalculator.models._
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.{RepackagedDraughtProducts, Underdeclaration}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, AdjustmentType, DutyCalculation, DutyCalculationRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentTotalCalculationRequest, AdjustmentType, DutyCalculation, RepackagedDutyChangeRequest}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
 class DutyService @Inject() (implicit val ec: ExecutionContext) {
-  def calculateDuty(dutyCalculationRequest: DutyCalculationRequest): DutyCalculation = {
+  def calculateDuty(adjustmentDutyCalculationRequest: AdjustmentDutyCalculationRequest): DutyCalculation = {
     val duty       =
-      (dutyCalculationRequest.pureAlcoholVolume * dutyCalculationRequest.rate).setScale(2, BigDecimal.RoundingMode.DOWN)
-    val signedDuty = checkDutyValue(duty, dutyCalculationRequest.adjustmentType)
+      (adjustmentDutyCalculationRequest.pureAlcoholVolume * adjustmentDutyCalculationRequest.rate)
+        .setScale(2, BigDecimal.RoundingMode.DOWN)
+    val signedDuty = checkDutyValue(duty, adjustmentDutyCalculationRequest.adjustmentType)
     DutyCalculation(signedDuty)
   }
 
@@ -47,15 +48,19 @@ class DutyService @Inject() (implicit val ec: ExecutionContext) {
     DutyTotalCalculationResponse(totalDuty = total, dutiesByTaxType = totalsByTaxType)
   }
 
-  def calculateAdjustmentDuty(adjustmentDutyCalculationRequest: AdjustmentDutyCalculationRequest): DutyCalculation =
-    DutyCalculation(adjustmentDutyCalculationRequest.newDuty - adjustmentDutyCalculationRequest.oldDuty)
+  def calculateAdjustmentDuty(repackagedDutyChangeRequest: RepackagedDutyChangeRequest): DutyCalculation =
+    DutyCalculation(repackagedDutyChangeRequest.newDuty - repackagedDutyChangeRequest.oldDuty)
 
-  private def checkDutyValue(duty: BigDecimal, adjustmentType: AdjustmentType): BigDecimal                            =
+  private def checkDutyValue(duty: BigDecimal, adjustmentType: AdjustmentType): BigDecimal =
     if (adjustmentType.equals(Underdeclaration) || adjustmentType.equals(RepackagedDraughtProducts)) {
       duty
     } else {
       duty * -1
     }
-  def calculateAdjustmentTotal(adjustmentTotalCalculationRequest: AdjustmentTotalCalculationRequest): DutyCalculation =
+  def calculateAdjustmentTotal(
+    adjustmentTotalCalculationRequest: AdjustmentTotalCalculationRequest
+  ): DutyCalculation = {
+    println(adjustmentTotalCalculationRequest.dutyList.sum)
     DutyCalculation(adjustmentTotalCalculationRequest.dutyList.sum)
+  }
 }

@@ -31,7 +31,7 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
 
       lazy val result = callRoute(
         FakeRequest("POST", routes.DutyCalculationController.calculateDuty().url)
-          .withBody(Json.toJson(DutyCalculationRequest(Underdeclaration, BigDecimal(1), BigDecimal(1))))
+          .withBody(Json.toJson(AdjustmentDutyCalculationRequest(Underdeclaration, BigDecimal(1), BigDecimal(1))))
       )
 
       status(result) shouldBe OK
