@@ -35,7 +35,7 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
       )
 
       status(result) shouldBe OK
-      val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDutyCalculation]
+      val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
       dutyCalculation.duty shouldBe BigDecimal(1)
     }
   }

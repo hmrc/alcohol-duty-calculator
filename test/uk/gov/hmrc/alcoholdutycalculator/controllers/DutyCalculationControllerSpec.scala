@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.Spoilt
-import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculation, AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, DutyByTaxType, DutyCalculationByTaxTypeResponse, DutyTotalCalculationRequest, DutyTotalCalculationResponse, RepackagedDutyChangeRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDuty, AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, DutyByTaxType, DutyCalculationByTaxTypeResponse, DutyTotalCalculationRequest, DutyTotalCalculationResponse, RepackagedDutyChangeRequest}
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 
 class DutyCalculationControllerSpec extends SpecBase {
@@ -43,7 +43,7 @@ class DutyCalculationControllerSpec extends SpecBase {
     pureAlcoholVolume = BigDecimal(1.0),
     rate = BigDecimal(1.0)
   )
-  val duty                              = AdjustmentDutyCalculation(BigDecimal(1.00))
+  val duty                              = AdjustmentDuty(BigDecimal(1.00))
   val repackagedDutyChangeRequest       = RepackagedDutyChangeRequest(BigDecimal(5), BigDecimal(4))
   val adjustmentTotalCalculationRequest =
     AdjustmentTotalCalculationRequest(Seq(BigDecimal(10), BigDecimal(9), BigDecimal(-18)))
@@ -85,7 +85,7 @@ class DutyCalculationControllerSpec extends SpecBase {
   )
 
   "adjustment duty calculation" should {
-    "return 200 OK with the AdjustmentDutyCalculation" in {
+    "return 200 OK with the AdjustmentDuty" in {
       when(mockDutyService.calculateAdjustmentDuty(any())).thenReturn(duty)
 
       val fakeRequest = FakeRequest(method = "POST", path = "/calculate-adjustment-duty")
@@ -95,7 +95,7 @@ class DutyCalculationControllerSpec extends SpecBase {
       val result = controller.calculateAdjustmentDuty()(fakeRequest)
 
       status(result) shouldBe OK
-      val body = contentAsJson(result).as[AdjustmentDutyCalculation]
+      val body = contentAsJson(result).as[AdjustmentDuty]
       body shouldBe duty
     }
 
@@ -124,7 +124,7 @@ class DutyCalculationControllerSpec extends SpecBase {
   }
 
   "adjustment repackaged duty calculation" should {
-    "return 200 OK with the AdjustmentDutyCalculation" in {
+    "return 200 OK with the AdjustmentDuty" in {
       when(mockDutyService.calculateRepackagedDutyChange(any())).thenReturn(duty)
 
       val fakeRequest = FakeRequest(method = "POST", path = "/calculate-repackaged-duty-change")
@@ -134,7 +134,7 @@ class DutyCalculationControllerSpec extends SpecBase {
       val result = controller.calculateRepackagedDutyChange()(fakeRequest)
 
       status(result) shouldBe OK
-      val body = contentAsJson(result).as[AdjustmentDutyCalculation]
+      val body = contentAsJson(result).as[AdjustmentDuty]
       body shouldBe duty
     }
 
@@ -163,7 +163,7 @@ class DutyCalculationControllerSpec extends SpecBase {
   }
 
   "adjustment total calculation" should {
-    "return 200 OK with the AdjustmentDutyCalculation" in {
+    "return 200 OK with the AdjustmentDuty" in {
       when(mockDutyService.calculateAdjustmentTotal(any())).thenReturn(duty)
 
       val fakeRequest = FakeRequest(method = "POST", path = "/calculate-total-adjustment")
@@ -173,7 +173,7 @@ class DutyCalculationControllerSpec extends SpecBase {
       val result = controller.calculateTotalAdjustment()(fakeRequest)
 
       status(result) shouldBe OK
-      val body = contentAsJson(result).as[AdjustmentDutyCalculation]
+      val body = contentAsJson(result).as[AdjustmentDuty]
       body shouldBe duty
     }
 

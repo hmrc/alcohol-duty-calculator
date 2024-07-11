@@ -18,10 +18,10 @@ package uk.gov.hmrc.alcoholdutycalculator.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AdjustmentDutyCalculation(duty: BigDecimal)
+case class AdjustmentDuty(duty: BigDecimal)
 
-object AdjustmentDutyCalculation {
-  implicit val formats: OFormat[AdjustmentDutyCalculation] = Json.format[AdjustmentDutyCalculation]
+object AdjustmentDuty {
+  implicit val formats: OFormat[AdjustmentDuty] = Json.format[AdjustmentDuty]
 }
 
 case class AdjustmentDutyCalculationRequest(

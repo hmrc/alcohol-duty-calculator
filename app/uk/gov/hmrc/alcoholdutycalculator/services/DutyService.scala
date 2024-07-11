@@ -18,22 +18,13 @@ package uk.gov.hmrc.alcoholdutycalculator.services
 
 import uk.gov.hmrc.alcoholdutycalculator.models._
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.{RepackagedDraughtProducts, Underdeclaration}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculation, AdjustmentTotalCalculationRequest, AdjustmentType, RepackagedDutyChangeRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDuty, AdjustmentTotalCalculationRequest, AdjustmentType, RepackagedDutyChangeRequest}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
 class DutyService @Inject() (implicit val ec: ExecutionContext) {
-  def calculateAdjustmentDuty(
-    adjustmentDutyCalculationRequest: AdjustmentDutyCalculationRequest
-  ): AdjustmentDutyCalculation = {
-    val duty       =
-      (adjustmentDutyCalculationRequest.pureAlcoholVolume * adjustmentDutyCalculationRequest.rate)
-        .setScale(2, BigDecimal.RoundingMode.DOWN)
-    val signedDuty = checkDutyValue(duty, adjustmentDutyCalculationRequest.adjustmentType)
-    AdjustmentDutyCalculation(signedDuty)
-  }
 
   def calculateTotalDuty(dutyRates: Seq[DutyByTaxType]): DutyTotalCalculationResponse = {
     val totalsByTaxType = dutyRates.map(dutyRate =>
@@ -50,10 +41,20 @@ class DutyService @Inject() (implicit val ec: ExecutionContext) {
     DutyTotalCalculationResponse(totalDuty = total, dutiesByTaxType = totalsByTaxType)
   }
 
+  def calculateAdjustmentDuty(
+    adjustmentDutyCalculationRequest: AdjustmentDutyCalculationRequest
+  ): AdjustmentDuty = {
+    val duty       =
+      (adjustmentDutyCalculationRequest.pureAlcoholVolume * adjustmentDutyCalculationRequest.rate)
+        .setScale(2, BigDecimal.RoundingMode.DOWN)
+    val signedDuty = checkDutyValue(duty, adjustmentDutyCalculationRequest.adjustmentType)
+    AdjustmentDuty(signedDuty)
+  }
+
   def calculateRepackagedDutyChange(
     repackagedDutyChangeRequest: RepackagedDutyChangeRequest
-  ): AdjustmentDutyCalculation =
-    AdjustmentDutyCalculation(repackagedDutyChangeRequest.newDuty - repackagedDutyChangeRequest.oldDuty)
+  ): AdjustmentDuty =
+    AdjustmentDuty(repackagedDutyChangeRequest.newDuty - repackagedDutyChangeRequest.oldDuty)
 
   private def checkDutyValue(duty: BigDecimal, adjustmentType: AdjustmentType): BigDecimal =
     if (adjustmentType.equals(Underdeclaration) || adjustmentType.equals(RepackagedDraughtProducts)) {
@@ -63,8 +64,8 @@ class DutyService @Inject() (implicit val ec: ExecutionContext) {
     }
   def calculateAdjustmentTotal(
     adjustmentTotalCalculationRequest: AdjustmentTotalCalculationRequest
-  ): AdjustmentDutyCalculation = {
+  ): AdjustmentDuty = {
     println(adjustmentTotalCalculationRequest.dutyList.sum)
-    AdjustmentDutyCalculation(adjustmentTotalCalculationRequest.dutyList.sum)
+    AdjustmentDuty(adjustmentTotalCalculationRequest.dutyList.sum)
   }
 }
