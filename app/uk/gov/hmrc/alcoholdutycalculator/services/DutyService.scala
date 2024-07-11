@@ -64,8 +64,6 @@ class DutyService @Inject() (implicit val ec: ExecutionContext) {
     }
   def calculateAdjustmentTotal(
     adjustmentTotalCalculationRequest: AdjustmentTotalCalculationRequest
-  ): AdjustmentDuty = {
-    println(adjustmentTotalCalculationRequest.dutyList.sum)
+  ): AdjustmentDuty                                                                        =
     AdjustmentDuty(adjustmentTotalCalculationRequest.dutyList.sum)
-  }
 }
