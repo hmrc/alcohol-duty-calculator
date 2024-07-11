@@ -48,11 +48,6 @@ object RateType {
   }
 }
 
-case class RateTypeResponse(rateType: RateType)
-
-object RateTypeResponse {
-  implicit val format: Format[RateTypeResponse] = Json.format[RateTypeResponse]
-}
 sealed trait AlcoholRegime
 
 object AlcoholRegime {

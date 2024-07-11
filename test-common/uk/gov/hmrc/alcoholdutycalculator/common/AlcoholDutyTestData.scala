@@ -43,15 +43,6 @@ trait AlcoholDutyTestData {
     )
   }
 
-  implicit val arbitraryRateTypeResponse: Arbitrary[RateTypeResponse] = Arbitrary {
-    Gen.oneOf(
-      RateTypeResponse(RateType.DraughtRelief),
-      RateTypeResponse(RateType.SmallProducerRelief),
-      RateTypeResponse(RateType.DraughtAndSmallProducerRelief),
-      RateTypeResponse(RateType.Core)
-    )
-  }
-
   implicit val arbitraryAlcoholRegimeName: Arbitrary[AlcoholRegime] = Arbitrary {
     Gen.oneOf(
       AlcoholRegime.Beer,

@@ -16,39 +16,12 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.models
 
-import play.api.libs.json.{Format, JsError, JsNumber, JsResult, JsSuccess, JsValue, Json, OFormat}
+import play.api.libs.json.{Json, OFormat}
 
-import scala.util.{Failure, Success, Try}
+case class AdjustmentDutyCalculation(duty: BigDecimal)
 
-case class DutyCalculation(duty: BigDecimal)
-
-object DutyCalculation {
-  implicit val formats: OFormat[DutyCalculation] = Json.format[DutyCalculation]
-}
-
-case class Volume(value: BigDecimal) {
-  require(value > BigDecimal(0) && value <= BigDecimal(999999999.99), "Volume must be between 0 and 999999999.99")
-}
-
-object Volume {
-
-  def apply(value: BigDecimal): Volume = {
-    require(value.scale <= 4, "Volume must have maximum 4 decimal place")
-    new Volume(value)
-  }
-
-  implicit val format: Format[Volume] = new Format[Volume] {
-    override def reads(json: JsValue): JsResult[Volume] = json.validate[BigDecimal] match {
-      case JsSuccess(value, _) =>
-        Try(Volume(value)) match {
-          case Success(v)         => JsSuccess(v)
-          case Failure(exception) => JsError(s"$value is not a valid Volume value. Failed with: $exception")
-        }
-      case e: JsError          => e
-    }
-
-    override def writes(o: Volume): JsValue = JsNumber(o.value)
-  }
+object AdjustmentDutyCalculation {
+  implicit val formats: OFormat[AdjustmentDutyCalculation] = Json.format[AdjustmentDutyCalculation]
 }
 
 case class AdjustmentDutyCalculationRequest(

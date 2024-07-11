@@ -47,7 +47,7 @@ class DutyCalculationController @Inject() (
   }
   def calculateAdjustmentDuty(): Action[JsValue]       = authorise.async(parse.json) { implicit request =>
     request.body.validate[AdjustmentDutyCalculationRequest] match {
-      case JsSuccess(value, _) => Future.successful(Ok(Json.toJson(dutyService.calculateDuty(value))))
+      case JsSuccess(value, _) => Future.successful(Ok(Json.toJson(dutyService.calculateAdjustmentDuty(value))))
       case JsError(e)          =>
         logger.error("Invalid JSON: " + e)
         Future.successful(BadRequest("Invalid JSON"))
@@ -55,7 +55,7 @@ class DutyCalculationController @Inject() (
   }
   def calculateRepackagedDutyChange(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
     request.body.validate[RepackagedDutyChangeRequest] match {
-      case JsSuccess(value, _) => Future.successful(Ok(Json.toJson(dutyService.calculateAdjustmentDuty(value))))
+      case JsSuccess(value, _) => Future.successful(Ok(Json.toJson(dutyService.calculateRepackagedDutyChange(value))))
       case JsError(e)          =>
         logger.error("Invalid JSON: " + e)
         Future.successful(BadRequest("Invalid JSON"))
