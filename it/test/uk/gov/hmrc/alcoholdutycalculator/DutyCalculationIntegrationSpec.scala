@@ -25,7 +25,7 @@ import uk.gov.hmrc.alcoholdutycalculator.models._
 
 class DutyCalculationIntegrationSpec extends ISpecBase {
 
-  "service duty calculation endpoint" should {
+  "adjustment duty calculation endpoint" should {
     "respond with 200 status" in {
       stubAuthorised()
 
@@ -40,7 +40,37 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
     }
   }
 
-  "service total duties calculation endpoint" should {
+  "repackaged adjustment duty change calculation endpoint" should {
+    "respond with 200 status" in {
+      stubAuthorised()
+
+      lazy val result = callRoute(
+        FakeRequest("POST", routes.DutyCalculationController.calculateRepackagedDutyChange().url)
+          .withBody(Json.toJson(RepackagedDutyChangeRequest(BigDecimal(10), BigDecimal(1))))
+      )
+
+      status(result) shouldBe OK
+      val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
+      dutyCalculation.duty shouldBe BigDecimal(9)
+    }
+  }
+
+  "adjustment total calculation endpoint" should {
+    "respond with 200 status" in {
+      stubAuthorised()
+
+      lazy val result = callRoute(
+        FakeRequest("POST", routes.DutyCalculationController.calculateTotalAdjustment().url)
+          .withBody(Json.toJson(AdjustmentTotalCalculationRequest(Seq(BigDecimal(10), BigDecimal(1), BigDecimal(1)))))
+      )
+
+      status(result) shouldBe OK
+      val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
+      dutyCalculation.duty shouldBe BigDecimal(12)
+    }
+  }
+
+  "returns total duties calculation endpoint" should {
     "respond with 200 status" in {
       stubAuthorised()
 

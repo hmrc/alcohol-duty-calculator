@@ -24,16 +24,32 @@ class DutyServiceSpec extends SpecBase {
 
   "calculateAdjustmentDuty" should {
 
-    "calculate duty" in {
-      val adjustmentDutyCalculationRequest =
-        AdjustmentDutyCalculationRequest(
-          Underdeclaration,
-          BigDecimal(0.03),
-          BigDecimal(2)
-        )
+    "calculate a positive duty for an Underdeclaration or Repackaged adjustment type" in {
+      forAll(arbitraryPositiveDutyAdjustmentType) { adjustmentType =>
+        val adjustmentDutyCalculationRequest =
+          AdjustmentDutyCalculationRequest(
+            adjustmentType.arbitrary.sample.get,
+            BigDecimal(0.03),
+            BigDecimal(2)
+          )
 
-      val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
-      result.duty shouldBe BigDecimal(0.06)
+        val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
+        result.duty shouldBe BigDecimal(0.06)
+      }
+    }
+
+    "calculate a negative duty for a Spoilt, Overdeclared and Drawback adjustment types" in {
+      forAll(arbitraryNegativeDutyAdjustmentType) { adjustmentType =>
+        val adjustmentDutyCalculationRequest =
+          AdjustmentDutyCalculationRequest(
+            adjustmentType.arbitrary.sample.get,
+            BigDecimal(0.04),
+            BigDecimal(2)
+          )
+
+        val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
+        result.duty shouldBe BigDecimal(-0.08)
+      }
     }
 
     "calculate duty with decimal values" in {

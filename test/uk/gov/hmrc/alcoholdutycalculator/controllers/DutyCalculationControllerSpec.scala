@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.Spoilt
-import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDuty, AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, DutyByTaxType, DutyCalculationByTaxTypeResponse, DutyTotalCalculationRequest, DutyTotalCalculationResponse, RepackagedDutyChangeRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models._
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 
 class DutyCalculationControllerSpec extends SpecBase {
@@ -144,7 +144,7 @@ class DutyCalculationControllerSpec extends SpecBase {
           .withHeaders("Authorization" -> "Token some-token")
           .withBody(Json.parse("""{"newDuty": "sd", "oldDuty": "test"}"""))
 
-        val result = controller.calculateAdjustmentDuty()(fakeRequest)
+        val result = controller.calculateRepackagedDutyChange()(fakeRequest)
 
         status(result) shouldBe BAD_REQUEST
       }
@@ -155,7 +155,7 @@ class DutyCalculationControllerSpec extends SpecBase {
         val fakeRequest = FakeRequest(method = "POST", path = "/calculate-repackaged-duty-change")
           .withHeaders("Authorization" -> "Token some-token")
 
-        val result      = controller.calculateAdjustmentDuty()(fakeRequest)
+        val result      = controller.calculateRepackagedDutyChange()(fakeRequest)
 
         status(result) shouldBe UNSUPPORTED_MEDIA_TYPE
       }
@@ -181,11 +181,12 @@ class DutyCalculationControllerSpec extends SpecBase {
       "the request is not valid" in {
         val fakeRequest = FakeRequest(method = "POST", path = "/calculate-total-adjustment")
           .withHeaders("Authorization" -> "Token some-token")
-          .withBody(Json.parse("""{"dutyList": "abc"}"""))
+          .withBody(Json.parse("""{"invalid": "json"}"""))
 
-        val result = controller.calculateAdjustmentDuty()(fakeRequest)
+        val result = controller.calculateTotalAdjustment()(fakeRequest)
 
-        status(result) shouldBe BAD_REQUEST
+        status(result)        shouldBe BAD_REQUEST
+        contentAsString(result) should include("Invalid JSON")
       }
     }
 
@@ -194,7 +195,7 @@ class DutyCalculationControllerSpec extends SpecBase {
         val fakeRequest = FakeRequest(method = "POST", path = "/calculate-total-adjustment")
           .withHeaders("Authorization" -> "Token some-token")
 
-        val result      = controller.calculateAdjustmentDuty()(fakeRequest)
+        val result      = controller.calculateTotalAdjustment()(fakeRequest)
 
         status(result) shouldBe UNSUPPORTED_MEDIA_TYPE
       }
