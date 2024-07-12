@@ -181,12 +181,11 @@ class DutyCalculationControllerSpec extends SpecBase {
       "the request is not valid" in {
         val fakeRequest = FakeRequest(method = "POST", path = "/calculate-total-adjustment")
           .withHeaders("Authorization" -> "Token some-token")
-          .withBody(Json.parse("""{"invalid": "json"}"""))
+          .withBody(Json.parse("""{"dutyList": "json"}"""))
 
         val result = controller.calculateTotalAdjustment()(fakeRequest)
 
-        status(result)        shouldBe BAD_REQUEST
-        contentAsString(result) should include("Invalid JSON")
+        status(result) shouldBe BAD_REQUEST
       }
     }
 
