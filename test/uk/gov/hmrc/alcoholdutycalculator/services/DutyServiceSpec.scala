@@ -23,7 +23,6 @@ class DutyServiceSpec extends SpecBase {
   val dutyService = new DutyService()
 
   "calculateAdjustmentDuty" should {
-
     "calculate a positive duty for an Underdeclaration or Repackaged adjustment type" in {
       forAll(arbitraryPositiveDutyAdjustmentType) { adjustmentType =>
         val adjustmentDutyCalculationRequest =
@@ -212,6 +211,11 @@ class DutyServiceSpec extends SpecBase {
       result.dutiesByTaxType.head.dutyRate shouldBe BigDecimal(0.01)
       result.dutiesByTaxType.last.dutyDue  shouldBe BigDecimal(0.04)
     }
+  }
 
+  "calculateDutyByTaxType" should {
+    "calculate the duty by tax type" in {
+      dutyService.calculateDutyByTaxType(calculateDutyDueByTaxTypeRequest) shouldBe calculatedDutyDueByTaxType
+    }
   }
 }

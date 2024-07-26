@@ -30,7 +30,7 @@ import play.api.mvc.{Result, Results}
 import play.api.test._
 import play.api.{Application, Mode}
 import uk.gov.hmrc.alcoholdutycalculator.base.WireMockHelper.setWireMockPort
-import uk.gov.hmrc.alcoholdutycalculator.common.AlcoholDutyTestData
+import uk.gov.hmrc.alcoholdutycalculator.common.TestData
 
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -60,7 +60,7 @@ abstract class ISpecBase
     with WireMockHelper
     with WireMockStubs
     with IntegrationPatience
-    with AlcoholDutyTestData {
+    with TestData {
 
   implicit lazy val arbString: Arbitrary[String] = Arbitrary(Gen.alphaNumStr.retryUntil(_.nonEmpty))
 

@@ -16,6 +16,6 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.base
 
-import uk.gov.hmrc.alcoholdutycalculator.common.AlcoholDutyTestData
+import uk.gov.hmrc.alcoholdutycalculator.common.TestData
 
-trait WireMockStubs extends AlcoholDutyTestData with AuthStubs
+trait WireMockStubs extends TestData with AuthStubs

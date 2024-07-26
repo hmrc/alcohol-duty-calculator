@@ -98,4 +98,18 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
       )
     }
   }
+
+  "total duty due by tax type calculation endpoint" should {
+    "respond with 200 status" in {
+      stubAuthorised()
+
+      lazy val result = callRoute(
+        FakeRequest("POST", routes.DutyCalculationController.calculateTotalDutyDueByTaxType().url)
+          .withBody(Json.toJson(calculateDutyDueByTaxTypeRequest))
+      )
+
+      status(result)                                                     shouldBe OK
+      Json.parse(contentAsString(result)).as[CalculatedDutyDueByTaxType] shouldBe calculatedDutyDueByTaxType
+    }
+  }
 }

@@ -23,7 +23,7 @@ import uk.gov.hmrc.alcoholdutycalculator.models._
 
 import java.time.YearMonth
 
-trait AlcoholDutyTestData {
+trait TestData {
 
   def alphaNumericString: String = Gen.alphaNumStr.retryUntil(_.nonEmpty).sample.get
   val testInternalId: String     = alphaNumericString
@@ -138,4 +138,87 @@ trait AlcoholDutyTestData {
   implicit val arbitraryPositiveDutyAdjustmentType: Arbitrary[AdjustmentType] = Arbitrary {
     Gen.oneOf(RepackagedDraughtProducts, Underdeclaration)
   }
+
+  val adjustmentDutyCalculationRequest: AdjustmentDutyCalculationRequest   = AdjustmentDutyCalculationRequest(
+    Spoilt,
+    pureAlcoholVolume = BigDecimal(1.0),
+    rate = BigDecimal(1.0)
+  )
+  val duty: AdjustmentDuty                                                 = AdjustmentDuty(BigDecimal(1.00))
+  val repackagedDutyChangeRequest: RepackagedDutyChangeRequest             =
+    RepackagedDutyChangeRequest(BigDecimal(5), BigDecimal(4))
+  val adjustmentTotalCalculationRequest: AdjustmentTotalCalculationRequest =
+    AdjustmentTotalCalculationRequest(Seq(BigDecimal(10), BigDecimal(9), BigDecimal(-18)))
+  val totalCalculationRequest: DutyTotalCalculationRequest                 = DutyTotalCalculationRequest(
+    Seq(
+      DutyByTaxType(
+        taxType = "taxType",
+        totalLitres = BigDecimal(1.0),
+        pureAlcohol = BigDecimal(1.0),
+        dutyRate = BigDecimal(1.0)
+      ),
+      DutyByTaxType(
+        taxType = "taxType2",
+        totalLitres = BigDecimal(2.0),
+        pureAlcohol = BigDecimal(2.0),
+        dutyRate = BigDecimal(2.0)
+      )
+    )
+  )
+
+  val totalCalculationResponse: DutyTotalCalculationResponse = DutyTotalCalculationResponse(
+    totalDuty = BigDecimal(3.0),
+    dutiesByTaxType = Seq(
+      DutyCalculationByTaxTypeResponse(
+        taxType = "taxType",
+        totalLitres = BigDecimal(1.0),
+        pureAlcohol = BigDecimal(1.0),
+        dutyRate = BigDecimal(1.0),
+        dutyDue = BigDecimal(1.0)
+      ),
+      DutyCalculationByTaxTypeResponse(
+        taxType = "taxType2",
+        totalLitres = BigDecimal(2.0),
+        pureAlcohol = BigDecimal(2.0),
+        dutyRate = BigDecimal(2.0),
+        dutyDue = BigDecimal(2.0)
+      )
+    )
+  )
+
+  val calculateDutyDueByTaxTypeRequest: CalculateDutyDueByTaxTypeRequest =
+    CalculateDutyDueByTaxTypeRequest(
+      declarationOrAdjustmentItems = Seq(
+        CalculateDutyDueByTaxTypeRequestItem(
+          taxType = "331",
+          dutyDue = BigDecimal("115.11")
+        ),
+        CalculateDutyDueByTaxTypeRequestItem(
+          taxType = "332",
+          dutyDue = BigDecimal("321.88")
+        ),
+        CalculateDutyDueByTaxTypeRequestItem(
+          taxType = "332",
+          dutyDue = BigDecimal("245.79")
+        ),
+        CalculateDutyDueByTaxTypeRequestItem(
+          taxType = "331",
+          dutyDue = BigDecimal("8.12")
+        )
+      )
+    )
+
+  val calculatedDutyDueByTaxType: CalculatedDutyDueByTaxType =
+    CalculatedDutyDueByTaxType(
+      totalDutyDueByTaxType = Seq(
+        CalculatedDutyDueByTaxTypeItem(
+          taxType = "332",
+          totalDutyDue = BigDecimal("567.67")
+        ),
+        CalculatedDutyDueByTaxTypeItem(
+          taxType = "331",
+          totalDutyDue = BigDecimal("123.23")
+        )
+      )
+    )
 }
