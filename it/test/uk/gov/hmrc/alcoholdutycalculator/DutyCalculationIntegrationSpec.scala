@@ -20,27 +20,57 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyByTaxType, DutyCalculation, DutyCalculationByTaxTypeResponse, DutyCalculationRequest, DutyTotalCalculationRequest, DutyTotalCalculationResponse, Volume}
+import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.Underdeclaration
+import uk.gov.hmrc.alcoholdutycalculator.models._
 
 class DutyCalculationIntegrationSpec extends ISpecBase {
 
-  "service duty calculation endpoint" should {
+  "adjustment duty calculation endpoint" should {
     "respond with 200 status" in {
       stubAuthorised()
 
       lazy val result = callRoute(
-        FakeRequest("POST", routes.DutyCalculationController.calculateDuty().url)
-          .withBody(Json.toJson(DutyCalculationRequest(AlcoholByVolume(1), Volume(1), 1)))
+        FakeRequest("POST", routes.DutyCalculationController.calculateAdjustmentDuty().url)
+          .withBody(Json.toJson(AdjustmentDutyCalculationRequest(Underdeclaration, BigDecimal(1), BigDecimal(1))))
       )
 
       status(result) shouldBe OK
-      val dutyCalculation = Json.parse(contentAsString(result)).as[DutyCalculation]
-      dutyCalculation.pureAlcoholVolume shouldBe BigDecimal(0.01)
-      dutyCalculation.duty              shouldBe BigDecimal(0.01)
+      val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
+      dutyCalculation.duty shouldBe BigDecimal(1)
     }
   }
 
-  "service total duties calculation endpoint" should {
+  "repackaged adjustment duty change calculation endpoint" should {
+    "respond with 200 status" in {
+      stubAuthorised()
+
+      lazy val result = callRoute(
+        FakeRequest("POST", routes.DutyCalculationController.calculateRepackagedDutyChange().url)
+          .withBody(Json.toJson(RepackagedDutyChangeRequest(BigDecimal(10), BigDecimal(1))))
+      )
+
+      status(result) shouldBe OK
+      val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
+      dutyCalculation.duty shouldBe BigDecimal(9)
+    }
+  }
+
+  "adjustment total calculation endpoint" should {
+    "respond with 200 status" in {
+      stubAuthorised()
+
+      lazy val result = callRoute(
+        FakeRequest("POST", routes.DutyCalculationController.calculateTotalAdjustment().url)
+          .withBody(Json.toJson(AdjustmentTotalCalculationRequest(Seq(BigDecimal(10), BigDecimal(1), BigDecimal(1)))))
+      )
+
+      status(result) shouldBe OK
+      val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
+      dutyCalculation.duty shouldBe BigDecimal(12)
+    }
+  }
+
+  "returns total duties calculation endpoint" should {
     "respond with 200 status" in {
       stubAuthorised()
 

@@ -18,6 +18,7 @@ package uk.gov.hmrc.alcoholdutycalculator.common
 
 import org.scalacheck.Gen.Choose
 import org.scalacheck.{Arbitrary, Gen}
+import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.{Drawback, Overdeclaration, RepackagedDraughtProducts, Spoilt, Underdeclaration}
 import uk.gov.hmrc.alcoholdutycalculator.models._
 
 import java.time.YearMonth
@@ -40,15 +41,6 @@ trait AlcoholDutyTestData {
       RateType.DraughtRelief,
       RateType.SmallProducerRelief,
       RateType.DraughtAndSmallProducerRelief
-    )
-  }
-
-  implicit val arbitraryRateTypeResponse: Arbitrary[RateTypeResponse] = Arbitrary {
-    Gen.oneOf(
-      RateTypeResponse(RateType.DraughtRelief),
-      RateTypeResponse(RateType.SmallProducerRelief),
-      RateTypeResponse(RateType.DraughtAndSmallProducerRelief),
-      RateTypeResponse(RateType.Core)
     )
   }
 
@@ -137,8 +129,13 @@ trait AlcoholDutyTestData {
     } yield RatePeriod(name, isLatest, validityStartDate, validityEndDate, rateBands)
   }
 
-  implicit val arbitraryListRatePeriod: Arbitrary[Seq[RatePeriod]] = Arbitrary {
+  implicit val arbitraryListRatePeriod: Arbitrary[Seq[RatePeriod]]            = Arbitrary {
     Gen.nonEmptyListOf(arbitraryRatePeriod.arbitrary)
   }
-
+  implicit val arbitraryNegativeDutyAdjustmentType: Arbitrary[AdjustmentType] = Arbitrary {
+    Gen.oneOf(Spoilt, Overdeclaration, Drawback)
+  }
+  implicit val arbitraryPositiveDutyAdjustmentType: Arbitrary[AdjustmentType] = Arbitrary {
+    Gen.oneOf(RepackagedDraughtProducts, Underdeclaration)
+  }
 }

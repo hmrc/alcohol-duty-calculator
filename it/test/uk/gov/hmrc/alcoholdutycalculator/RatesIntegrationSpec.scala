@@ -21,7 +21,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
 import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, OtherFermentedProduct, Wine}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateType}
 
 import java.time.YearMonth
 
@@ -45,27 +45,12 @@ class RatesIntegrationSpec extends ISpecBase {
     }
   }
 
-  "service rate-type endpoint" should {
-    "respond with 200 status" in {
-      stubAuthorised()
-      val urlParams   =
-        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&abv=${Json
-          .toJson(5)
-          .toString}&alcoholRegimes=${Json.toJson(Set("Beer", "Wine")).toString()}"
-      lazy val result =
-        callRoute(FakeRequest("GET", routes.RatesController.rateType().url + urlParams))
-      status(result) shouldBe OK
-      val rateType: RateTypeResponse = Json.parse(contentAsString(result)).as[RateTypeResponse]
-      rateType shouldBe RateTypeResponse(RateType.DraughtAndSmallProducerRelief)
-    }
-  }
-
   "service rate-band endpoint" should {
     "respond with 200 status" in {
       stubAuthorised()
       val taxType     = "321"
       val urlParams   =
-        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&taxType=$taxType"
+        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&taxTypeCode=$taxType"
       lazy val result =
         callRoute(FakeRequest("GET", routes.RatesController.rateBand().url + urlParams))
       status(result) shouldBe OK

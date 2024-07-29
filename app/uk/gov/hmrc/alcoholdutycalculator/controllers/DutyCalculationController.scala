@@ -17,10 +17,10 @@
 package uk.gov.hmrc.alcoholdutycalculator.controllers
 
 import play.api.Logging
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{DutyCalculationRequest, DutyTotalCalculationRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, DutyTotalCalculationRequest, RepackagedDutyChangeRequest}
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -36,23 +36,26 @@ class DutyCalculationController @Inject() (
 ) extends BackendController(controllerComponents)
     with WithJsonBody
     with Logging {
-
-  def calculateDuty(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
-    request.body.validate[DutyCalculationRequest] match {
-      case JsSuccess(value, _) => Future.successful(Ok(Json.toJson(dutyService.calculateDuty(value))))
-      case JsError(e)          =>
-        logger.error("Invalid JSON: " + e)
-        Future.successful(BadRequest("Invalid JSON"))
+  def calculateTotalDuty(): Action[JsValue]            = authorise.async(parse.json) { implicit request =>
+    withJsonBody[DutyTotalCalculationRequest] { dutyTotalCalculationRequest =>
+      Future.successful(Ok(Json.toJson(dutyService.calculateTotalDuty(dutyTotalCalculationRequest.dutiesByTaxType))))
+    }
+  }
+  def calculateAdjustmentDuty(): Action[JsValue]       = authorise.async(parse.json) { implicit request =>
+    withJsonBody[AdjustmentDutyCalculationRequest] { adjustmentDutyCalculationRequest =>
+      Future.successful(Ok(Json.toJson(dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest))))
+    }
+  }
+  def calculateRepackagedDutyChange(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
+    withJsonBody[RepackagedDutyChangeRequest] { repackagedDutyChangeRequest =>
+      Future.successful(Ok(Json.toJson(dutyService.calculateRepackagedDutyChange(repackagedDutyChangeRequest))))
     }
   }
 
-  def calculateTotalDuty(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
-    request.body.validate[DutyTotalCalculationRequest] match {
-      case JsSuccess(value, _) =>
-        Future.successful(Ok(Json.toJson(dutyService.calculateTotalDuty(value.dutiesByTaxType))))
-      case JsError(e)          =>
-        logger.error("Invalid JSON: " + e)
-        Future.successful(BadRequest("Invalid JSON"))
+  def calculateTotalAdjustment(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
+    withJsonBody[AdjustmentTotalCalculationRequest] { adjustmentTotalCalculationRequest =>
+      Future.successful(Ok(Json.toJson(dutyService.calculateAdjustmentTotal(adjustmentTotalCalculationRequest))))
     }
   }
+
 }

@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType, RateTypeResponse}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 
 import scala.concurrent.Future
@@ -135,89 +135,6 @@ class RatesControllerSpec extends SpecBase {
     }
   }
 
-  "rateTypes" should {
-    "return 200 OK with rate type based on query parameters" in forAll {
-      (
-        ratePeriod: YearMonth,
-        abv: AlcoholByVolume,
-        alcoholRegimes: Set[AlcoholRegime],
-        rateType: RateTypeResponse
-      ) =>
-        when(mockRatesService.rateTypes(any(), any())).thenReturn(rateType)
-
-        val urlWithParams =
-          s"/rate-type?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&abv=${Json.toJson(abv).toString}" +
-            s"&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-
-        val requestWithParams = FakeRequest("GET", urlWithParams)
-
-        val result: Future[Result] = controller.rateType()(requestWithParams)
-
-        status(result)        shouldBe OK
-        contentAsJson(result) shouldBe Json.toJson(rateType)
-
-        verify(mockRatesService).rateTypes(ratePeriod, alcoholRegimes)
-    }
-    "return BadRequest" when {
-      "'ratePeriod' parameter is missing" in forAll {
-        (
-          abv: AlcoholByVolume,
-          alcoholRegimes: Set[AlcoholRegime]
-        ) =>
-          val urlWithParams                =
-            s"/rates?abv=${Json.toJson(abv).toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-          val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
-          val result: Future[Result]       = controller.rateType()(requestWithMissingRatePeriod)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Missing or invalid 'ratePeriod' parameter")
-      }
-      "'ratePeriod' parameter is invalid" in forAll {
-        (
-          abv: AlcoholByVolume,
-          alcoholRegimes: Set[AlcoholRegime]
-        ) =>
-          val urlWithParams                =
-            s"/rates?ratePeriod=1234&abv=${Json.toJson(abv).toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
-          val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
-          val result: Future[Result]       = controller.rateType()(requestWithMissingRatePeriod)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Invalid 'ratePeriod' parameter")
-      }
-      "'alcoholRegimes' parameter is missing" in forAll {
-        (
-          ratePeriod: YearMonth,
-          abv: AlcoholByVolume
-        ) =>
-          val urlWithParams =
-            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&abv=${Json.toJson(abv).toString}"
-
-          val requestWithInvalidRegimes =
-            FakeRequest("GET", urlWithParams)
-          val result: Future[Result]    = controller.rateType()(requestWithInvalidRegimes)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Missing or invalid 'alcoholRegimes' parameter")
-      }
-      "'alcoholRegimes' parameter is invalid" in forAll {
-        (
-          ratePeriod: YearMonth,
-          abv: AlcoholByVolume
-        ) =>
-          val urlWithParams =
-            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&abv=${Json.toJson(abv).toString}&alcoholRegimes=1234"
-
-          val requestWithInvalidRegimes =
-            FakeRequest("GET", urlWithParams)
-          val result: Future[Result]    = controller.rateType()(requestWithInvalidRegimes)
-
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Invalid 'alcoholRegimes' parameter")
-      }
-    }
-  }
-
   "rateBand" should {
     "return 200 OK with rate band based on query parameters" in forAll {
       (
@@ -227,7 +144,7 @@ class RatesControllerSpec extends SpecBase {
         when(mockRatesService.taxType(any(), any())).thenReturn(Some(rateBand))
 
         val urlWithParams =
-          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=312"
+          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxTypeCode=312"
 
         val requestWithParams = FakeRequest("GET", urlWithParams)
 
@@ -246,7 +163,7 @@ class RatesControllerSpec extends SpecBase {
         when(mockRatesService.taxType(any(), any())).thenReturn(None)
 
         val urlWithParams =
-          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=312"
+          s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxTypeCode=312"
 
         val requestWithParams = FakeRequest("GET", urlWithParams)
 
@@ -262,7 +179,7 @@ class RatesControllerSpec extends SpecBase {
           taxType: String
         ) =>
           val urlWithParams                =
-            s"/rate-band?taxType=$taxType"
+            s"/rate-band?taxTypeCode=$taxType"
           val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
           val result: Future[Result]       = controller.rateBand()(requestWithMissingRatePeriod)
 
@@ -274,14 +191,14 @@ class RatesControllerSpec extends SpecBase {
           taxType: String
         ) =>
           val urlWithParams                =
-            s"/rate-band?ratePeriod=1234&taxType=$taxType"
+            s"/rate-band?ratePeriod=1234&taxTypeCode=$taxType"
           val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
           val result: Future[Result]       = controller.rateBand()(requestWithMissingRatePeriod)
 
           status(result)        shouldBe BAD_REQUEST
           contentAsString(result) should include("Invalid 'ratePeriod' parameter")
       }
-      "'taxType' parameter is missing" in forAll {
+      "'taxTypeCode' parameter is missing" in forAll {
         (
           ratePeriod: YearMonth
         ) =>
@@ -293,14 +210,14 @@ class RatesControllerSpec extends SpecBase {
           val result: Future[Result]    = controller.rateBand()(requestWithInvalidTaxType)
 
           status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Missing or invalid 'taxType' parameter")
+          contentAsString(result) should include("Missing or invalid 'taxTypeCode' parameter")
       }
-      "'taxType' parameter is invalid" in forAll {
+      "'taxTypeCode' parameter is invalid" in forAll {
         (
           ratePeriod: YearMonth
         ) =>
           val urlWithParams =
-            s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxType=abcd"
+            s"/rate-band?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&taxTypeCode=abcd"
 
           val requestWithInvalidTaxType =
             FakeRequest("GET", urlWithParams)

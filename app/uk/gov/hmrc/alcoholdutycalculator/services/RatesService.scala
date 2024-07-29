@@ -20,8 +20,7 @@ import play.api.Environment
 import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateTypeResponse}
-import uk.gov.hmrc.alcoholdutycalculator.models.RateType.{Core, DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod}
 
 import java.time.YearMonth
 import javax.inject.{Inject, Singleton}
@@ -55,7 +54,7 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
 
   def taxType(
     ratePeriodYearMonth: YearMonth,
-    taxType: String
+    taxTypeCode: String
   ): Option[RateBand] =
     alcoholDutyRates
       .filter(rp =>
@@ -63,25 +62,6 @@ class RatesService @Inject() (env: Environment, appConfig: AppConfig)(implicit v
           rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
       )
       .flatMap(_.rateBands)
-      .find(rb => rb.taxTypeCode == taxType)
-
-  def rateTypes(
-    ratePeriodYearMonth: YearMonth,
-    alcoholRegimes: Set[AlcoholRegime]
-  ): RateTypeResponse = {
-    val rateTypes     = alcoholDutyRates
-      .filter(rp =>
-        !ratePeriodYearMonth.isBefore(rp.validityStartDate) &&
-          rp.validityEndDate.forall(_.isAfter(ratePeriodYearMonth))
-      )
-      .flatMap { ratePeriod =>
-        ratePeriod.rateBands
-          .filter(rb => rb.rangeDetails.map(_.alcoholRegime).intersect(alcoholRegimes).nonEmpty)
-          .map(_.rateType)
-          .toSet
-      }
-    val rateTypesList = List(DraughtAndSmallProducerRelief, DraughtRelief, SmallProducerRelief)
-    RateTypeResponse(rateTypesList.find(rateTypes.contains).getOrElse(Core))
-  }
+      .find(rb => rb.taxTypeCode == taxTypeCode)
 
 }

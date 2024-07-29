@@ -16,47 +16,36 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.models
 
-import play.api.libs.json.{Format, JsError, JsNumber, JsResult, JsSuccess, JsValue, Json, OFormat}
+import play.api.libs.json.{Json, OFormat}
 
-import scala.util.{Failure, Success, Try}
+case class AdjustmentDuty(duty: BigDecimal)
 
-case class DutyCalculation(pureAlcoholVolume: BigDecimal, duty: BigDecimal)
-
-object DutyCalculation {
-  implicit val formats: OFormat[DutyCalculation] = Json.format[DutyCalculation]
+object AdjustmentDuty {
+  implicit val formats: OFormat[AdjustmentDuty] = Json.format[AdjustmentDuty]
 }
 
-case class Volume(value: BigDecimal) {
-  require(value > BigDecimal(0) && value <= BigDecimal(999999999.99), "Volume must be between 0 and 999999999.99")
-}
-
-object Volume {
-
-  def apply(value: BigDecimal): Volume = {
-    require(value.scale <= 4, "Volume must have maximum 4 decimal place")
-    new Volume(value)
-  }
-
-  implicit val format: Format[Volume] = new Format[Volume] {
-    override def reads(json: JsValue): JsResult[Volume] = json.validate[BigDecimal] match {
-      case JsSuccess(value, _) =>
-        Try(Volume(value)) match {
-          case Success(v)         => JsSuccess(v)
-          case Failure(exception) => JsError(s"$value is not a valid Volume value. Failed with: $exception")
-        }
-      case e: JsError          => e
-    }
-
-    override def writes(o: Volume): JsValue = JsNumber(o.value)
-  }
-}
-
-case class DutyCalculationRequest(
-  abv: AlcoholByVolume,
-  volume: Volume,
+case class AdjustmentDutyCalculationRequest(
+  adjustmentType: AdjustmentType,
+  pureAlcoholVolume: BigDecimal,
   rate: BigDecimal
 )
 
-object DutyCalculationRequest {
-  implicit val formats: OFormat[DutyCalculationRequest] = Json.format[DutyCalculationRequest]
+object AdjustmentDutyCalculationRequest {
+  implicit val formats: OFormat[AdjustmentDutyCalculationRequest] = Json.format[AdjustmentDutyCalculationRequest]
+}
+case class RepackagedDutyChangeRequest(
+  newDuty: BigDecimal,
+  oldDuty: BigDecimal
+)
+
+object RepackagedDutyChangeRequest {
+  implicit val formats: OFormat[RepackagedDutyChangeRequest] = Json.format[RepackagedDutyChangeRequest]
+}
+
+case class AdjustmentTotalCalculationRequest(
+  dutyList: Seq[BigDecimal]
+)
+
+object AdjustmentTotalCalculationRequest {
+  implicit val formats: OFormat[AdjustmentTotalCalculationRequest] = Json.format[AdjustmentTotalCalculationRequest]
 }

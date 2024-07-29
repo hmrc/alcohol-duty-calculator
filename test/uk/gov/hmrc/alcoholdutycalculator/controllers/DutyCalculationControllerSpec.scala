@@ -22,7 +22,8 @@ import org.mockito.ArgumentMatchers.any
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, DutyByTaxType, DutyCalculation, DutyCalculationByTaxTypeResponse, DutyCalculationRequest, DutyTotalCalculationRequest, DutyTotalCalculationResponse, Volume}
+import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.Spoilt
+import uk.gov.hmrc.alcoholdutycalculator.models._
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 
 class DutyCalculationControllerSpec extends SpecBase {
@@ -37,14 +38,16 @@ class DutyCalculationControllerSpec extends SpecBase {
     cc
   )
 
-  val dutyCalculationRequest = DutyCalculationRequest(
-    abv = AlcoholByVolume(1.0),
-    volume = Volume(1.0),
+  val adjustmentDutyCalculationRequest  = AdjustmentDutyCalculationRequest(
+    Spoilt,
+    pureAlcoholVolume = BigDecimal(1.0),
     rate = BigDecimal(1.0)
   )
-  val duty                   = DutyCalculation(BigDecimal(0.25), BigDecimal(1.25))
-
-  val totalCalculationRequest = DutyTotalCalculationRequest(
+  val duty                              = AdjustmentDuty(BigDecimal(1.00))
+  val repackagedDutyChangeRequest       = RepackagedDutyChangeRequest(BigDecimal(5), BigDecimal(4))
+  val adjustmentTotalCalculationRequest =
+    AdjustmentTotalCalculationRequest(Seq(BigDecimal(10), BigDecimal(9), BigDecimal(-18)))
+  val totalCalculationRequest           = DutyTotalCalculationRequest(
     Seq(
       DutyByTaxType(
         taxType = "taxType",
@@ -81,38 +84,28 @@ class DutyCalculationControllerSpec extends SpecBase {
     )
   )
 
-  "duty controller" should {
-    "return 200 OK with the DutyCalculation" in {
-      when(mockDutyService.calculateDuty(any())).thenReturn(duty)
+  "adjustment duty calculation" should {
+    "return 200 OK with the AdjustmentDuty" in {
+      when(mockDutyService.calculateAdjustmentDuty(any())).thenReturn(duty)
 
-      val fakeRequest = FakeRequest(method = "POST", path = "/calculate-duty")
+      val fakeRequest = FakeRequest(method = "POST", path = "/calculate-adjustment-duty")
         .withHeaders("Authorization" -> "Token some-token")
-        .withBody(Json.toJson(dutyCalculationRequest))
+        .withBody(Json.toJson(adjustmentDutyCalculationRequest))
 
-      val result = controller.calculateDuty()(fakeRequest)
+      val result = controller.calculateAdjustmentDuty()(fakeRequest)
 
       status(result) shouldBe OK
-      val body = contentAsJson(result).as[DutyCalculation]
+      val body = contentAsJson(result).as[AdjustmentDuty]
       body shouldBe duty
     }
 
     "return 400 BAD REQUEST" when {
-      "the AlcoholByVolume in the request is not valid" in {
-        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-duty")
+      "the AdjustmentType in the request is not valid" in {
+        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-adjustment-duty")
           .withHeaders("Authorization" -> "Token some-token")
-          .withBody(Json.parse("""{"abv": -1.123, "volume": 1.0, "rate": 1.0}"""))
+          .withBody(Json.parse("""{"adjustmentType": -1.123, "volume": 1.0, "rate": 1.0}"""))
 
-        val result = controller.calculateDuty()(fakeRequest)
-
-        status(result) shouldBe BAD_REQUEST
-      }
-
-      "the Volume in the request is not valid" in {
-        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-duty")
-          .withHeaders("Authorization" -> "Token some-token")
-          .withBody(Json.parse("""{"abv": 1.0, "volume": -1.12345, "rate": 1.0}"""))
-
-        val result = controller.calculateDuty()(fakeRequest)
+        val result = controller.calculateAdjustmentDuty()(fakeRequest)
 
         status(result) shouldBe BAD_REQUEST
       }
@@ -120,15 +113,95 @@ class DutyCalculationControllerSpec extends SpecBase {
 
     "return 415 UNSUPPORTED MEDIA TYPE" when {
       "there is no body in the request" in {
-        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-duty")
+        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-adjustment-duty")
           .withHeaders("Authorization" -> "Token some-token")
 
-        val result      = controller.calculateDuty()(fakeRequest)
+        val result      = controller.calculateAdjustmentDuty()(fakeRequest)
 
         status(result) shouldBe UNSUPPORTED_MEDIA_TYPE
       }
     }
+  }
 
+  "adjustment repackaged duty calculation" should {
+    "return 200 OK with the AdjustmentDuty" in {
+      when(mockDutyService.calculateRepackagedDutyChange(any())).thenReturn(duty)
+
+      val fakeRequest = FakeRequest(method = "POST", path = "/calculate-repackaged-duty-change")
+        .withHeaders("Authorization" -> "Token some-token")
+        .withBody(Json.toJson(repackagedDutyChangeRequest))
+
+      val result = controller.calculateRepackagedDutyChange()(fakeRequest)
+
+      status(result) shouldBe OK
+      val body = contentAsJson(result).as[AdjustmentDuty]
+      body shouldBe duty
+    }
+
+    "return 400 BAD REQUEST" when {
+      "the request is not valid" in {
+        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-repackaged-duty-change")
+          .withHeaders("Authorization" -> "Token some-token")
+          .withBody(Json.parse("""{"newDuty": "sd", "oldDuty": "test"}"""))
+
+        val result = controller.calculateRepackagedDutyChange()(fakeRequest)
+
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+
+    "return 415 UNSUPPORTED MEDIA TYPE" when {
+      "there is no body in the request" in {
+        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-repackaged-duty-change")
+          .withHeaders("Authorization" -> "Token some-token")
+
+        val result      = controller.calculateRepackagedDutyChange()(fakeRequest)
+
+        status(result) shouldBe UNSUPPORTED_MEDIA_TYPE
+      }
+    }
+  }
+
+  "adjustment total calculation" should {
+    "return 200 OK with the AdjustmentDuty" in {
+      when(mockDutyService.calculateAdjustmentTotal(any())).thenReturn(duty)
+
+      val fakeRequest = FakeRequest(method = "POST", path = "/calculate-total-adjustment")
+        .withHeaders("Authorization" -> "Token some-token")
+        .withBody(Json.toJson(adjustmentTotalCalculationRequest))
+
+      val result = controller.calculateTotalAdjustment()(fakeRequest)
+
+      status(result) shouldBe OK
+      val body = contentAsJson(result).as[AdjustmentDuty]
+      body shouldBe duty
+    }
+
+    "return 400 BAD REQUEST" when {
+      "the request is not valid" in {
+        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-total-adjustment")
+          .withHeaders("Authorization" -> "Token some-token")
+          .withBody(Json.parse("""{"dutyList": "json"}"""))
+
+        val result = controller.calculateTotalAdjustment()(fakeRequest)
+
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+
+    "return 415 UNSUPPORTED MEDIA TYPE" when {
+      "there is no body in the request" in {
+        val fakeRequest = FakeRequest(method = "POST", path = "/calculate-total-adjustment")
+          .withHeaders("Authorization" -> "Token some-token")
+
+        val result      = controller.calculateTotalAdjustment()(fakeRequest)
+
+        status(result) shouldBe UNSUPPORTED_MEDIA_TYPE
+      }
+    }
+  }
+
+  "returns calculate total duty" should {
     "return 200 OK with the total duty calculation" in {
       when(mockDutyService.calculateTotalDuty(any())).thenReturn(totalCalculationResponse)
 
