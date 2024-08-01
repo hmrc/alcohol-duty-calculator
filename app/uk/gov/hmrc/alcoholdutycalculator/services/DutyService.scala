@@ -62,8 +62,21 @@ class DutyService @Inject() (implicit val ec: ExecutionContext) {
     } else {
       duty * -1
     }
+
   def calculateAdjustmentTotal(
     adjustmentTotalCalculationRequest: AdjustmentTotalCalculationRequest
-  ): AdjustmentDuty                                                                        =
+  ): AdjustmentDuty =
     AdjustmentDuty(adjustmentTotalCalculationRequest.dutyList.sum)
+
+  def calculateDutyByTaxType(
+    calculateDutyByTaxTypeRequest: CalculateDutyDueByTaxTypeRequest
+  ): CalculatedDutyDueByTaxType =
+    CalculatedDutyDueByTaxType(
+      calculateDutyByTaxTypeRequest.declarationOrAdjustmentItems
+        .groupBy(_.taxType)
+        .map { case (taxType, item) =>
+          CalculatedDutyDueByTaxTypeItem(taxType = taxType, totalDutyDue = item.map(_.dutyDue).sum)
+        }
+        .toSeq
+    )
 }

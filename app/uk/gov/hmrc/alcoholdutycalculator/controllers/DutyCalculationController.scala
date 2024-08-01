@@ -20,7 +20,7 @@ import play.api.Logging
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, DutyTotalCalculationRequest, RepackagedDutyChangeRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, CalculateDutyDueByTaxTypeRequest, DutyTotalCalculationRequest, RepackagedDutyChangeRequest}
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -36,16 +36,19 @@ class DutyCalculationController @Inject() (
 ) extends BackendController(controllerComponents)
     with WithJsonBody
     with Logging {
-  def calculateTotalDuty(): Action[JsValue]            = authorise.async(parse.json) { implicit request =>
+
+  def calculateTotalDuty(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
     withJsonBody[DutyTotalCalculationRequest] { dutyTotalCalculationRequest =>
       Future.successful(Ok(Json.toJson(dutyService.calculateTotalDuty(dutyTotalCalculationRequest.dutiesByTaxType))))
     }
   }
-  def calculateAdjustmentDuty(): Action[JsValue]       = authorise.async(parse.json) { implicit request =>
+
+  def calculateAdjustmentDuty(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
     withJsonBody[AdjustmentDutyCalculationRequest] { adjustmentDutyCalculationRequest =>
       Future.successful(Ok(Json.toJson(dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest))))
     }
   }
+
   def calculateRepackagedDutyChange(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
     withJsonBody[RepackagedDutyChangeRequest] { repackagedDutyChangeRequest =>
       Future.successful(Ok(Json.toJson(dutyService.calculateRepackagedDutyChange(repackagedDutyChangeRequest))))
@@ -58,4 +61,9 @@ class DutyCalculationController @Inject() (
     }
   }
 
+  def calculateTotalDutyDueByTaxType(): Action[JsValue] = authorise.async(parse.json) { implicit request =>
+    withJsonBody[CalculateDutyDueByTaxTypeRequest] { calculateDutyByTaxTypeRequest =>
+      Future.successful(Ok(Json.toJson(dutyService.calculateDutyByTaxType(calculateDutyByTaxTypeRequest))))
+    }
+  }
 }

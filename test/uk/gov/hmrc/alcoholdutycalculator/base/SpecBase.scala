@@ -30,7 +30,7 @@ import play.api.libs.json.JsValue
 import play.api.mvc._
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FakeHeaders, FakeRequest, ResultExtractors}
-import uk.gov.hmrc.alcoholdutycalculator.common.AlcoholDutyTestData
+import uk.gov.hmrc.alcoholdutycalculator.common.TestData
 import uk.gov.hmrc.alcoholdutycalculator.common.generators.ModelGenerators
 import uk.gov.hmrc.alcoholdutycalculator.config.AppConfig
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.FakeAuthorisedAction
@@ -54,7 +54,7 @@ trait SpecBase
     with ScalaCheckPropertyChecks
     with BeforeAndAfterEach
     with ModelGenerators
-    with AlcoholDutyTestData {
+    with TestData {
 
   def configOverrides: Map[String, Any] = Map()
 
