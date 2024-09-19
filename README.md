@@ -5,6 +5,14 @@ This is the backend microservice that handles duty calculations for Alcohol Duty
 
 ## API Endpoints
 
+- [Calculate adjustment duty](api-docs/calculateAdjustmentDuty.md): `POST /alcohol-duty-calculator/calculate-adjustment-duty`
+- [Calculate duty due by tax type](api-docs/calculateDutyDueByTaxType.md): `POST /alcohol-duty-calculator/calculate-duty-due-by-tax-type`
+- [Calculate repackaged duty change](api-docs/calculateRepackagedDutyChange.md): `POST /alcohol-duty-calculator/calculate-repackaged-duty-change`
+- [Calculate total adjustment](api-docs/calculateTotalAdjustment.md): `POST /alcohol-duty-calculator/calculate-total-adjustment`
+- [Calculate total duty](api-docs/calculateTotalDuty.md): `POST /alcohol-duty-calculator/calculate-total-duty`
+- [Get a rate band for a tax code in period](api-docs/getRateBand.md): `GET /alcohol-duty-calculator/rate-band`
+- [Get rates for a period](api-docs/getRates.md): `GET /alcohol-duty-calculator/rates`
+
 ## Running the service
 
 > `sbt run`
