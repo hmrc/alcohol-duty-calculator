@@ -1,6 +1,6 @@
 # Calculate due due by tax type
 
-Groups the various entries (of duty and adjustment values) by tax type and sums each
+Groups the various entries (of duty and adjustment values) by tax type and sums each.
 
 Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
 
@@ -22,7 +22,8 @@ No parameters are required
 
 **Request Body Examples**
 
-*** Three elements to be summed, one sharing a tax code: ***
+***Three elements to be summed, one sharing a tax code:***
+
 ```json
 {
   "declarationOrAdjustmentItems": [
@@ -66,7 +67,7 @@ The response body returns the following fields
 
 **Response Body Examples**
 
-***Duty due for two tax types: ***
+***Duty due for two tax types:***
 
 ```json
 {

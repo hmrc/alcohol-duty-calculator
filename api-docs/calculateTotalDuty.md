@@ -1,6 +1,6 @@
 # Calculate total duty
 
-Performs the calculation dutyRate * pureAlcohol for each of the tax types presented and provides individual calculations and the sum
+Performs the calculation dutyRate * pureAlcohol for each of the tax types presented, and provides individual calculations and the sum.
 
 Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
 
@@ -24,7 +24,8 @@ No parameters are required
 
 **Request Body Examples**
 
-*** Two tax types to calculate duty on: ***
+***Two tax types to calculate duty on:***
+
 ```json
 {
   "dutiesByTaxType": [
@@ -72,7 +73,7 @@ The response body returns the following fields
 
 **Response Body Examples**
 
-***A single element (real return will contain many elements like this): ***
+***A single element (real return will contain many elements like this):***
 
 ```json
 {

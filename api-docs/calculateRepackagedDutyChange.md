@@ -1,6 +1,6 @@
 # Calculate repackaged duty change
 
-Performs the calculation newDuty - oldDuty to calculate what the customer owes after repackaging
+Performs the calculation newDuty - oldDuty to calculate what the customer owes after repackaging.
 
 Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
 
@@ -21,7 +21,8 @@ No parameters are required
 
 **Request Body Examples**
 
-*** An example duty change: ***
+***An example duty change:***
+
 ```json
 {
   "newDuty": 100.50,
@@ -51,7 +52,7 @@ The response body returns the following fields
 
 **Response Body Examples**
 
-***Fifty pounds twenty five is owing: ***
+***Fifty pounds twenty five is owing:***
 
 ```json
 {"duty":50.25}

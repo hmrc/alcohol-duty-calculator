@@ -1,6 +1,6 @@
 # Get Rates
 
-Returns tax rates, bands and description for the various tax type codes of specific regimes for a specific period
+Returns tax rates, bands and description for the various tax type codes of specific regimes for a specific period.
 
 Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
 
@@ -42,7 +42,7 @@ The response body returns rate bands with the following fields
 | rateType                           | The type of rate                                                 | Enum      | Mandatory          | Core, DraughtRelief, SmallProducerRelief, DraughtAndSmallProducerRelief |
 | rangeDetails                       | Ranges of alcohol regimes and alcohol types covered by this rate | Enum      | Mandatory          | Return, LPI, RPI                                                        |
 | rangeDetails.alcoholRegime         | The alcohol regime covered by this range                         | String    | Mandatory          | Beer, Cider, Wine, Spirits, OtherFermentedProduct                       |
-| rangeDetails.abvRanges             | The ABV ranges and alcohol types covered                         | String    | Array(ABVRange)    |                                                                         |
+| rangeDetails.abvRanges             | The ABV ranges and alcohol types covered                         | String    | Array(Items)       |                                                                         |
 | rangeDetails.abvRanges.alcoholType | The alcohol type                                                 | Numeric   | Enum               | Beer, Cider, SparklingCider, Wine, Spirits, OtherFermentedProduct       |
 | rangeDetails.abvRanges.minABV      | The min ABV                                                      | Numeric   | Mandatory          | Between 0 and 100                                                       |
 | rangeDetails.abvRanges.maxABV      | The max ABV                                                      | Numeric   | Mandatory          | Between 0 and 100                                                       |
@@ -50,7 +50,7 @@ The response body returns rate bands with the following fields
 
 **Response Body Examples**
 
-***A single element (real response will contain many elements like this): ***
+***A single element (real response will contain many elements like this):***
 
 ```json
 [

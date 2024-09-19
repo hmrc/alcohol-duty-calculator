@@ -1,6 +1,6 @@
 # Calculate total adjustment
 
-Performs the sum of the various adjustments
+Performs the sum of the various adjustments.
 
 Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
 
@@ -20,7 +20,7 @@ No parameters are required
 
 **Request Body Examples**
 
-*** Three adjustments to be summed: ***
+***Three adjustments to be summed:***
 ```json
 {
   "dutyList": [100.01, -200.02, 300.03]
@@ -49,7 +49,7 @@ The response body returns the following fields
 
 **Response Body Examples**
 
-***Two hundred pounds and two pence is owing: ***
+***Two hundred pounds and two pence is owing:***
 
 ```json
 {"duty":200.02}

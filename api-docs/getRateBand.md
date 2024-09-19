@@ -1,6 +1,6 @@
 # Get Rate Band
 
-Returns tax rates, bands and description for a specific tax code for a specific period
+Returns tax rates, bands and description for a specific tax code for a specific period.
 
 Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
 
@@ -50,7 +50,7 @@ The response body returns details for a single tax code
 
 **Response Body Examples**
 
-***An example rate band: ***
+***An example rate band:***
 
 ```json
 {

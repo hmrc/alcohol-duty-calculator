@@ -1,6 +1,6 @@
 # Calculate adjustment duty
 
-Performs the calculation rate * pureAlcoholVolume for the adjustment provided and applies the appropriate sign depending if it's owing or a refund
+Performs the calculation rate * pureAlcoholVolume for the adjustment provided and applies the appropriate sign depending if it's owing or a refund.
 
 Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
 
@@ -22,7 +22,7 @@ No parameters are required
 
 **Request Body Examples**
 
-*** An under-declaration: ***
+***An under-declaration:***
 ```json
 {
   "adjustmentType": "Underdeclaration",
@@ -53,7 +53,7 @@ The response body returns the following fields
 
 **Response Body Examples**
 
-***One thousand pounds and twenty five pence is owing: ***
+***One thousand pounds and twenty five pence is owing:***
 
 ```json
 {"duty":1000.25}
