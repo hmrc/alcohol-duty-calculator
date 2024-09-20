@@ -20,8 +20,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
-import uk.gov.hmrc.alcoholdutycalculator.models.AlcoholRegime.{Beer, OtherFermentedProduct, Wine}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateType}
+import uk.gov.hmrc.alcoholdutycalculator.models.{RateBand, RatePeriod, RateType}
 
 import java.time.YearMonth
 
@@ -32,9 +31,7 @@ class RatesIntegrationSpec extends ISpecBase {
       stubAuthorised()
 
       val urlParams =
-        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=${Json
-          .toJson(Set(Json.toJson[AlcoholRegime](Beer), Json.toJson[AlcoholRegime](Wine), Json.toJson[AlcoholRegime](OtherFermentedProduct)))
-          .toString()}"
+        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=Beer,Wine,OtherFermentedProduct"
 
       lazy val result =
         callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))

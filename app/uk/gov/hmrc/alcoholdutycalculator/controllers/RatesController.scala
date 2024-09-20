@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.controllers
 
+import cats.implicits._
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
@@ -40,11 +41,10 @@ class RatesController @Inject() (
 
       val result: Either[String, Seq[RateBand]] = for {
         ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        alcoholRegimes <- extractParam[Set[AlcoholRegime]](
+        alcoholRegimes <- extractQueryParam(
                             "alcoholRegimes",
-                            queryParams,
-                            Format(Reads.set[AlcoholRegime], Writes.set[AlcoholRegime])
-                          )
+                            queryParams
+                          ).flatMap(_.split(",").toSet.map(AlcoholRegime.fromString).toList.sequence.map(_.toSet))
       } yield ratesService.rateBands(ratePeriod, alcoholRegimes)
 
       result.fold(

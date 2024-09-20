@@ -17,7 +17,7 @@ No parameters are required
 | Parameter Name | Description               | Data Type | Mandatory/Optional | Notes   |
 |----------------|---------------------------|-----------|--------------------|---------|
 | ratePeriod     | The period                | YearMonth | Mandatory          | YYYY-MM |
-| taxType        | The three digit tax code  | String    | Mandatory          |         |
+| taxTypeCode    | The three digit tax code  | String    | Mandatory          |         |
 
 **Required Request Headers**:
 

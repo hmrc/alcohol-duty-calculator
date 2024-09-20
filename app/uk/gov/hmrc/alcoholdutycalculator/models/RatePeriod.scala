@@ -57,6 +57,15 @@ object AlcoholRegime {
   case object Spirits extends AlcoholRegime
   case object OtherFermentedProduct extends AlcoholRegime
 
+  def fromString(str: String): Either[String, AlcoholRegime] = str match {
+    case "Beer"                  => Right(Beer)
+    case "Cider"                 => Right(Cider)
+    case "Wine"                  => Right(Wine)
+    case "Spirits"               => Right(Spirits)
+    case "OtherFermentedProduct" => Right(OtherFermentedProduct)
+    case str                     => Left(s"$str is not a valid AlcoholRegime")
+  }
+
   implicit val format: Format[AlcoholRegime] = new Format[AlcoholRegime] {
     override def reads(json: JsValue): JsResult[AlcoholRegime] = json.validate[String] match {
       case JsSuccess(value, _) =>
