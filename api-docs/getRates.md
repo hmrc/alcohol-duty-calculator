@@ -25,6 +25,10 @@ No parameters are required
 |---------------|----------------|--------------------------------------------|
 | Authorization | Bearer {TOKEN} | A valid bearer token from the auth service |
 
+***Example request:***
+
+/alcohol-duty-calculator/rates?ratePeriod="2024-07"&alcoholRegimes=Beer,Cider,Wine,Spirits,OtherFermentedProduct
+
 ## Responses
 
 ### Success response

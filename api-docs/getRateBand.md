@@ -19,6 +19,10 @@ No parameters are required
 | ratePeriod     | The period                | YearMonth | Mandatory          | YYYY-MM |
 | taxTypeCode    | The three digit tax code  | String    | Mandatory          |         |
 
+***Example request:***
+
+/alcohol-duty-calculator/rate-band?ratePeriod="2024-07"&taxTypeCode=311
+
 **Required Request Headers**:
 
 | Header Name   | Header Value   | Description                                |
