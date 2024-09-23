@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholByVolume, AlcoholRegime, RateBand, RatePeriod, RateType}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod, RateType}
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 
 import scala.concurrent.Future
@@ -43,37 +43,37 @@ class RatesControllerSpec extends SpecBase {
         rateBandList: Seq[RateBand],
         ratePeriod: YearMonth,
         rateType: RateType,
-        abv: AlcoholByVolume,
         alcoholRegimes: Set[AlcoholRegime]
       ) =>
-        when(mockRatesService.rateBands(any(), any())).thenReturn(rateBandList)
+        if (alcoholRegimes.nonEmpty) {
+          when(mockRatesService.rateBands(any(), any())).thenReturn(rateBandList)
 
-        val urlWithParams =
-          s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
-            .toJson(rateType)
-            .toString}&abv=${Json.toJson(abv).toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
+          val urlWithParams =
+            s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
+              .toJson(rateType)
+              .toString}&alcoholRegimes=${alcoholRegimes.mkString(",")}"
 
-        val requestWithParams = FakeRequest("GET", urlWithParams)
+          val requestWithParams = FakeRequest("GET", urlWithParams)
 
-        val result: Future[Result] = controller.rates()(requestWithParams)
+          val result: Future[Result] = controller.rates()(requestWithParams)
 
-        status(result)        shouldBe OK
-        contentAsJson(result) shouldBe Json.toJson(rateBandList)
+          status(result)        shouldBe OK
+          contentAsJson(result) shouldBe Json.toJson(rateBandList)
 
-        verify(mockRatesService).rateBands(ratePeriod, alcoholRegimes)
+          verify(mockRatesService).rateBands(ratePeriod, alcoholRegimes)
+        }
     }
 
     "return BadRequest" when {
       "'ratePeriod' parameter is missing" in forAll {
         (
           rateType: RateType,
-          abv: AlcoholByVolume,
           alcoholRegimes: Set[AlcoholRegime]
         ) =>
           val urlWithParams                =
             s"/rates?rateType=${Json
               .toJson(rateType)
-              .toString}&abv=${Json.toJson(abv).toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
+              .toString}&alcoholRegimes=${alcoholRegimes.mkString(",")}"
           val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
           val result: Future[Result]       = controller.rates()(requestWithMissingRatePeriod)
 
@@ -83,13 +83,12 @@ class RatesControllerSpec extends SpecBase {
       "'ratePeriod' parameter is invalid" in forAll {
         (
           rateType: RateType,
-          abv: AlcoholByVolume,
           alcoholRegimes: Set[AlcoholRegime]
         ) =>
           val urlWithParams                =
             s"/rates?ratePeriod=1234&rateType=${Json
               .toJson(rateType)
-              .toString}&abv=${Json.toJson(abv).toString}&alcoholRegimes=${Json.toJson(alcoholRegimes).toString()}"
+              .toString}&alcoholRegimes=${alcoholRegimes.toString}"
           val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
           val result: Future[Result]       = controller.rates()(requestWithMissingRatePeriod)
 
@@ -99,13 +98,12 @@ class RatesControllerSpec extends SpecBase {
       "'alcoholRegimes' parameter is missing" in forAll {
         (
           ratePeriod: YearMonth,
-          rateType: RateType,
-          abv: AlcoholByVolume
+          rateType: RateType
         ) =>
           val urlWithParams =
             s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
               .toJson(rateType)
-              .toString}&abv=${Json.toJson(abv).toString}"
+              .toString}"
 
           val requestWithInvalidRegimes =
             FakeRequest("GET", urlWithParams)
@@ -117,20 +115,19 @@ class RatesControllerSpec extends SpecBase {
       "'alcoholRegimes' parameter is invalid" in forAll {
         (
           ratePeriod: YearMonth,
-          rateType: RateType,
-          abv: AlcoholByVolume
+          rateType: RateType
         ) =>
           val urlWithParams =
             s"/rates?ratePeriod=${Json.toJson(ratePeriod)(RatePeriod.yearMonthFormat).toString()}&rateType=${Json
               .toJson(rateType)
-              .toString}&abv=${Json.toJson(abv).toString}&alcoholRegimes=1234"
+              .toString}&alcoholRegimes=1234"
 
           val requestWithInvalidRegimes =
             FakeRequest("GET", urlWithParams)
           val result: Future[Result]    = controller.rates()(requestWithInvalidRegimes)
 
-          status(result)        shouldBe BAD_REQUEST
-          contentAsString(result) should include("Invalid 'alcoholRegimes' parameter")
+          status(result)          shouldBe BAD_REQUEST
+          contentAsString(result) shouldBe "1234 is not a valid AlcoholRegime"
       }
     }
   }

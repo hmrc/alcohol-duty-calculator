@@ -6,9 +6,10 @@ object AppDependencies {
   private val mockitoScalaVersion = "1.17.37"
 
   val compile = Seq(
-    "uk.gov.hmrc"  %% "bootstrap-backend-play-30" % bootstrapVersion,
-    "com.beachape" %% "enumeratum"                % "1.7.4",
-    "com.beachape" %% "enumeratum-play"           % "1.8.1"
+    "org.typelevel" %% "cats-core"                 % "2.12.0",
+    "uk.gov.hmrc"   %% "bootstrap-backend-play-30" % bootstrapVersion,
+    "com.beachape"  %% "enumeratum"                % "1.7.4",
+    "com.beachape"  %% "enumeratum-play"           % "1.8.1"
   )
 
   val test = Seq(

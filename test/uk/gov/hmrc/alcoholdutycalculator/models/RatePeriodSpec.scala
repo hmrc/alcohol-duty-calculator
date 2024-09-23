@@ -50,20 +50,34 @@ class RatePeriodSpec extends SpecBase {
   }
 
   "AlcoholRegime" when {
-    "writing to json"   should {
-      "return the correct string representation" in {
-        Json.toJson[AlcoholRegime](AlcoholRegime.Beer)    shouldBe JsString("Beer")
-        Json.toJson[AlcoholRegime](AlcoholRegime.Cider)   shouldBe JsString("Cider")
-        Json.toJson[AlcoholRegime](AlcoholRegime.Wine)    shouldBe JsString("Wine")
-        Json.toJson[AlcoholRegime](AlcoholRegime.Spirits) shouldBe JsString("Spirits")
+    "converting from a string" should {
+      "translate from the string rep, to the correct case object" in {
+        AlcoholRegime.fromString("Beer")                  shouldBe Right(AlcoholRegime.Beer)
+        AlcoholRegime.fromString("Cider")                 shouldBe Right(AlcoholRegime.Cider)
+        AlcoholRegime.fromString("Wine")                  shouldBe Right(AlcoholRegime.Wine)
+        AlcoholRegime.fromString("Spirits")               shouldBe Right(AlcoholRegime.Spirits)
+        AlcoholRegime.fromString("OtherFermentedProduct") shouldBe Right(AlcoholRegime.OtherFermentedProduct)
+      }
+      "return an error in response to an unrecognised string" in {
+        AlcoholRegime.fromString("some-other") shouldBe Left("some-other is not a valid AlcoholRegime")
       }
     }
-    "reading from json" should {
+    "writing to json"          should {
+      "return the correct string representation" in {
+        Json.toJson[AlcoholRegime](AlcoholRegime.Beer)                  shouldBe JsString("Beer")
+        Json.toJson[AlcoholRegime](AlcoholRegime.Cider)                 shouldBe JsString("Cider")
+        Json.toJson[AlcoholRegime](AlcoholRegime.Wine)                  shouldBe JsString("Wine")
+        Json.toJson[AlcoholRegime](AlcoholRegime.Spirits)               shouldBe JsString("Spirits")
+        Json.toJson[AlcoholRegime](AlcoholRegime.OtherFermentedProduct) shouldBe JsString("OtherFermentedProduct")
+      }
+    }
+    "reading from json"        should {
       "translate from the string rep, to the correct case object" in {
-        JsString("Beer").as[AlcoholRegime]    shouldBe AlcoholRegime.Beer
-        JsString("Cider").as[AlcoholRegime]   shouldBe AlcoholRegime.Cider
-        JsString("Wine").as[AlcoholRegime]    shouldBe AlcoholRegime.Wine
-        JsString("Spirits").as[AlcoholRegime] shouldBe AlcoholRegime.Spirits
+        JsString("Beer").as[AlcoholRegime]                  shouldBe AlcoholRegime.Beer
+        JsString("Cider").as[AlcoholRegime]                 shouldBe AlcoholRegime.Cider
+        JsString("Wine").as[AlcoholRegime]                  shouldBe AlcoholRegime.Wine
+        JsString("Spirits").as[AlcoholRegime]               shouldBe AlcoholRegime.Spirits
+        JsString("OtherFermentedProduct").as[AlcoholRegime] shouldBe AlcoholRegime.OtherFermentedProduct
       }
       "return an exception in response to an unrecognised string" in {
         JsString("some-other").validate[AlcoholRegime] shouldBe JsError("some-other is not a valid AlcoholRegime")
