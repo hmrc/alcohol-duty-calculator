@@ -6,7 +6,7 @@
     "rateBands": [
       {
         "taxTypeCode": "311",
-        "description": "Beer from 1.3 to 3.4%",
+        "description": "Beer from 1.3 to 3.4 percent",
         "rateType": "Core",
         "rate": 9.27,
         "rangeDetails": [
@@ -24,7 +24,7 @@
       },
       {
         "taxTypeCode": "312",
-        "description": "Cider (but not sparkling cider) from 1.3 to 3.4%",
+        "description": "Cider (but not sparkling cider) from 1.3 to 3.4 percent",
         "rateType": "Core",
         "rate": 9.27,
         "rangeDetails": [
