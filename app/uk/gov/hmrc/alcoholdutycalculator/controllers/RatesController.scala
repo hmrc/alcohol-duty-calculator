@@ -17,6 +17,7 @@
 package uk.gov.hmrc.alcoholdutycalculator.controllers
 
 import cats.implicits._
+import play.api.Logging
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
@@ -33,7 +34,8 @@ class RatesController @Inject() (
   authorise: AuthorisedAction,
   ratesService: RatesService,
   override val controllerComponents: ControllerComponents
-) extends BackendController(controllerComponents) {
+) extends BackendController(controllerComponents)
+    with Logging {
 
   def rates(): Action[AnyContent] =
     authorise { implicit request =>
@@ -48,7 +50,10 @@ class RatesController @Inject() (
       } yield ratesService.rateBands(ratePeriod, alcoholRegimes)
 
       result.fold(
-        error => BadRequest(error),
+        error => {
+          logger.warn(s"Impossible to retrieve rate bands. Error: $error")
+          BadRequest(error)
+        },
         rateBands => Ok(Json.toJson(rateBands))
       )
     }
@@ -70,7 +75,9 @@ class RatesController @Inject() (
       result match {
         case Right(Some(rateBand)) => Ok(Json.toJson(rateBand))
         case Right(None)           => NotFound("RateBand not found")
-        case Left(error)           => BadRequest(error)
+        case Left(error)           =>
+          logger.warn(s"Impossible to retrieve rate band. Error: $error")
+          BadRequest(error)
       }
     }
 
