@@ -22,7 +22,8 @@ import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.alcoholdutycalculator.controllers.actions.AuthorisedAction
-import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand, RatePeriod}
+import uk.gov.hmrc.alcoholdutycalculator.models.{AlcoholRegime, RateBand}
+import uk.gov.hmrc.alcoholdutycalculator.models.RatePeriod._
 import uk.gov.hmrc.alcoholdutycalculator.services.RatesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -42,16 +43,16 @@ class RatesController @Inject() (
       val queryParams = request.queryString
 
       val result: Either[String, Seq[RateBand]] = for {
-        ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
+        ratePeriod     <- extractParam[YearMonth]("ratePeriod", queryParams)
         alcoholRegimes <- extractQueryParam(
                             "alcoholRegimes",
                             queryParams
-                          ).flatMap(_.split(",").toSet.map(AlcoholRegime.fromString).toList.sequence.map(_.toSet))
+                          ).flatMap(_.split(',').toList.map(AlcoholRegime.fromString).sequence.map(_.toSet))
       } yield ratesService.rateBands(ratePeriod, alcoholRegimes)
 
       result.fold(
         error => {
-          logger.warn(s"Impossible to retrieve rate bands. Error: $error")
+          logger.warn(s"Unable to retrieve rate bands. Error: $error")
           BadRequest(error)
         },
         rateBands => Ok(Json.toJson(rateBands))
@@ -62,13 +63,14 @@ class RatesController @Inject() (
     authorise { implicit request =>
       val queryParams = request.queryString
 
-      val result: Either[String, Option[RateBand]] = for {
-
-        ratePeriod <- extractParam[YearMonth]("ratePeriod", queryParams, RatePeriod.yearMonthFormat)
-        taxType    <- extractQueryParam(
-                        "taxTypeCode",
-                        queryParams
-                      )
+      val result = for {
+        ratePeriod <- extractParam[YearMonth]("ratePeriod", queryParams)
+        taxType    <- extractQueryParam("taxTypeCode", queryParams)
+        _          <- if (isValidTaxCode(taxType)) {
+                        Right(())
+                      } else {
+                        Left("Invalid 'taxTypeCode' parameter")
+                      }
         rateBand   <- Right(ratesService.taxType(ratePeriod, taxType))
       } yield rateBand
 
@@ -76,21 +78,74 @@ class RatesController @Inject() (
         case Right(Some(rateBand)) => Ok(Json.toJson(rateBand))
         case Right(None)           => NotFound("RateBand not found")
         case Left(error)           =>
-          logger.warn(s"Impossible to retrieve rate band. Error: $error")
+          logger.warn(s"Unable to retrieve rate band. Error: $error")
           BadRequest(error)
       }
     }
 
-  private def extractParam[T](
-    paramName: String,
-    queryParams: Map[String, Seq[String]],
-    jsonFormat: Format[T]
+  def rateBands(): Action[AnyContent] =
+    authorise { implicit request =>
+      val queryParams = request.queryString
+
+      val result = for {
+
+        ratePeriods <- extractParamCSV[YearMonth]("ratePeriods", queryParams)
+        taxTypes    <- extractQueryParamCSV(
+                         "taxTypeCodes",
+                         queryParams
+                       )
+        _           <- if (taxTypes.forall(isValidTaxCode(_))) {
+                         Right(())
+                       } else {
+                         Left("Invalid 'taxTypeCodes' parameter")
+                       }
+        _           <- if (ratePeriods.length == taxTypes.length) {
+                         Right(())
+                       } else {
+                         Left("Expected the number of ratePeriods and taxTypeCodes to match")
+                       }
+        rateBands   <- Right(ratePeriods.zip(taxTypes).map { case (ratePeriod, taxType) =>
+                         ratesService.taxType(ratePeriod, taxType)
+                       })
+      } yield {
+        val foundRateBands = rateBands.flatten
+        if (foundRateBands.length != taxTypes.length) None else Some(foundRateBands)
+      }
+
+      result match {
+        case Right(Some(rateBand)) => Ok(Json.toJson(rateBand))
+        case Right(None)           => NotFound("Some rateBands not found")
+        case Left(error)           =>
+          logger.warn(s"Unable to retrieve rate bands. Error: $error")
+          BadRequest(error)
+      }
+    }
+
+  private def extractParam[T](paramName: String, queryParams: Map[String, Seq[String]])(implicit
+    reads: Reads[T]
   ): Either[String, T] =
-    extractQueryParam(paramName, queryParams).flatMap(value =>
-      Try(Json.parse(value).as[T](jsonFormat)).toEither.left.map(_ => s"Invalid '$paramName' parameter")
-    )
+    extractQueryParam(paramName, queryParams).flatMap(value => parseParam[T](paramName, value))
+
+  private def extractParamCSV[T](paramName: String, queryParams: Map[String, Seq[String]])(implicit
+    reads: Reads[T]
+  ): Either[String, Seq[T]] =
+    extractQueryParamCSV(paramName, queryParams).flatMap(_.map(parseParam[T](paramName, _)).sequence.map(_.toSeq))
+
+  private def parseParam[T](
+    paramName: String,
+    value: String
+  )(implicit reads: Reads[T]): Either[String, T] =
+    Try(Json.parse(value).as[T]).toEither.leftMap(_ => s"Invalid '$paramName' parameter")
 
   private def extractQueryParam(paramName: String, queryParams: Map[String, Seq[String]]): Either[String, String] =
     queryParams.get(paramName).flatMap(_.headOption).toRight(s"Missing or invalid '$paramName' parameter")
 
+  private def extractQueryParamCSV(
+    paramName: String,
+    queryParams: Map[String, Seq[String]]
+  ): Either[String, Seq[String]] =
+    extractQueryParam(paramName, queryParams).map(value => value.split(',').toSeq)
+
+  private def isValidTaxCode(taxCode: String): Boolean =
+    taxCode.matches("\\d\\d\\d")
 }
