@@ -104,18 +104,16 @@ class RatesController @Inject() (
                        } else {
                          Left("Expected the number of ratePeriods and taxTypeCodes to match")
                        }
-        rateBands   <- Right(ratePeriods.zip(taxTypes).map { case (ratePeriod, taxType) =>
-                         ratesService.taxType(ratePeriod, taxType)
-                       })
-      } yield {
-        val foundRateBands = rateBands.flatten
-        if (foundRateBands.length != taxTypes.length) None else Some(foundRateBands)
-      }
+      } yield ratePeriods
+        .zip(taxTypes)
+        .flatMap { case (ratePeriod, taxType) =>
+          ratesService.taxType(ratePeriod, taxType).map((ratePeriod, taxType) -> _)
+        }
+        .toMap
 
       result match {
-        case Right(Some(rateBand)) => Ok(Json.toJson(rateBand))
-        case Right(None)           => NotFound("Some rateBands not found")
-        case Left(error)           =>
+        case Right(rateBandsMapping) => Ok(Json.toJson(rateBandsMapping))
+        case Left(error)             =>
           logger.warn(s"Unable to retrieve rate bands. Error: $error")
           BadRequest(error)
       }

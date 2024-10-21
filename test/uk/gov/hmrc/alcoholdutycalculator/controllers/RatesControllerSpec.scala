@@ -18,7 +18,6 @@ package uk.gov.hmrc.alcoholdutycalculator.controllers
 
 import java.time.YearMonth
 import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
@@ -316,47 +315,99 @@ class RatesControllerSpec extends SpecBase {
   }
 
   "rateBands" should {
-    "return 200 OK with rate bands based on query parameters" in forAll {
-      (
-        ratePeriod: YearMonth,
-        rateBand: RateBand,
-        ratePeriod2: YearMonth,
-        rateBand2: RateBand,
-        ratePeriod3: YearMonth,
-        rateBand3: RateBand
-      ) =>
-        val mockRatesService: RatesService = mock[RatesService]
+    "return 200 OK" when {
+      "all rate bands looked up from query parameters" in forAll {
+        (
+          ratePeriod: YearMonth,
+          rateBand: RateBand,
+          ratePeriod2: YearMonth,
+          rateBand2: RateBand,
+          ratePeriod3: YearMonth,
+          rateBand3: RateBand
+        ) =>
+          val mockRatesService: RatesService = mock[RatesService]
 
-        val controller = new RatesController(
-          fakeAuthorisedAction,
-          mockRatesService,
-          cc
-        )
+          val controller = new RatesController(
+            fakeAuthorisedAction,
+            mockRatesService,
+            cc
+          )
 
-        val ratePeriods  = Seq(ratePeriod, ratePeriod2, ratePeriod3)
-        val taxTypeCodes = Seq("311", "312", "313")
-        val rateBands    = Seq(rateBand, rateBand2, rateBand3)
+          val ratePeriods  = Seq(ratePeriod, ratePeriod2, ratePeriod3)
+          val taxTypeCodes = Seq("311", "312", "313")
+          val rateBands    = Seq(rateBand, rateBand2, rateBand3)
 
-        val ratePeriodsWithTaxTypeCodes = ratePeriods.zip(taxTypeCodes)
+          val ratePeriodsWithTaxTypeCodes            = ratePeriods.zip(taxTypeCodes)
+          val ratePeriodsWithTaxTypeCodesToRateBands = ratePeriodsWithTaxTypeCodes.zip(rateBands).toMap
 
-        ratePeriodsWithTaxTypeCodes.zip(rateBands).foreach { case ((ratePeriod, taxTypeCode), rateBand) =>
-          when(mockRatesService.taxType(eqTo(ratePeriod), eqTo(taxTypeCode))).thenReturn(Some(rateBand))
-        }
+          ratePeriodsWithTaxTypeCodesToRateBands.foreach { case ((ratePeriod, taxTypeCode), rateBand) =>
+            when(mockRatesService.taxType(ratePeriod, taxTypeCode)).thenReturn(Some(rateBand))
+          }
 
-        val urlWithParams =
-          s"/rate-bands?ratePeriods=${ratePeriods.map(ratePeriod => Json.toJson(ratePeriod).toString()).mkString(",")}&taxTypeCodes=${taxTypeCodes
-            .mkString(",")}"
+          val urlWithParams =
+            s"/rate-bands?ratePeriods=${ratePeriods.map(ratePeriod => Json.toJson(ratePeriod).toString()).mkString(",")}&taxTypeCodes=${taxTypeCodes
+              .mkString(",")}"
 
-        val requestWithParams = FakeRequest("GET", urlWithParams)
+          val requestWithParams = FakeRequest("GET", urlWithParams)
 
-        val result: Future[Result] = controller.rateBands()(requestWithParams)
+          val result: Future[Result] = controller.rateBands()(requestWithParams)
 
-        status(result)        shouldBe OK
-        contentAsJson(result) shouldBe Json.toJson(rateBands)
+          status(result)        shouldBe OK
+          contentAsJson(result) shouldBe Json.toJson(ratePeriodsWithTaxTypeCodesToRateBands)
 
-        ratePeriodsWithTaxTypeCodes.foreach { case (ratePeriod, taxTypeCode) =>
-          verify(mockRatesService).taxType(ratePeriod, taxTypeCode)
-        }
+          ratePeriodsWithTaxTypeCodes.foreach { case (ratePeriod, taxTypeCode) =>
+            verify(mockRatesService).taxType(ratePeriod, taxTypeCode)
+          }
+      }
+
+      "some rate bands couldn't be looked up" in forAll {
+        (
+          ratePeriod: YearMonth,
+          rateBand: RateBand,
+          ratePeriod2: YearMonth,
+          rateBand2: RateBand,
+          ratePeriod3: YearMonth,
+          rateBand3: RateBand
+        ) =>
+          val mockRatesService: RatesService = mock[RatesService]
+
+          val controller = new RatesController(
+            fakeAuthorisedAction,
+            mockRatesService,
+            cc
+          )
+
+          val ratePeriods  = Seq(ratePeriod, ratePeriod2, ratePeriod3)
+          val taxTypeCodes = Seq("311", "312", "313")
+          val rateBands    = Seq(rateBand, rateBand2, rateBand3)
+
+          val ratePeriodsWithTaxTypeCodes            = ratePeriods.zip(taxTypeCodes)
+          val ratePeriodsWithTaxTypeCodesToRateBands = ratePeriodsWithTaxTypeCodes.zip(rateBands).toMap
+
+          val i                                                      = (Math.random() * 3).toInt
+          val ratePeriodsWithTaxTypeCodesToRateBandsWithMissingEntry =
+            ratePeriodsWithTaxTypeCodesToRateBands - ratePeriodsWithTaxTypeCodes(i)
+
+          ratePeriodsWithTaxTypeCodesToRateBands.foreach { case ((ratePeriod, taxTypeCode), maybeRateBand) =>
+            when(mockRatesService.taxType(ratePeriod, taxTypeCode))
+              .thenReturn(ratePeriodsWithTaxTypeCodesToRateBandsWithMissingEntry.get((ratePeriod, taxTypeCode)))
+          }
+
+          val urlWithParams =
+            s"/rate-bands?ratePeriods=${ratePeriods.map(ratePeriod => Json.toJson(ratePeriod).toString()).mkString(",")}&taxTypeCodes=${taxTypeCodes
+              .mkString(",")}"
+
+          val requestWithParams = FakeRequest("GET", urlWithParams)
+
+          val result: Future[Result] = controller.rateBands()(requestWithParams)
+
+          status(result)        shouldBe OK
+          contentAsJson(result) shouldBe Json.toJson(ratePeriodsWithTaxTypeCodesToRateBandsWithMissingEntry)
+
+          ratePeriodsWithTaxTypeCodes.foreach { case (ratePeriod, taxTypeCode) =>
+            verify(mockRatesService).taxType(ratePeriod, taxTypeCode)
+          }
+      }
     }
 
     "return 400 BadRequest" when {
@@ -483,56 +534,6 @@ class RatesControllerSpec extends SpecBase {
         status(result)          shouldBe BAD_REQUEST
         contentAsString(result) shouldBe "Expected the number of ratePeriods and taxTypeCodes to match"
       }
-    }
-
-    "return 404 NOT_FOUND if any rate band cannot be found" in forAll {
-      (
-        ratePeriod: YearMonth,
-        rateBand: RateBand,
-        ratePeriod2: YearMonth,
-        rateBand2: RateBand,
-        ratePeriod3: YearMonth,
-        rateBand3: RateBand
-      ) =>
-        val mockRatesService: RatesService = mock[RatesService]
-
-        val controller = new RatesController(
-          fakeAuthorisedAction,
-          mockRatesService,
-          cc
-        )
-
-        val ratePeriods  = Seq(ratePeriod, ratePeriod2, ratePeriod3)
-        val taxTypeCodes = Seq("311", "312", "313")
-        val rateBands    = Seq(rateBand, rateBand2, rateBand3)
-
-        val ratePeriodsWithTaxTypeCodes = ratePeriods.zip(taxTypeCodes)
-
-        val i              = (Math.random() * 3).toInt
-        val ithTaxTypeCode = taxTypeCodes(i)
-
-        ratePeriodsWithTaxTypeCodes.zip(rateBands).foreach { case ((ratePeriod, taxTypeCode), rateBand) =>
-          if (taxTypeCode == ithTaxTypeCode) {
-            when(mockRatesService.taxType(eqTo(ratePeriod), eqTo(taxTypeCode))).thenReturn(None)
-          } else {
-            when(mockRatesService.taxType(eqTo(ratePeriod), eqTo(taxTypeCode))).thenReturn(Some(rateBand))
-          }
-        }
-
-        val urlWithParams =
-          s"/rate-bands?ratePeriods=${ratePeriods.map(ratePeriod => Json.toJson(ratePeriod).toString()).mkString(",")}&taxTypeCodes=${taxTypeCodes
-            .mkString(",")}"
-
-        val requestWithParams = FakeRequest("GET", urlWithParams)
-
-        val result: Future[Result] = controller.rateBands()(requestWithParams)
-
-        status(result)          shouldBe NOT_FOUND
-        contentAsString(result) shouldBe "Some rateBands not found"
-
-        ratePeriodsWithTaxTypeCodes.foreach { case (ratePeriod, taxTypeCode) =>
-          verify(mockRatesService).taxType(ratePeriod, taxTypeCode)
-        }
     }
   }
 }
