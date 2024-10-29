@@ -20,13 +20,13 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 
 class CalculateDutyDueByTaxTypeRequestSpec extends SpecBase {
-  "CalculateDutyDueByTaxTypeRequest" should {
+  "CalculateDutyDueByTaxTypeRequest must" - {
     "serialise to json" in new SetUp {
-      Json.toJson(calculateDutyDueByTaxTypeRequest).toString shouldBe json
+      Json.toJson(calculateDutyDueByTaxTypeRequest).toString mustBe json
     }
 
     "deserialise from json" in new SetUp {
-      Json.parse(json).as[CalculateDutyDueByTaxTypeRequest] shouldBe calculateDutyDueByTaxTypeRequest
+      Json.parse(json).as[CalculateDutyDueByTaxTypeRequest] mustBe calculateDutyDueByTaxTypeRequest
     }
   }
 

@@ -25,7 +25,7 @@ import uk.gov.hmrc.alcoholdutycalculator.models._
 
 class DutyCalculationIntegrationSpec extends ISpecBase {
 
-  "adjustment duty calculation endpoint" should {
+  "adjustment duty calculation endpoint must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
@@ -34,13 +34,13 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
           .withBody(Json.toJson(AdjustmentDutyCalculationRequest(Underdeclaration, BigDecimal(1), BigDecimal(1))))
       )
 
-      status(result) shouldBe OK
+      status(result) mustBe OK
       val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
-      dutyCalculation.duty shouldBe BigDecimal(1)
+      dutyCalculation.duty mustBe BigDecimal(1)
     }
   }
 
-  "repackaged adjustment duty change calculation endpoint" should {
+  "repackaged adjustment duty change calculation endpoint must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
@@ -49,13 +49,13 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
           .withBody(Json.toJson(RepackagedDutyChangeRequest(BigDecimal(10), BigDecimal(1))))
       )
 
-      status(result) shouldBe OK
+      status(result) mustBe OK
       val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
-      dutyCalculation.duty shouldBe BigDecimal(9)
+      dutyCalculation.duty mustBe BigDecimal(9)
     }
   }
 
-  "adjustment total calculation endpoint" should {
+  "adjustment total calculation endpoint must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
@@ -64,13 +64,13 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
           .withBody(Json.toJson(AdjustmentTotalCalculationRequest(Seq(BigDecimal(10), BigDecimal(1), BigDecimal(1)))))
       )
 
-      status(result) shouldBe OK
+      status(result) mustBe OK
       val dutyCalculation = Json.parse(contentAsString(result)).as[AdjustmentDuty]
-      dutyCalculation.duty shouldBe BigDecimal(12)
+      dutyCalculation.duty mustBe BigDecimal(12)
     }
   }
 
-  "returns total duties calculation endpoint" should {
+  "returns total duties calculation endpoint must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
@@ -88,18 +88,18 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
           )
       )
 
-      status(result) shouldBe OK
+      status(result) mustBe OK
       val dutyCalculation = Json.parse(contentAsString(result)).as[DutyTotalCalculationResponse]
-      dutyCalculation.totalDuty            shouldBe BigDecimal(5.0)
-      dutyCalculation.dutiesByTaxType.size shouldBe 2
-      dutyCalculation.dutiesByTaxType      shouldBe Seq(
+      dutyCalculation.totalDuty            mustBe BigDecimal(5.0)
+      dutyCalculation.dutiesByTaxType.size mustBe 2
+      dutyCalculation.dutiesByTaxType      mustBe Seq(
         DutyCalculationByTaxTypeResponse("taxType", BigDecimal(1), BigDecimal(1), BigDecimal(1), BigDecimal(1.0)),
         DutyCalculationByTaxTypeResponse("taxType2", BigDecimal(2), BigDecimal(2), BigDecimal(2), BigDecimal(4.0))
       )
     }
   }
 
-  "total duty due by tax type calculation endpoint" should {
+  "total duty due by tax type calculation endpoint must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
@@ -108,8 +108,8 @@ class DutyCalculationIntegrationSpec extends ISpecBase {
           .withBody(Json.toJson(calculateDutyDueByTaxTypeRequest))
       )
 
-      status(result)                                                     shouldBe OK
-      Json.parse(contentAsString(result)).as[CalculatedDutyDueByTaxType] shouldBe calculatedDutyDueByTaxType
+      status(result)                                                     mustBe OK
+      Json.parse(contentAsString(result)).as[CalculatedDutyDueByTaxType] mustBe calculatedDutyDueByTaxType
     }
   }
 }
