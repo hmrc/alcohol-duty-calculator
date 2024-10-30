@@ -22,7 +22,7 @@ import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationReques
 class DutyServiceSpec extends SpecBase {
   val dutyService = new DutyService()
 
-  "calculateAdjustmentDuty" should {
+  "calculateAdjustmentDuty must" - {
     "calculate a positive duty for an Underdeclaration or Repackaged adjustment type" in {
       forAll(arbitraryPositiveDutyAdjustmentType) { adjustmentType =>
         val adjustmentDutyCalculationRequest =
@@ -33,7 +33,7 @@ class DutyServiceSpec extends SpecBase {
           )
 
         val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
-        result.duty shouldBe BigDecimal(0.06)
+        result.duty mustBe BigDecimal(0.06)
       }
     }
 
@@ -47,7 +47,7 @@ class DutyServiceSpec extends SpecBase {
           )
 
         val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
-        result.duty shouldBe BigDecimal(-0.08)
+        result.duty mustBe BigDecimal(-0.08)
       }
     }
 
@@ -60,7 +60,7 @@ class DutyServiceSpec extends SpecBase {
         )
 
       val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
-      result.duty shouldBe BigDecimal(3.08)
+      result.duty mustBe BigDecimal(3.08)
     }
 
     "calculate duty with negative values" in {
@@ -72,7 +72,7 @@ class DutyServiceSpec extends SpecBase {
         )
 
       val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
-      result.duty shouldBe BigDecimal(-0.06)
+      result.duty mustBe BigDecimal(-0.06)
     }
 
     "calculate duty rounding down to the nearest penny" in {
@@ -84,7 +84,7 @@ class DutyServiceSpec extends SpecBase {
         )
 
       val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
-      result.duty shouldBe BigDecimal(0.21)
+      result.duty mustBe BigDecimal(0.21)
     }
 
     "calculate duty rounding down to the nearest penny with large decimals" in {
@@ -96,42 +96,40 @@ class DutyServiceSpec extends SpecBase {
         )
 
       val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
-      result.duty shouldBe BigDecimal(0.21)
+      result.duty mustBe BigDecimal(0.21)
     }
   }
 
-  "calculateRepackagedDutyChange" should {
-
+  "calculateRepackagedDutyChange must" - {
     "calculate duty" in {
       val repackagedDutyChangeRequest = RepackagedDutyChangeRequest(BigDecimal(5), BigDecimal(4))
 
       val result = dutyService.calculateRepackagedDutyChange(repackagedDutyChangeRequest)
-      result.duty shouldBe BigDecimal(1)
+      result.duty mustBe BigDecimal(1)
     }
 
     "calculate duty with decimal values" in {
       val repackagedDutyChangeRequest = RepackagedDutyChangeRequest(BigDecimal(5.55), BigDecimal(4.25))
 
       val result = dutyService.calculateRepackagedDutyChange(repackagedDutyChangeRequest)
-      result.duty shouldBe BigDecimal(1.3)
+      result.duty mustBe BigDecimal(1.3)
     }
 
     "calculate duty with negative values" in {
       val repackagedDutyChangeRequest = RepackagedDutyChangeRequest(BigDecimal(-5.45), BigDecimal(4.57))
 
       val result = dutyService.calculateRepackagedDutyChange(repackagedDutyChangeRequest)
-      result.duty shouldBe BigDecimal(-10.02)
+      result.duty mustBe BigDecimal(-10.02)
     }
   }
 
-  "calculateAdjustmentTotal" should {
-
+  "calculateAdjustmentTotal must" - {
     "calculate duty" in {
       val adjustmentTotalCalculationRequest =
         AdjustmentTotalCalculationRequest(Seq(BigDecimal(10), BigDecimal(19), BigDecimal(18)))
 
       val result = dutyService.calculateAdjustmentTotal(adjustmentTotalCalculationRequest)
-      result.duty shouldBe BigDecimal(47)
+      result.duty mustBe BigDecimal(47)
     }
 
     "calculate duty with decimal values" in {
@@ -139,7 +137,7 @@ class DutyServiceSpec extends SpecBase {
         AdjustmentTotalCalculationRequest(Seq(BigDecimal(10.12), BigDecimal(19.45), BigDecimal(18.45)))
 
       val result = dutyService.calculateAdjustmentTotal(adjustmentTotalCalculationRequest)
-      result.duty shouldBe BigDecimal(48.02)
+      result.duty mustBe BigDecimal(48.02)
     }
 
     "calculate duty with negative values" in {
@@ -147,11 +145,11 @@ class DutyServiceSpec extends SpecBase {
         AdjustmentTotalCalculationRequest(Seq(BigDecimal(10.12), BigDecimal(-19.45), BigDecimal(18.45)))
 
       val result = dutyService.calculateAdjustmentTotal(adjustmentTotalCalculationRequest)
-      result.duty shouldBe BigDecimal(9.12)
+      result.duty mustBe BigDecimal(9.12)
     }
   }
 
-  "returns calculateTotalDuty" should {
+  "returns calculateTotalDuty must" - {
     "calculate the correct alcohol duty" in {
       val adjustmentDutyCalculationRequest = Seq(
         DutyByTaxType(
@@ -169,9 +167,9 @@ class DutyServiceSpec extends SpecBase {
       )
 
       val result = dutyService.calculateTotalDuty(adjustmentDutyCalculationRequest)
-      result.totalDuty            shouldBe BigDecimal(5.0)
-      result.dutiesByTaxType.size shouldBe 2
-      result.dutiesByTaxType      shouldBe Seq(
+      result.totalDuty            mustBe BigDecimal(5.0)
+      result.dutiesByTaxType.size mustBe 2
+      result.dutiesByTaxType      mustBe Seq(
         DutyCalculationByTaxTypeResponse(
           taxType = "taxType",
           totalLitres = BigDecimal(1.0),
@@ -189,7 +187,7 @@ class DutyServiceSpec extends SpecBase {
       )
     }
 
-    "calculate the correct alcohol duty rounded down to two decimals" in {
+    "calculate the correct alcohol duty rounded down to two decimal places" in {
       val adjustmentDutyCalculationRequest = Seq(
         DutyByTaxType(
           taxType = "taxType",
@@ -206,16 +204,16 @@ class DutyServiceSpec extends SpecBase {
       )
 
       val result = dutyService.calculateTotalDuty(adjustmentDutyCalculationRequest)
-      result.totalDuty                     shouldBe BigDecimal(0.05)
-      result.dutiesByTaxType.size          shouldBe 2
-      result.dutiesByTaxType.head.dutyRate shouldBe BigDecimal(0.01)
-      result.dutiesByTaxType.last.dutyDue  shouldBe BigDecimal(0.04)
+      result.totalDuty                     mustBe BigDecimal(0.05)
+      result.dutiesByTaxType.size          mustBe 2
+      result.dutiesByTaxType.head.dutyRate mustBe BigDecimal(0.01)
+      result.dutiesByTaxType.last.dutyDue  mustBe BigDecimal(0.04)
     }
   }
 
-  "calculateDutyByTaxType" should {
+  "calculateDutyByTaxType must" - {
     "calculate the duty by tax type" in {
-      dutyService.calculateDutyByTaxType(calculateDutyDueByTaxTypeRequest) shouldBe calculatedDutyDueByTaxType
+      dutyService.calculateDutyByTaxType(calculateDutyDueByTaxTypeRequest) mustBe calculatedDutyDueByTaxType
     }
   }
 }

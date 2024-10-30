@@ -25,94 +25,86 @@ import uk.gov.hmrc.alcoholdutycalculator.models._
 import uk.gov.hmrc.alcoholdutycalculator.services.DutyService
 
 class DutyCalculationControllerSpec extends SpecBase {
-  "DutyCalculationController" when {
-    "adjustment duty calculation" should {
+  "DutyCalculationController when" - {
+    "calculating adjustment duty must" - {
       "return 200 OK with the AdjustmentDuty" in new SetUp {
         when(mockDutyService.calculateAdjustmentDuty(any())).thenReturn(duty)
 
         val result =
           controller.calculateAdjustmentDuty()(fakeRequestWithJsonBody(Json.toJson(adjustmentDutyCalculationRequest)))
 
-        status(result)                           shouldBe OK
-        contentAsJson(result).as[AdjustmentDuty] shouldBe duty
+        status(result)                           mustBe OK
+        contentAsJson(result).as[AdjustmentDuty] mustBe duty
       }
 
-      "return 400 BAD REQUEST" when {
-        "the AdjustmentType in the request is not valid" in new SetUp {
-          val result = controller.calculateAdjustmentDuty()(
-            fakeRequestWithJsonBody(Json.parse("""{"adjustmentType": -1.123, "volume": 1.0, "rate": 1.0}"""))
-          )
+      "return 400 BAD REQUEST when the AdjustmentType in the request is not valid" in new SetUp {
+        val result = controller.calculateAdjustmentDuty()(
+          fakeRequestWithJsonBody(Json.parse("""{"adjustmentType": -1.123, "volume": 1.0, "rate": 1.0}"""))
+        )
 
-          status(result) shouldBe BAD_REQUEST
-        }
+        status(result) mustBe BAD_REQUEST
       }
     }
 
-    "adjustment repackaged duty calculation" should {
+    "calculating adjustment repackaged duty must" - {
       "return 200 OK with the AdjustmentDuty" in new SetUp {
         when(mockDutyService.calculateRepackagedDutyChange(any())).thenReturn(duty)
 
         val result =
           controller.calculateRepackagedDutyChange()(fakeRequestWithJsonBody(Json.toJson(repackagedDutyChangeRequest)))
 
-        status(result)                           shouldBe OK
-        contentAsJson(result).as[AdjustmentDuty] shouldBe duty
+        status(result)                           mustBe OK
+        contentAsJson(result).as[AdjustmentDuty] mustBe duty
       }
 
-      "return 400 BAD REQUEST" when {
-        "the request is not valid" in new SetUp {
-          val result = controller.calculateRepackagedDutyChange()(
-            fakeRequestWithJsonBody(Json.parse("""{"newDuty": "sd", "oldDuty": "test"}"""))
-          )
+      "return 400 BAD REQUEST when the request is not valid" in new SetUp {
+        val result = controller.calculateRepackagedDutyChange()(
+          fakeRequestWithJsonBody(Json.parse("""{"newDuty": "sd", "oldDuty": "test"}"""))
+        )
 
-          status(result) shouldBe BAD_REQUEST
-        }
+        status(result) mustBe BAD_REQUEST
       }
     }
 
-    "adjustment total calculation" should {
+    "calculating adjustment total must" - {
       "return 200 OK with the AdjustmentDuty" in new SetUp {
         when(mockDutyService.calculateAdjustmentTotal(any())).thenReturn(duty)
 
         val result =
           controller.calculateTotalAdjustment()(fakeRequestWithJsonBody(Json.toJson(adjustmentTotalCalculationRequest)))
 
-        status(result)                           shouldBe OK
-        contentAsJson(result).as[AdjustmentDuty] shouldBe duty
+        status(result)                           mustBe OK
+        contentAsJson(result).as[AdjustmentDuty] mustBe duty
       }
 
-      "return 400 BAD REQUEST" when {
-        "the request is not valid" in new SetUp {
-          val result =
-            controller.calculateTotalAdjustment()(fakeRequestWithJsonBody(Json.parse("""{"dutyList": "json"}""")))
+      "return 400 BAD REQUEST when the request is not valid" in new SetUp {
+        val result =
+          controller.calculateTotalAdjustment()(fakeRequestWithJsonBody(Json.parse("""{"dutyList": "json"}""")))
 
-          status(result) shouldBe BAD_REQUEST
-        }
+        status(result) mustBe BAD_REQUEST
       }
     }
 
-    "returns calculate total duty" should {
+    "calculating total duty duty must" - {
       "return 200 OK with the total duty calculation" in new SetUp {
         when(mockDutyService.calculateTotalDuty(any())).thenReturn(totalCalculationResponse)
 
         val result = controller.calculateTotalDuty()(fakeRequestWithJsonBody(Json.toJson(totalCalculationRequest)))
 
-        status(result)                                         shouldBe OK
-        contentAsJson(result).as[DutyTotalCalculationResponse] shouldBe totalCalculationResponse
+        status(result)                                         mustBe OK
+        contentAsJson(result).as[DutyTotalCalculationResponse] mustBe totalCalculationResponse
       }
 
-      "return 400 BAD REQUEST" when {
-        "the request is not valid" in new SetUp {
-          val result = controller.calculateTotalDuty()(
-            fakeRequestWithJsonBody(Json.parse("""{"abv": -1.123, "volume": 1.0, "rate": 1.0}"""))
-          )
+      "return 400 BAD REQUEST when the request is not valid" in new SetUp {
+        val result = controller.calculateTotalDuty()(
+          fakeRequestWithJsonBody(Json.parse("""{"abv": -1.123, "volume": 1.0, "rate": 1.0}"""))
+        )
 
-          status(result) shouldBe BAD_REQUEST
-        }
+        status(result) mustBe BAD_REQUEST
       }
     }
 
-    "calculateTotalDutyDueByTaxType" should {
+    "calculateTotalDutyDueByTaxType must" - {
       "return 200 OK with the total duty due by tax type calculation" in new SetUp {
         when(mockDutyService.calculateDutyByTaxType(any())).thenReturn(calculatedDutyDueByTaxType)
 
@@ -120,18 +112,16 @@ class DutyCalculationControllerSpec extends SpecBase {
           fakeRequestWithJsonBody(Json.toJson(calculateDutyDueByTaxTypeRequest))
         )
 
-        status(result)                                       shouldBe OK
-        contentAsJson(result).as[CalculatedDutyDueByTaxType] shouldBe calculatedDutyDueByTaxType
+        status(result)                                       mustBe OK
+        contentAsJson(result).as[CalculatedDutyDueByTaxType] mustBe calculatedDutyDueByTaxType
       }
 
-      "return 400 BAD REQUEST" when {
-        "the request is not valid" in new SetUp {
-          val result = controller.calculateTotalDutyDueByTaxType()(
-            fakeRequestWithJsonBody(Json.parse("""{"totalDutyDueByTaxType":1}"""))
-          )
+      "return 400 BAD REQUEST when the request is not valid" in new SetUp {
+        val result = controller.calculateTotalDutyDueByTaxType()(
+          fakeRequestWithJsonBody(Json.parse("""{"totalDutyDueByTaxType":1}"""))
+        )
 
-          status(result) shouldBe BAD_REQUEST
-        }
+        status(result) mustBe BAD_REQUEST
       }
     }
   }

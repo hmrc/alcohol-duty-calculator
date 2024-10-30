@@ -30,9 +30,8 @@ import java.time.YearMonth
 
 class RatesServiceSpec extends SpecBase {
 
-  "alcoholDutyRates" should {
+  "alcoholDutyRates must" - {
     "return the list of rates from a file" in {
-
       val mockEnv    = mock[Environment]
       val mockConfig = mock[AppConfig]
       when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
@@ -81,7 +80,7 @@ class RatesServiceSpec extends SpecBase {
       val service = new RatesService(mockEnv, mockConfig)
 
       val result = service.alcoholDutyRates
-      result shouldBe List(
+      result mustBe List(
         RatePeriod(
           "2023-1",
           isLatest = true,
@@ -111,8 +110,7 @@ class RatesServiceSpec extends SpecBase {
       )
     }
 
-    "throws an exception when the file can't be opened" in {
-
+    "throw an exception when the file can't be opened" in {
       val mockEnv    = mock[Environment]
       val mockConfig = mock[AppConfig]
       when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
@@ -122,12 +120,11 @@ class RatesServiceSpec extends SpecBase {
       the[Exception] thrownBy {
         val service = new RatesService(mockEnv, mockConfig)
         service.alcoholDutyRates
-      } should have message "Could not open Alcohol Duty Rate file"
+      } must have message "Could not open Alcohol Duty Rate file"
     }
   }
 
-  "rateBands" should {
-
+  "rateBands must" - {
     val baseRateBand = RateBand(
       "taxTypeBase",
       "descriptionBase",
@@ -321,37 +318,37 @@ class RatesServiceSpec extends SpecBase {
       service
         .rateBands(YearMonth.of(2023, 1), Set(Beer))
         .head
-        .taxTypeCode shouldBe "2023-1"
+        .taxTypeCode mustBe "2023-1"
 
       service
         .rateBands(YearMonth.of(2023, 12), Set(Beer))
         .head
-        .taxTypeCode shouldBe "2023-1"
+        .taxTypeCode mustBe "2023-1"
 
       service
         .rateBands(YearMonth.of(2024, 1), Set(Beer))
         .head
-        .taxTypeCode shouldBe "2024-1"
+        .taxTypeCode mustBe "2024-1"
 
       service
         .rateBands(YearMonth.of(2024, 12), Set(Beer))
         .head
-        .taxTypeCode shouldBe "2024-1"
+        .taxTypeCode mustBe "2024-1"
 
       service
         .rateBands(YearMonth.of(2025, 1), Set(Beer))
         .head
-        .taxTypeCode shouldBe "2025-1"
+        .taxTypeCode mustBe "2025-1"
 
       service
         .rateBands(YearMonth.of(2025, 12), Set(Beer))
         .head
-        .taxTypeCode shouldBe "2025-1"
+        .taxTypeCode mustBe "2025-1"
 
       service
         .rateBands(YearMonth.of(2030, 6), Set(Beer))
         .head
-        .taxTypeCode shouldBe "2025-1"
+        .taxTypeCode mustBe "2025-1"
     }
 
     "filter rateBands by alcohol regimes" in {
@@ -368,36 +365,36 @@ class RatesServiceSpec extends SpecBase {
         .rateBands(
           YearMonth.of(2025, 1),
           Set(Spirits)
-        ) should have size 1
+        ) must have size 1
 
       service
         .rateBands(YearMonth.of(2025, 1), Set(Spirits))
         .head
-        .taxTypeCode shouldBe "2025-4"
+        .taxTypeCode mustBe "2025-4"
 
       service
         .rateBands(
           YearMonth.of(2025, 1),
           Set(Beer)
-        ) should have size 4
+        ) must have size 4
 
       service
         .rateBands(
           YearMonth.of(2025, 1),
           Set(Wine)
-        ) should have size 3
+        ) must have size 3
 
       service
         .rateBands(
           YearMonth.of(2025, 1),
           Set(Wine, Cider, Spirits)
-        ) should have size 3
+        ) must have size 3
 
       service
         .rateBands(
           YearMonth.of(2025, 1),
           Set(Beer, Wine, Cider, Spirits)
-        ) should have size 4
+        ) must have size 4
     }
 
     "filter rateBands by year for the taxType request" in {
@@ -411,20 +408,19 @@ class RatesServiceSpec extends SpecBase {
       val service = new RatesService(mockEnv, mockConfig)
 
       service
-        .taxType(YearMonth.of(2023, 1), "2023-1") shouldBe Some(ratePeriods.head.rateBands.head)
+        .taxType(YearMonth.of(2023, 1), "2023-1") mustBe Some(ratePeriods.head.rateBands.head)
       service
-        .taxType(YearMonth.of(2024, 1), "2024-1") shouldBe Some(ratePeriods(1).rateBands.head)
+        .taxType(YearMonth.of(2024, 1), "2024-1") mustBe Some(ratePeriods(1).rateBands.head)
       service
-        .taxType(YearMonth.of(2099, 1), "2024-1") shouldBe None
+        .taxType(YearMonth.of(2099, 1), "2024-1") mustBe None
       service
-        .taxType(YearMonth.of(2025, 1), "2025-1") shouldBe Some(ratePeriods(2).rateBands.head)
+        .taxType(YearMonth.of(2025, 1), "2025-1") mustBe Some(ratePeriods(2).rateBands.head)
       service
-        .taxType(YearMonth.of(2025, 1), "2025-3") shouldBe Some(ratePeriods(2).rateBands(2))
+        .taxType(YearMonth.of(2025, 1), "2025-3") mustBe Some(ratePeriods(2).rateBands(2))
 
     }
 
     "filter rateBands by taxType for the taxType request" in {
-
       val mockEnv    = mock[Environment]
       val mockConfig = mock[AppConfig]
       when(mockConfig.alcoholDutyRatesFile).thenReturn("foo")
@@ -435,11 +431,10 @@ class RatesServiceSpec extends SpecBase {
       val service = new RatesService(mockEnv, mockConfig)
 
       service
-        .taxType(YearMonth.of(2023, 1), "2023-1") shouldBe Some(ratePeriods.head.rateBands.head)
+        .taxType(YearMonth.of(2023, 1), "2023-1") mustBe Some(ratePeriods.head.rateBands.head)
 
       service
-        .taxType(YearMonth.of(2023, 1), "2023-2") shouldBe Some(ratePeriods.head.rateBands(1))
-
+        .taxType(YearMonth.of(2023, 1), "2023-2") mustBe Some(ratePeriods.head.rateBands(1))
     }
   }
 }

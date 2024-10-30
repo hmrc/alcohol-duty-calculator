@@ -26,7 +26,7 @@ import java.time.YearMonth
 
 class RatesIntegrationSpec extends ISpecBase {
 
-  "service rates endpoint" should {
+  "service rates endpoint must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
@@ -36,13 +36,13 @@ class RatesIntegrationSpec extends ISpecBase {
       lazy val result =
         callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
 
-      status(result) shouldBe OK
+      status(result) mustBe OK
       val rateBandList = Json.parse(contentAsString(result)).as[Seq[RateBand]]
-      rateBandList should have size 30
+      rateBandList must have size 30
     }
   }
 
-  "service rate-band endpoint" should {
+  "service rate-band endpoint must" - {
     "respond with 200 status" in {
       stubAuthorised()
       val taxType     = "321"
@@ -50,9 +50,9 @@ class RatesIntegrationSpec extends ISpecBase {
         s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&taxTypeCode=$taxType"
       lazy val result =
         callRoute(FakeRequest("GET", routes.RatesController.rateBand().url + urlParams))
-      status(result) shouldBe OK
+      status(result) mustBe OK
       val rateBand: RateBand = Json.parse(contentAsString(result)).as[RateBand]
-      rateBand.rateType shouldBe RateType.Core
+      rateBand.rateType mustBe RateType.Core
     }
   }
 }

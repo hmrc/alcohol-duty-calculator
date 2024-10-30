@@ -43,8 +43,7 @@ class AuthorisedActionSpec extends SpecBase {
     Future(Ok(testContent))
   }
 
-  "invokeBlock" should {
-
+  "invokeBlock must" - {
     "execute the block and return OK if authorised" in {
       when(
         mockAuthConnector.authorise[Unit](
@@ -62,8 +61,8 @@ class AuthorisedActionSpec extends SpecBase {
 
       val result: Future[Result] = authorisedAction.invokeBlock(fakeRequest, testAction)
 
-      status(result)          shouldBe OK
-      contentAsString(result) shouldBe testContent
+      status(result)          mustBe OK
+      contentAsString(result) mustBe testContent
     }
   }
 
@@ -85,7 +84,7 @@ class AuthorisedActionSpec extends SpecBase {
 
       val result: Future[Result] = authorisedAction.invokeBlock(fakeRequest, testAction)
 
-      status(result) shouldBe UNAUTHORIZED
+      status(result) mustBe UNAUTHORIZED
     }
   }
 
@@ -99,6 +98,6 @@ class AuthorisedActionSpec extends SpecBase {
       await(authorisedAction.invokeBlock(fakeRequest, testAction))
     }
 
-    result.getMessage shouldBe msg
+    result.getMessage mustBe msg
   }
 }
