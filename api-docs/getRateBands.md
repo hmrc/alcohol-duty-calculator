@@ -1,10 +1,10 @@
-# Get Rate Band
+# Get Rate Bands
 
-Returns tax rates, bands and description for a specific tax code for a specific period.
+Returns a list of tax rates, bands and description for a specific list of tax codes for specific periods.
 
 Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
 
-**URL**: `/alcohol-duty-calculator/rate-band`
+**URL**: `/alcohol-duty-calculator/rate-bands`
 
 **Method**: `GET`
 
@@ -14,14 +14,16 @@ No parameters are required
 
 **Query Params**
 
-| Parameter Name | Description               | Data Type | Mandatory/Optional | Notes   |
-|----------------|---------------------------|-----------|--------------------|---------|
-| ratePeriod     | The period                | YearMonth | Mandatory          | YYYY-MM |
-| taxTypeCode    | The three digit tax code  | String    | Mandatory          |         |
+| Parameter Name | Description               | Data Type     | Mandatory/Optional | Notes   |
+|----------------|---------------------------|---------------|--------------------|---------|
+| ratePeriods    | The periods               | YearMonth CSV | Mandatory          | YYYY-MM |
+| taxTypeCodes   | The three digit tax codes | String CSV    | Mandatory          |         |
+
+Note the number of rate periods must match the number of tax codes
 
 ***Example request:***
 
-/alcohol-duty-calculator/rate-band?ratePeriod="2024-07"&taxTypeCode=311
+/alcohol-duty-calculator/rate-band?ratePeriod="2024-07","2024-08"&taxTypeCode=311,312
 
 **Required Request Headers**:
 
@@ -37,7 +39,7 @@ No parameters are required
 
 **Response Body**
 
-The response body returns details for a single rate period, tax code
+The response body returns a list of details for each rate period, tax code in the same order as the parameter rate period, tax code pairs
 
 | Field Name                         | Description                                                      | Data Type     | Mandatory/Optional | Notes                                                                   |
 |------------------------------------|------------------------------------------------------------------|---------------|--------------------|-------------------------------------------------------------------------|
@@ -54,44 +56,46 @@ The response body returns details for a single rate period, tax code
 
 **Response Body Examples**
 
-***An example rate band:***
+***An example single rate band:***
 
 ```json
-{
-  "taxTypeCode": "359",
-  "description": "Other fermented products like fruit ciders from 3.5% to 8.4% or Sparkling cider from 5.6% to 8.4%, eligible for draught relief",
-  "rateType": "DraughtRelief",
-  "rangeDetails": [
-    {
-      "alcoholRegime": "OtherFermentedProduct",
-      "abvRanges": [
-        {
-          "alcoholType": "OtherFermentedProduct",
-          "minABV": 3.5,
-          "maxABV": 8.4
-        },
-        {
-          "alcoholType": "SparklingCider",
-          "minABV": 5.6,
-          "maxABV": 8.4
-        }
-      ]
-    }
-  ],
-  "rate": 19.08
-}
+[
+  {
+    "taxTypeCode": "359",
+    "description": "Other fermented products like fruit ciders from 3.5% to 8.4% or Sparkling cider from 5.6% to 8.4%, eligible for draught relief",
+    "rateType": "DraughtRelief",
+    "rangeDetails": [
+      {
+        "alcoholRegime": "OtherFermentedProduct",
+        "abvRanges": [
+          {
+            "alcoholType": "OtherFermentedProduct",
+            "minABV": 3.5,
+            "maxABV": 8.4
+          },
+          {
+            "alcoholType": "SparklingCider",
+            "minABV": 5.6,
+            "maxABV": 8.4
+          }
+        ]
+      }
+    ],
+    "rate": 19.08
+  }
+]
 ```
 
 ### Responses
 
 **Code**: `400 BAD_REQUEST`
-This response can occur if the parameters cannot be parsed
+This response can occur if the parameters cannot be parsed, or the number of rate periods and tax codes do not match
 
 **Code**: `401 UNAUTHORIZED`
 This response can occur when a call is made by any consumer without an authorized session that has an ADR enrolment.
 
 **Code**: `404 NOT_FOUND`
-This response can occur if the tax code couldn't be found in the rates file for the rate period
+This response can occur if one or more the tax codes couldn't be found in the rates file for the respective rate periods
 
 **Code**: `500 INTERNAL_SERVER_ERROR`
 This response can occur if the rates file couldn't be read
