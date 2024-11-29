@@ -45,7 +45,7 @@ class RatesIntegrationSpec extends ISpecBase {
         val expectedRate: Double = 9.27d
 
         val urlParams =
-          s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=Beer"
+          s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=Beer,Wine,OtherFermentedProduct,Cider,Spirits"
 
         lazy val result =
           callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
@@ -53,9 +53,10 @@ class RatesIntegrationSpec extends ISpecBase {
         status(result) mustBe OK
         val rateBandList = Json.parse(contentAsString(result)).as[Seq[RateBand]]
 
-        rateBandList.find(x => Seq("311", "312", "313", "314", "315").contains(x.taxTypeCode)).get.rate mustBe Some(
-          expectedRate
-        )
+        rateBandList.filter(x => Seq("311", "312", "313", "314", "315").contains(x.taxTypeCode)) must have size 5
+        rateBandList
+          .filter(x => Seq("311", "312", "313", "314", "315").contains(x.taxTypeCode))
+          .foreach(r => r.rate mustBe Some(expectedRate))
       }
     }
   }
