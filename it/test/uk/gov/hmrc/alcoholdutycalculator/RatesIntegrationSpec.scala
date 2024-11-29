@@ -37,27 +37,25 @@ class RatesIntegrationSpec extends ISpecBase {
     validateJsonAgainstSchema(lines) mustBe true
   }
 
-  "for beer" - {
-    "where tax type code 311, 312, 313, 314, 315" - {
-      "service rates endpoint must" - {
-        "show the correct rate" in {
-          stubAuthorised()
+  "where tax type code 311, 312, 313, 314, 315" - {
+    "service rates endpoint must" - {
+      "show the correct rate" in {
+        stubAuthorised()
 
-          val expectedRate: Double = 9.27d
+        val expectedRate: Double = 9.27d
 
-          val urlParams =
-            s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=Beer"
+        val urlParams =
+          s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=Beer"
 
-          lazy val result =
-            callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
+        lazy val result =
+          callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
 
-          status(result) mustBe OK
-          val rateBandList = Json.parse(contentAsString(result)).as[Seq[RateBand]]
+        status(result) mustBe OK
+        val rateBandList = Json.parse(contentAsString(result)).as[Seq[RateBand]]
 
-          rateBandList.find(x => Seq("311", "312", "313", "314", "315").contains(x.taxTypeCode)).get.rate mustBe Some(
-            expectedRate
-          )
-        }
+        rateBandList.find(x => Seq("311", "312", "313", "314", "315").contains(x.taxTypeCode)).get.rate mustBe Some(
+          expectedRate
+        )
       }
     }
   }
