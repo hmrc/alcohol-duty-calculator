@@ -29,9 +29,6 @@ import uk.gov.hmrc.alcoholdutycalculator.models.{ABVRange, RangeDetailsByRegime,
 import java.io.InputStream
 import java.time.YearMonth
 
-// TODO - need to amend this to cover bands also!! Currently if you add a band (ABV) it does not get flagged in the spec
-// TODO - validate the alcohol types are correct
-
 class RatesIntegrationSpec extends ISpecBase {
 
   val schemaUri: String                                 = getClass.getResource("/alcohol-duty-rates-schema.json").toURI.toString
