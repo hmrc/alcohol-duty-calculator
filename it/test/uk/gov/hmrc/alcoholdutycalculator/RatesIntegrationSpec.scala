@@ -24,25 +24,29 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
-import uk.gov.hmrc.alcoholdutycalculator.models.{RateBand, RatePeriod, RateType}
+import uk.gov.hmrc.alcoholdutycalculator.models.{ABVRange, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
 
 import java.io.InputStream
 import java.time.YearMonth
 
+// TODO - need to amend this to cover bands also!! Currently if you add a band (ABV) it does not get flagged in the spec
+// TODO - validate the alcohol types are correct
+
 class RatesIntegrationSpec extends ISpecBase {
 
+  val schemaUri: String                                 = getClass.getResource("/alcohol-duty-rates-schema.json").toURI.toString
   private lazy val jsonSchemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault
   private lazy val jsonSchema: JsonSchema               =
-    jsonSchemaFactory.getJsonSchema(s"resource:/rates/alcohol-duty-rates-schema.json")
-
-  private val month = 5
+    jsonSchemaFactory.getJsonSchema(schemaUri)
+  private lazy val currentRatePeriod: String            = Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()
+  private lazy val currentTotalNoOfRates: Int           = 48
 
   "service rates endpoint must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
       val urlParams =
-        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=Beer,Wine,OtherFermentedProduct"
+        s"?ratePeriod=$currentRatePeriod&alcoholRegimes=Beer,Wine,OtherFermentedProduct"
 
       lazy val result =
         callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
@@ -58,7 +62,7 @@ class RatesIntegrationSpec extends ISpecBase {
       stubAuthorised()
       val taxType     = "321"
       val urlParams   =
-        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&taxTypeCode=$taxType"
+        s"?ratePeriod=$currentRatePeriod&taxTypeCode=$taxType"
       lazy val result =
         callRoute(FakeRequest("GET", routes.RatesController.rateBand().url + urlParams))
       status(result) mustBe OK
@@ -74,9 +78,8 @@ class RatesIntegrationSpec extends ISpecBase {
   }
 
   "validate the rates within the file" - {
-    // For every tax year we need a section! Seq(years and loop) up to a max of cy-5
-    s"For cy" - {
-      lazy val cy = 2023
+    s"For rate period" - {
+      lazy val rateBandList: Seq[RateBand] = getRatesFromJson(currentRatePeriod)
 
       "For band A" - {
         val rate: Option[Double]  = Some(9.27d)
@@ -85,7 +88,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -97,7 +100,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -109,7 +112,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -121,7 +124,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -133,7 +136,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -145,7 +148,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -157,7 +160,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -169,7 +172,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -181,7 +184,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -193,7 +196,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, count, rate)
           }
         }
       }
@@ -204,39 +207,31 @@ class RatesIntegrationSpec extends ISpecBase {
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verifyRate(cy, taxTypes, count, None)
+            verify(rateBandList, taxTypes, count, None)
           }
         }
       }
-
-    }
-
-    // TODO when we hit the next tax year current cy tests become cy-1 and cy can be updated with new values (up to cy-5)
-    s"For cy-1" - {
-      "For band A" - {}
-      "For band B" - {}
-      "For band C" - {}
-      // etc...
     }
   }
 
-  private def verifyRate(taxYear: Int, taxTypes: Seq[String], count: Int, rate: Option[Double]): Unit = {
-    val rateBandList = getRatesFromJson(taxYear)
-    val rates        = rateBandList.filter(rateBand => taxTypes.contains(rateBand.taxTypeCode))
+  private def verify(rateBandList: Seq[RateBand], taxTypes: Seq[String], count: Int, rate: Option[Double]): Unit = {
+    rateBandList.length mustBe currentTotalNoOfRates
 
+    val rates = rateBandList.filter(rateBand => taxTypes.contains(rateBand.taxTypeCode))
     rates must have size count
+
+    // TODO - verify the range details and ranges (no of occurrences, abv values etc)
+    val rangeDetails: Seq[RangeDetailsByRegime] = rates.flatMap(x => x.rangeDetails)
+    val ranges: Seq[ABVRange]                   = rangeDetails.flatMap(y => y.abvRanges)
+
     rates.foreach(band => band.rate mustBe rate)
   }
 
-  private def getRatesFromJson(taxYear: Int): Seq[RateBand] = {
+  private def getRatesFromJson(ratePeriod: String): Seq[RateBand] = {
     stubAuthorised()
 
     val urlParams =
-      s"?ratePeriod=${Json
-        .toJson(
-          YearMonth.of(taxYear, month)
-        )(RatePeriod.yearMonthFormat)
-        .toString()}&alcoholRegimes=Beer,Cider,Wine,Spirits,OtherFermentedProduct"
+      s"?ratePeriod=$ratePeriod&alcoholRegimes=Beer,Cider,Wine,Spirits,OtherFermentedProduct"
 
     lazy val result =
       callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
