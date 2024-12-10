@@ -84,11 +84,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band A" - {
         val rate: Option[Double]  = Some(9.27d)
         val taxTypes: Seq[String] = Seq("311", "312", "313", "314", "315")
-        val count                 = 5
+        val rateCount             = 5
+        val rangeDetailsCount     = 5
+        val rangesCount           = 5
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -96,11 +98,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band B" - {
         val rate: Option[Double]  = Some(21.01d)
         val taxTypes: Seq[String] = Seq("321")
-        val count                 = 1
+        val rateCount             = 1
+        val rangeDetailsCount     = 1
+        val rangesCount           = 1
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -108,11 +112,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band C" - {
         val rate: Option[Double]  = Some(9.67d)
         val taxTypes: Seq[String] = Seq("322")
-        val count                 = 1
+        val rateCount             = 1
+        val rangeDetailsCount     = 1
+        val rangesCount           = 2
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -120,11 +126,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band D" - {
         val rate: Option[Double]  = Some(24.77d)
         val taxTypes: Seq[String] = Seq("323", "324", "325")
-        val count                 = 3
+        val rateCount             = 3
+        val rangeDetailsCount     = 3
+        val rangesCount           = 4
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -132,11 +140,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band E" - {
         val rate: Option[Double]  = Some(28.50d)
         val taxTypes: Seq[String] = Seq("331", "333", "334", "335")
-        val count                 = 4
+        val rateCount             = 4
+        val rangeDetailsCount     = 4
+        val rangesCount           = 4
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -144,11 +154,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band F" - {
         val rate: Option[Double]  = Some(31.64d)
         val taxTypes: Seq[String] = Seq("341", "343", "344", "345")
-        val count                 = 4
+        val rateCount             = 4
+        val rangeDetailsCount     = 4
+        val rangesCount           = 4
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -156,11 +168,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band G" - {
         val rate: Option[Double]  = Some(8.42d)
         val taxTypes: Seq[String] = Seq("351", "352", "353", "354", "355")
-        val count                 = 5
+        val rateCount             = 5
+        val rangeDetailsCount     = 5
+        val rangesCount           = 5
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -168,11 +182,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band H" - {
         val rate: Option[Double]  = Some(19.08d)
         val taxTypes: Seq[String] = Seq("356")
-        val count                 = 1
+        val rateCount             = 1
+        val rangeDetailsCount     = 1
+        val rangesCount           = 1
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -180,11 +196,13 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band I" - {
         val rate: Option[Double]  = Some(8.78d)
         val taxTypes: Seq[String] = Seq("357")
-        val count                 = 1
+        val rateCount             = 1
+        val rangeDetailsCount     = 1
+        val rangesCount           = 2
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
@@ -192,38 +210,49 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band J" - {
         val rate: Option[Double]  = Some(19.08d)
         val taxTypes: Seq[String] = Seq("358", "359", "360")
-        val count                 = 3
+        val rateCount             = 3
+        val rangeDetailsCount     = 3
+        val rangesCount           = 4
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, rate)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
           }
         }
       }
 
       "For band K" - {
         val taxTypes: Seq[String] = Seq("371", "372", "373", "374", "375", "376", "377", "378", "379", "380")
-        val count                 = 10
+        val rateCount             = 10
+        val rangeDetailsCount     = 10
+        val rangesCount           = 12
 
         "service rates endpoint must" - {
           "show the correct rate" in {
-            verify(rateBandList, taxTypes, count, None)
+            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, None)
           }
         }
       }
     }
   }
 
-  private def verify(rateBandList: Seq[RateBand], taxTypes: Seq[String], count: Int, rate: Option[Double]): Unit = {
+  private def verify(
+    rateBandList: Seq[RateBand],
+    taxTypes: Seq[String],
+    rateCount: Int,
+    rangeDetailsCount: Int,
+    rangesCount: Int,
+    rate: Option[Double]
+  ): Unit = {
     rateBandList.length mustBe currentTotalNoOfRates
 
-    val rates = rateBandList.filter(rateBand => taxTypes.contains(rateBand.taxTypeCode))
-    rates must have size count
-
-    // TODO - verify the range details and ranges (no of occurrences, abv values etc)
+    val rates                                   = rateBandList.filter(rateBand => taxTypes.contains(rateBand.taxTypeCode))
     val rangeDetails: Seq[RangeDetailsByRegime] = rates.flatMap(x => x.rangeDetails)
     val ranges: Seq[ABVRange]                   = rangeDetails.flatMap(y => y.abvRanges)
 
+    rates        must have size rateCount
+    rangeDetails must have size rangeDetailsCount
+    ranges       must have size rangesCount
     rates.foreach(band => band.rate mustBe rate)
   }
 
