@@ -160,16 +160,21 @@
         "rate": 24.77,
         "rangeDetails": [
           {
+            "alcoholRegime": "Cider",
+            "abvRanges": [
+              {
+                "alcoholType": "SparklingCider",
+                "minABV": 5.6,
+                "maxABV": 8.4
+              }
+            ]
+          },
+          {
             "alcoholRegime": "OtherFermentedProduct",
             "abvRanges": [
               {
                 "alcoholType": "OtherFermentedProduct",
                 "minABV": 3.5,
-                "maxABV": 8.4
-              },
-              {
-                "alcoholType": "SparklingCider",
-                "minABV": 5.6,
                 "maxABV": 8.4
               }
             ]
@@ -494,16 +499,21 @@
         "rate": 19.08,
         "rangeDetails": [
           {
+            "alcoholRegime": "Cider",
+            "abvRanges": [
+              {
+                "alcoholType": "SparklingCider",
+                "minABV": 5.6,
+                "maxABV": 8.4
+              }
+            ]
+          },
+          {
             "alcoholRegime": "OtherFermentedProduct",
             "abvRanges": [
               {
                 "alcoholType": "OtherFermentedProduct",
                 "minABV": 3.5,
-                "maxABV": 8.4
-              },
-              {
-                "alcoholType": "SparklingCider",
-                "minABV": 5.6,
                 "maxABV": 8.4
               }
             ]
@@ -675,16 +685,21 @@
         "rateType": "SmallProducerRelief",
         "rangeDetails": [
           {
+            "alcoholRegime": "Cider",
+            "abvRanges": [
+              {
+                "alcoholType": "SparklingCider",
+                "minABV": 5.6,
+                "maxABV": 8.4
+              }
+            ]
+          },
+          {
             "alcoholRegime": "OtherFermentedProduct",
             "abvRanges": [
               {
                 "alcoholType": "OtherFermentedProduct",
                 "minABV": 3.5,
-                "maxABV": 8.4
-              },
-              {
-                "alcoholType": "SparklingCider",
-                "minABV": 5.6,
                 "maxABV": 8.4
               }
             ]
@@ -855,16 +870,21 @@
         "rateType": "DraughtAndSmallProducerRelief",
         "rangeDetails": [
           {
+            "alcoholRegime": "Cider",
+            "abvRanges": [
+              {
+                "alcoholType": "SparklingCider",
+                "minABV": 5.6,
+                "maxABV": 8.4
+              }
+            ]
+          },
+          {
             "alcoholRegime": "OtherFermentedProduct",
             "abvRanges": [
               {
                 "alcoholType": "OtherFermentedProduct",
                 "minABV": 3.5,
-                "maxABV": 8.4
-              },
-              {
-                "alcoholType": "SparklingCider",
-                "minABV": 5.6,
                 "maxABV": 8.4
               }
             ]
