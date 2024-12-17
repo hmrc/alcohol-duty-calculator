@@ -124,7 +124,7 @@ class RatesIntegrationSpec extends ISpecBase {
         val rate: Option[Double]  = Some(24.77d)
         val taxTypes: Seq[String] = Seq("323", "324", "325")
         val rateCount             = 3
-        val rangeDetailsCount     = 3
+        val rangeDetailsCount     = 4
         val rangesCount           = 4
 
         "service rates endpoint must" - {
@@ -208,7 +208,7 @@ class RatesIntegrationSpec extends ISpecBase {
         val rate: Option[Double]  = Some(19.08d)
         val taxTypes: Seq[String] = Seq("358", "359", "360")
         val rateCount             = 3
-        val rangeDetailsCount     = 3
+        val rangeDetailsCount     = 4
         val rangesCount           = 4
 
         "service rates endpoint must" - {
@@ -221,7 +221,7 @@ class RatesIntegrationSpec extends ISpecBase {
       "For band K" - {
         val taxTypes: Seq[String] = Seq("371", "372", "373", "374", "375", "376", "377", "378", "379", "380")
         val rateCount             = 10
-        val rangeDetailsCount     = 10
+        val rangeDetailsCount     = 11
         val rangesCount           = 12
 
         "service rates endpoint must" - {
