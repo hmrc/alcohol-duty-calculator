@@ -8,10 +8,10 @@
       "name": {
         "type": "string"
       },
-      "isLatest": {
-        "type": "boolean"
-      },
       "validityStartDate": {
+        "type": "string"
+      },
+      "validityEndDate": {
         "type": "string"
       },
       "rateBands": {
@@ -80,7 +80,6 @@
     },
     "required": [
       "name",
-      "isLatest",
       "validityStartDate",
       "rateBands"
     ]

@@ -41,7 +41,6 @@ class RatesServiceSpec extends SpecBase {
           Seq(
             Json.obj(
               "name"              -> "2023-1",
-              "isLatest"          -> true,
               "validityStartDate" -> "2023-01",
               "validityEndDate"   -> "2024-01",
               "rateBands"         -> JsArray(
@@ -83,7 +82,6 @@ class RatesServiceSpec extends SpecBase {
       result mustBe List(
         RatePeriod(
           "2023-1",
-          isLatest = true,
           YearMonth.parse("2023-01"),
           Some(YearMonth.parse("2024-01")),
           List(
@@ -146,7 +144,6 @@ class RatesServiceSpec extends SpecBase {
 
     val baseRatePeriod = RatePeriod(
       "2023-base",
-      isLatest = true,
       YearMonth.of(2023, 1),
       Some(YearMonth.of(2024, 1)),
       List(baseRateBand)
