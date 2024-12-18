@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.alcoholdutycalculator
+package uk.gov.hmrc.alcoholdutycalculator.rates
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.github.fge.jackson.JsonLoader
@@ -24,21 +24,30 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
-import uk.gov.hmrc.alcoholdutycalculator.models.{ABVRange, RangeDetailsByRegime, RateBand, RatePeriod, RateType}
+import uk.gov.hmrc.alcoholdutycalculator.models._
 
 import java.io.InputStream
 import java.time.YearMonth
+import scala.util.Random
 
-class RatesIntegrationSpec extends ISpecBase {
+class RatesIntegration_2023_1Spec extends ISpecBase {
 
   val schemaUri: String                                 = getClass.getResource("/alcohol-duty-rates-schema.json").toURI.toString
   private lazy val jsonSchemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault
-  private lazy val jsonSchema: JsonSchema               =
-    jsonSchemaFactory.getJsonSchema(schemaUri)
-  private lazy val currentRatePeriod: String            = Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()
+  private lazy val jsonSchema: JsonSchema               = jsonSchemaFactory.getJsonSchema(schemaUri)
+  private lazy val year: Int                            = 2023
+  private lazy val startMonthInclusive: Int             = 1
+  private lazy val endMonthExclusive: Int               = 13
+  private lazy val month: Int                           = Random.between(startMonthInclusive, endMonthExclusive)
   private lazy val currentTotalNoOfRates: Int           = 48
 
-  "service rates endpoint must" - {
+  private lazy val currentRatePeriod: String = Json
+    .toJson(
+      YearMonth.of(year, month)
+    )(RatePeriod.yearMonthFormat)
+    .toString()
+
+  s"service rates endpoint for period $currentRatePeriod must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
@@ -70,7 +79,7 @@ class RatesIntegrationSpec extends ISpecBase {
 
   "validate rate file against schema" in {
     val stream: InputStream = getClass.getResourceAsStream("/rates/alcohol-duty-rates.json")
-    val lines               = scala.io.Source.fromInputStream(stream).getLines().mkString
+    val lines: String       = scala.io.Source.fromInputStream(stream).getLines().mkString
     validateJsonAgainstSchema(lines) mustBe true
   }
 
@@ -79,11 +88,11 @@ class RatesIntegrationSpec extends ISpecBase {
       lazy val rateBandList: Seq[RateBand] = getRatesFromJson(currentRatePeriod)
 
       "For band A" - {
-        val rate: Option[Double]  = Some(9.27d)
-        val taxTypes: Seq[String] = Seq("311", "312", "313", "314", "315")
-        val rateCount             = 5
-        val rangeDetailsCount     = 5
-        val rangesCount           = 5
+        val rate: Option[Double]   = Some(9.27d)
+        val taxTypes: Seq[String]  = Seq("311", "312", "313", "314", "315")
+        val rateCount: Int         = 5
+        val rangeDetailsCount: Int = 5
+        val rangesCount: Int       = 5
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -93,11 +102,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band B" - {
-        val rate: Option[Double]  = Some(21.01d)
-        val taxTypes: Seq[String] = Seq("321")
-        val rateCount             = 1
-        val rangeDetailsCount     = 1
-        val rangesCount           = 1
+        val rate: Option[Double]   = Some(21.01d)
+        val taxTypes: Seq[String]  = Seq("321")
+        val rateCount: Int         = 1
+        val rangeDetailsCount: Int = 1
+        val rangesCount: Int       = 1
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -107,11 +116,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band C" - {
-        val rate: Option[Double]  = Some(9.67d)
-        val taxTypes: Seq[String] = Seq("322")
-        val rateCount             = 1
-        val rangeDetailsCount     = 1
-        val rangesCount           = 2
+        val rate: Option[Double]   = Some(9.67d)
+        val taxTypes: Seq[String]  = Seq("322")
+        val rateCount: Int         = 1
+        val rangeDetailsCount: Int = 1
+        val rangesCount: Int       = 2
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -121,11 +130,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band D" - {
-        val rate: Option[Double]  = Some(24.77d)
-        val taxTypes: Seq[String] = Seq("323", "324", "325")
-        val rateCount             = 3
-        val rangeDetailsCount     = 4
-        val rangesCount           = 4
+        val rate: Option[Double]   = Some(24.77d)
+        val taxTypes: Seq[String]  = Seq("323", "324", "325")
+        val rateCount: Int         = 3
+        val rangeDetailsCount: Int = 4
+        val rangesCount: Int       = 4
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -135,11 +144,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band E" - {
-        val rate: Option[Double]  = Some(28.50d)
-        val taxTypes: Seq[String] = Seq("331", "333", "334", "335")
-        val rateCount             = 4
-        val rangeDetailsCount     = 4
-        val rangesCount           = 4
+        val rate: Option[Double]   = Some(28.50d)
+        val taxTypes: Seq[String]  = Seq("331", "333", "334", "335")
+        val rateCount: Int         = 4
+        val rangeDetailsCount: Int = 4
+        val rangesCount: Int       = 4
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -149,11 +158,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band F" - {
-        val rate: Option[Double]  = Some(31.64d)
-        val taxTypes: Seq[String] = Seq("341", "343", "344", "345")
-        val rateCount             = 4
-        val rangeDetailsCount     = 4
-        val rangesCount           = 4
+        val rate: Option[Double]   = Some(31.64d)
+        val taxTypes: Seq[String]  = Seq("341", "343", "344", "345")
+        val rateCount: Int         = 4
+        val rangeDetailsCount: Int = 4
+        val rangesCount: Int       = 4
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -163,11 +172,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band G" - {
-        val rate: Option[Double]  = Some(8.42d)
-        val taxTypes: Seq[String] = Seq("351", "352", "353", "354", "355")
-        val rateCount             = 5
-        val rangeDetailsCount     = 5
-        val rangesCount           = 5
+        val rate: Option[Double]   = Some(8.42d)
+        val taxTypes: Seq[String]  = Seq("351", "352", "353", "354", "355")
+        val rateCount: Int         = 5
+        val rangeDetailsCount: Int = 5
+        val rangesCount: Int       = 5
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -177,11 +186,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band H" - {
-        val rate: Option[Double]  = Some(19.08d)
-        val taxTypes: Seq[String] = Seq("356")
-        val rateCount             = 1
-        val rangeDetailsCount     = 1
-        val rangesCount           = 1
+        val rate: Option[Double]   = Some(19.08d)
+        val taxTypes: Seq[String]  = Seq("356")
+        val rateCount: Int         = 1
+        val rangeDetailsCount: Int = 1
+        val rangesCount: Int       = 1
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -191,11 +200,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band I" - {
-        val rate: Option[Double]  = Some(8.78d)
-        val taxTypes: Seq[String] = Seq("357")
-        val rateCount             = 1
-        val rangeDetailsCount     = 1
-        val rangesCount           = 2
+        val rate: Option[Double]   = Some(8.78d)
+        val taxTypes: Seq[String]  = Seq("357")
+        val rateCount: Int         = 1
+        val rangeDetailsCount: Int = 1
+        val rangesCount: Int       = 2
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -205,11 +214,11 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band J" - {
-        val rate: Option[Double]  = Some(19.08d)
-        val taxTypes: Seq[String] = Seq("358", "359", "360")
-        val rateCount             = 3
-        val rangeDetailsCount     = 4
-        val rangesCount           = 4
+        val rate: Option[Double]   = Some(19.08d)
+        val taxTypes: Seq[String]  = Seq("358", "359", "360")
+        val rateCount: Int         = 3
+        val rangeDetailsCount: Int = 4
+        val rangesCount: Int       = 4
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -219,10 +228,10 @@ class RatesIntegrationSpec extends ISpecBase {
       }
 
       "For band K" - {
-        val taxTypes: Seq[String] = Seq("371", "372", "373", "374", "375", "376", "377", "378", "379", "380")
-        val rateCount             = 10
-        val rangeDetailsCount     = 11
-        val rangesCount           = 12
+        val taxTypes: Seq[String]  = Seq("371", "372", "373", "374", "375", "376", "377", "378", "379", "380")
+        val rateCount: Int         = 10
+        val rangeDetailsCount: Int = 11
+        val rangesCount: Int       = 12
 
         "service rates endpoint must" - {
           "show the correct rate" in {
@@ -243,7 +252,7 @@ class RatesIntegrationSpec extends ISpecBase {
   ): Unit = {
     rateBandList.length mustBe currentTotalNoOfRates
 
-    val rates                                   = rateBandList.filter(rateBand => taxTypes.contains(rateBand.taxTypeCode))
+    val rates: Seq[RateBand]                    = rateBandList.filter(rateBand => taxTypes.contains(rateBand.taxTypeCode))
     val rangeDetails: Seq[RangeDetailsByRegime] = rates.flatMap(x => x.rangeDetails)
     val ranges: Seq[ABVRange]                   = rangeDetails.flatMap(y => y.abvRanges)
 
