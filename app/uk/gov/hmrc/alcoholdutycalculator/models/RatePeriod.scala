@@ -146,7 +146,6 @@ object RateBand {
 
 case class RatePeriod(
   name: String,
-  isLatest: Boolean,
   validityStartDate: YearMonth,
   validityEndDate: Option[YearMonth],
   rateBands: Seq[RateBand]

@@ -122,11 +122,10 @@ trait TestData {
   implicit val arbitraryRatePeriod: Arbitrary[RatePeriod] = Arbitrary {
     for {
       name              <- Gen.alphaStr
-      isLatest          <- Gen.oneOf(true, false)
       validityStartDate <- Arbitrary.arbitrary[YearMonth]
       validityEndDate   <- Gen.option(Arbitrary.arbitrary[YearMonth])
       rateBands         <- Gen.nonEmptyListOf(arbitraryRateBand.arbitrary)
-    } yield RatePeriod(name, isLatest, validityStartDate, validityEndDate, rateBands)
+    } yield RatePeriod(name, validityStartDate, validityEndDate, rateBands)
   }
 
   implicit val arbitraryListRatePeriod: Arbitrary[Seq[RatePeriod]]            = Arbitrary {

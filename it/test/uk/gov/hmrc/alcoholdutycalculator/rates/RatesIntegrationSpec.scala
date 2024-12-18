@@ -14,24 +14,36 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.alcoholdutycalculator
+package uk.gov.hmrc.alcoholdutycalculator.rates
 
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
-import uk.gov.hmrc.alcoholdutycalculator.models.{RateBand, RatePeriod, RateType}
+import uk.gov.hmrc.alcoholdutycalculator.models._
 
 import java.time.YearMonth
+import scala.util.Random
 
 class RatesIntegrationSpec extends ISpecBase {
 
-  "service rates endpoint must" - {
+  private lazy val year: Int = 2023
+  private lazy val startMonthInclusive: Int = 1
+  private lazy val endMonthExclusive: Int = 13
+  private lazy val month: Int = Random.between(startMonthInclusive, endMonthExclusive)
+
+  private lazy val currentRatePeriod: String = Json
+    .toJson(
+      YearMonth.of(year, month)
+    )(RatePeriod.yearMonthFormat)
+    .toString()
+
+  s"service rates endpoint for period $currentRatePeriod must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
       val urlParams =
-        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&alcoholRegimes=Beer,Wine,OtherFermentedProduct"
+        s"?ratePeriod=$currentRatePeriod&alcoholRegimes=Beer,Wine,OtherFermentedProduct"
 
       lazy val result =
         callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
@@ -40,19 +52,19 @@ class RatesIntegrationSpec extends ISpecBase {
       val rateBandList = Json.parse(contentAsString(result)).as[Seq[RateBand]]
       rateBandList must have size 30
     }
-  }
 
-  "service rate-band endpoint must" - {
-    "respond with 200 status" in {
-      stubAuthorised()
-      val taxType     = "321"
-      val urlParams   =
-        s"?ratePeriod=${Json.toJson(YearMonth.of(2023, 5))(RatePeriod.yearMonthFormat).toString()}&taxTypeCode=$taxType"
-      lazy val result =
-        callRoute(FakeRequest("GET", routes.RatesController.rateBand().url + urlParams))
-      status(result) mustBe OK
-      val rateBand: RateBand = Json.parse(contentAsString(result)).as[RateBand]
-      rateBand.rateType mustBe RateType.Core
+    "service rate-band endpoint must" - {
+      "respond with 200 status" in {
+        stubAuthorised()
+        val taxType = "321"
+        val urlParams =
+          s"?ratePeriod=$currentRatePeriod&taxTypeCode=$taxType"
+        lazy val result =
+          callRoute(FakeRequest("GET", routes.RatesController.rateBand().url + urlParams))
+        status(result) mustBe OK
+        val rateBand: RateBand = Json.parse(contentAsString(result)).as[RateBand]
+        rateBand.rateType mustBe RateType.Core
+      }
     }
   }
 }

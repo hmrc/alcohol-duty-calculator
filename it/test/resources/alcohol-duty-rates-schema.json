@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Alcohol duty rates schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "validityStartDate": {
+        "type": "string"
+      },
+      "validityEndDate": {
+        "type": "string"
+      },
+      "rateBands": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "taxTypeCode": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "rateType": {
+              "type": "string"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "rangeDetails": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "alcoholRegime": {
+                    "type": "string"
+                  },
+                  "abvRanges": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "alcoholType": {
+                          "type": "string"
+                        },
+                        "minABV": {
+                          "type": "number"
+                        },
+                        "maxABV": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "alcoholType",
+                        "minABV",
+                        "maxABV"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "alcoholRegime",
+                  "abvRanges"
+                ]
+              }
+            }
+          },
+          "required": [
+            "taxTypeCode",
+            "description",
+            "rateType",
+            "rangeDetails"
+          ]
+        }
+      }
+    },
+    "required": [
+      "name",
+      "validityStartDate",
+      "rateBands"
+    ]
+  }
+}
