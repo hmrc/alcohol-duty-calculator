@@ -39,7 +39,9 @@ class RatesIntegration_2023_1Spec extends ISpecBase {
   private lazy val startMonthInclusive: Int             = 1
   private lazy val endMonthExclusive: Int               = 13
   private lazy val month: Int                           = Random.between(startMonthInclusive, endMonthExclusive)
-  private lazy val currentTotalNoOfRates: Int           = 48
+  private lazy val totalNoRateBands: Int                = 48
+  private lazy val totalNumberRangeDetails: Int         = 52
+  private lazy val totalNumberRanges: Int               = 56
 
   private lazy val currentRatePeriod: String = Json
     .toJson(
@@ -47,45 +49,32 @@ class RatesIntegration_2023_1Spec extends ISpecBase {
     )(RatePeriod.yearMonthFormat)
     .toString()
 
-  s"service rates endpoint for period $currentRatePeriod must" - {
-    "respond with 200 status" in {
-      stubAuthorised()
-
-      val urlParams =
-        s"?ratePeriod=$currentRatePeriod&alcoholRegimes=Beer,Wine,OtherFermentedProduct"
-
-      lazy val result =
-        callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
-
-      status(result) mustBe OK
-      val rateBandList = Json.parse(contentAsString(result)).as[Seq[RateBand]]
-      rateBandList must have size 30
+  s"rates file for period $currentRatePeriod must" - {
+    "validate against schema" in {
+      val stream: InputStream = getClass.getResourceAsStream("/rates/alcohol-duty-rates.json")
+      val lines: String       = scala.io.Source.fromInputStream(stream).getLines().mkString
+      validateJsonAgainstSchema(lines) mustBe true
     }
-  }
 
-  "service rate-band endpoint must" - {
-    "respond with 200 status" in {
-      stubAuthorised()
-      val taxType     = "321"
-      val urlParams   =
-        s"?ratePeriod=$currentRatePeriod&taxTypeCode=$taxType"
-      lazy val result =
-        callRoute(FakeRequest("GET", routes.RatesController.rateBand().url + urlParams))
-      status(result) mustBe OK
-      val rateBand: RateBand = Json.parse(contentAsString(result)).as[RateBand]
-      rateBand.rateType mustBe RateType.Core
-    }
-  }
-
-  "validate rate file against schema" in {
-    val stream: InputStream = getClass.getResourceAsStream("/rates/alcohol-duty-rates.json")
-    val lines: String       = scala.io.Source.fromInputStream(stream).getLines().mkString
-    validateJsonAgainstSchema(lines) mustBe true
-  }
-
-  "validate the rates within the file" - {
-    s"For rate period" - {
+    "hold valid data" - {
       lazy val rateBandList: Seq[RateBand] = getRatesFromJson(currentRatePeriod)
+
+      "for all entries" - {
+        "have the correct count of rate bands" in {
+          rateBandList.length mustBe totalNoRateBands
+        }
+
+        "have the correct count of range details" in {
+          val rangeDetails: Seq[RangeDetailsByRegime] = rateBandList.flatMap(x => x.rangeDetails)
+          rangeDetails.length mustBe totalNumberRangeDetails
+        }
+
+        "have the correct count of ranges" in {
+          val rangeDetails: Seq[RangeDetailsByRegime] = rateBandList.flatMap(x => x.rangeDetails)
+          val ranges: Seq[ABVRange]                   = rangeDetails.flatMap(y => y.abvRanges)
+          ranges.length mustBe totalNumberRanges
+        }
+      }
 
       "For band A" - {
         val rate: Option[Double]   = Some(9.27d)
@@ -250,7 +239,6 @@ class RatesIntegration_2023_1Spec extends ISpecBase {
     rangesCount: Int,
     rate: Option[Double]
   ): Unit = {
-    rateBandList.length mustBe currentTotalNoOfRates
 
     val rates: Seq[RateBand]                    = rateBandList.filter(rateBand => taxTypes.contains(rateBand.taxTypeCode))
     val rangeDetails: Seq[RangeDetailsByRegime] = rates.flatMap(x => x.rangeDetails)
