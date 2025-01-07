@@ -30,13 +30,13 @@ import java.io.InputStream
 import java.time.YearMonth
 import scala.util.Random
 
-class RatesIntegration_2025_1Spec extends ISpecBase {
+class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
 
   val schemaUri: String                                 = getClass.getResource("/alcohol-duty-rates-schema.json").toURI.toString
   private lazy val jsonSchemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault
   private lazy val jsonSchema: JsonSchema               = jsonSchemaFactory.getJsonSchema(schemaUri)
-  private lazy val year: Int                            = 2025
-  private lazy val startMonthInclusive: Int             = 2 // Feb 25
+  private lazy val year: Int                            = 2023
+  private lazy val startMonthInclusive: Int             = 1
   private lazy val endMonthExclusive: Int               = 13
   private lazy val month: Int                           = Random.between(startMonthInclusive, endMonthExclusive)
   private lazy val totalNoRateBands: Int                = 48
@@ -77,7 +77,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band A" - {
-        val rate: Option[Double]   = Some(9.61d)
+        val rate: Option[Double]   = Some(9.27d)
         val taxTypes: Seq[String]  = Seq("311", "312", "313", "314", "315")
         val rateCount: Int         = 5
         val rangeDetailsCount: Int = 5
@@ -91,7 +91,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band B" - {
-        val rate: Option[Double]   = Some(21.78d)
+        val rate: Option[Double]   = Some(21.01d)
         val taxTypes: Seq[String]  = Seq("321")
         val rateCount: Int         = 1
         val rangeDetailsCount: Int = 1
@@ -105,7 +105,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band C" - {
-        val rate: Option[Double]   = Some(10.02d)
+        val rate: Option[Double]   = Some(9.67d)
         val taxTypes: Seq[String]  = Seq("322")
         val rateCount: Int         = 1
         val rangeDetailsCount: Int = 1
@@ -119,7 +119,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band D" - {
-        val rate: Option[Double]   = Some(25.67d)
+        val rate: Option[Double]   = Some(24.77d)
         val taxTypes: Seq[String]  = Seq("323", "324", "325")
         val rateCount: Int         = 3
         val rangeDetailsCount: Int = 4
@@ -133,7 +133,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band E" - {
-        val rate: Option[Double]   = Some(29.54d)
+        val rate: Option[Double]   = Some(28.50d)
         val taxTypes: Seq[String]  = Seq("331", "333", "334", "335")
         val rateCount: Int         = 4
         val rangeDetailsCount: Int = 4
@@ -147,7 +147,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band F" - {
-        val rate: Option[Double]   = Some(32.79d)
+        val rate: Option[Double]   = Some(31.64d)
         val taxTypes: Seq[String]  = Seq("341", "343", "344", "345")
         val rateCount: Int         = 4
         val rangeDetailsCount: Int = 4
@@ -161,7 +161,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band G" - {
-        val rate: Option[Double]   = Some(8.28d)
+        val rate: Option[Double]   = Some(8.42d)
         val taxTypes: Seq[String]  = Seq("351", "352", "353", "354", "355")
         val rateCount: Int         = 5
         val rangeDetailsCount: Int = 5
@@ -175,7 +175,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band H" - {
-        val rate: Option[Double]   = Some(18.76d)
+        val rate: Option[Double]   = Some(19.08d)
         val taxTypes: Seq[String]  = Seq("356")
         val rateCount: Int         = 1
         val rangeDetailsCount: Int = 1
@@ -189,7 +189,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band I" - {
-        val rate: Option[Double]   = Some(8.63d)
+        val rate: Option[Double]   = Some(8.78d)
         val taxTypes: Seq[String]  = Seq("357")
         val rateCount: Int         = 1
         val rangeDetailsCount: Int = 1
@@ -203,7 +203,7 @@ class RatesIntegration_2025_1Spec extends ISpecBase {
       }
 
       "For band J" - {
-        val rate: Option[Double]   = Some(18.76d)
+        val rate: Option[Double]   = Some(19.08d)
         val taxTypes: Seq[String]  = Seq("358", "359", "360")
         val rateCount: Int         = 3
         val rangeDetailsCount: Int = 4
