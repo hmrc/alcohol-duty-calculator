@@ -30,7 +30,7 @@ import java.io.InputStream
 import java.time.YearMonth
 import scala.util.Random
 
-class RatesIntegrationBandings_2025_1Spec extends ISpecBase {
+class RatesIntegrationBandings_2025_2Spec extends ISpecBase {
 
   val schemaUri: String                                 = getClass.getResource("/alcohol-duty-rates-schema.json").toURI.toString
   private lazy val jsonSchemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault

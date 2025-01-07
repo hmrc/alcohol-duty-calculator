@@ -25,10 +25,10 @@ import uk.gov.hmrc.alcoholdutycalculator.models._
 import java.time.YearMonth
 import scala.util.Random
 
-class RatesIntegration_2025Spec extends ISpecBase {
+class RatesIntegrationSpec extends ISpecBase {
 
-  private lazy val year: Int                = 2025
-  private lazy val startMonthInclusive: Int = 2
+  private lazy val year: Int                = 2023
+  private lazy val startMonthInclusive: Int = 1
   private lazy val endMonthExclusive: Int   = 13
   private lazy val month: Int               = Random.between(startMonthInclusive, endMonthExclusive)
 
