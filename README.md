@@ -11,6 +11,7 @@ This is the backend microservice that handles duty calculations for Alcohol Duty
 - [Calculate total adjustment](api-docs/calculateTotalAdjustment.md): `POST /alcohol-duty-calculator/calculate-total-adjustment`
 - [Calculate total duty](api-docs/calculateTotalDuty.md): `POST /alcohol-duty-calculator/calculate-total-duty`
 - [Get a rate band for a tax code in period](api-docs/getRateBand.md): `GET /alcohol-duty-calculator/rate-band`
+- [Get several rate band for tax codes in periods](api-docs/getRateBands.md): `GET /alcohol-duty-calculator/rate-bands`
 - [Get rates for a period](api-docs/getRates.md): `GET /alcohol-duty-calculator/rates`
 
 ## Running the service
