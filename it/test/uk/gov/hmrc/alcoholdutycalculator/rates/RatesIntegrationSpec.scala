@@ -27,10 +27,10 @@ import scala.util.Random
 
 class RatesIntegrationSpec extends ISpecBase {
 
-  private lazy val year: Int = 2023
+  private lazy val year: Int                = 2023
   private lazy val startMonthInclusive: Int = 1
-  private lazy val endMonthExclusive: Int = 13
-  private lazy val month: Int = Random.between(startMonthInclusive, endMonthExclusive)
+  private lazy val endMonthExclusive: Int   = 13
+  private lazy val month: Int               = Random.between(startMonthInclusive, endMonthExclusive)
 
   private lazy val currentRatePeriod: String = Json
     .toJson(
@@ -56,8 +56,8 @@ class RatesIntegrationSpec extends ISpecBase {
     "service rate-band endpoint must" - {
       "respond with 200 status" in {
         stubAuthorised()
-        val taxType = "321"
-        val urlParams =
+        val taxType     = "321"
+        val urlParams   =
           s"?ratePeriod=$currentRatePeriod&taxTypeCode=$taxType"
         lazy val result =
           callRoute(FakeRequest("GET", routes.RatesController.rateBand().url + urlParams))
