@@ -27,23 +27,23 @@ import scala.util.Random
 
 class RatesIntegrationSpec extends ISpecBase {
 
-  private lazy val year: Int = 2023
+  private lazy val year: Int                = 2023
   private lazy val startMonthInclusive: Int = 1
-  private lazy val endMonthExclusive: Int = 13
-  private lazy val month: Int = Random.between(startMonthInclusive, endMonthExclusive)
+  private lazy val endMonthExclusive: Int   = 13
+  private lazy val month: Int               = Random.between(startMonthInclusive, endMonthExclusive)
 
-  private lazy val currentRatePeriod: String = Json
+  private lazy val ratePeriod: String = Json
     .toJson(
       YearMonth.of(year, month)
     )(RatePeriod.yearMonthFormat)
     .toString()
 
-  s"service rates endpoint for period $currentRatePeriod must" - {
+  s"service rates endpoint for period $ratePeriod must" - {
     "respond with 200 status" in {
       stubAuthorised()
 
       val urlParams =
-        s"?ratePeriod=$currentRatePeriod&alcoholRegimes=Beer,Wine,OtherFermentedProduct"
+        s"?ratePeriod=$ratePeriod&alcoholRegimes=Beer,Wine,OtherFermentedProduct"
 
       lazy val result =
         callRoute(FakeRequest("GET", routes.RatesController.rates().url + urlParams))
@@ -56,9 +56,9 @@ class RatesIntegrationSpec extends ISpecBase {
     "service rate-band endpoint must" - {
       "respond with 200 status" in {
         stubAuthorised()
-        val taxType = "321"
-        val urlParams =
-          s"?ratePeriod=$currentRatePeriod&taxTypeCode=$taxType"
+        val taxType     = "321"
+        val urlParams   =
+          s"?ratePeriod=$ratePeriod&taxTypeCode=$taxType"
         lazy val result =
           callRoute(FakeRequest("GET", routes.RatesController.rateBand().url + urlParams))
         status(result) mustBe OK
