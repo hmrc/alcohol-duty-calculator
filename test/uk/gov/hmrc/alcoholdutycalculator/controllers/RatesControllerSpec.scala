@@ -314,7 +314,7 @@ class RatesControllerSpec extends SpecBase {
     }
   }
 
-  "rateBands should" - {
+  "rateBands must" - {
     "return 200 OK when" - {
       "all rate bands looked up from query parameters" in forAll {
         (
