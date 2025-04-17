@@ -220,4 +220,16 @@ trait TestData {
         )
       )
     )
+
+  val dutySuspendedQuantities = DutySuspendedQuantities(
+    totalLitresDeliveredInsideUK = BigDecimal(3),
+    pureAlcoholDeliveredInsideUK = BigDecimal(1.0000),
+    totalLitresDeliveredOutsideUK = BigDecimal(7.26),
+    pureAlcoholDeliveredOutsideUK = BigDecimal(2.8),
+    totalLitresReceived = BigDecimal(10.1),
+    pureAlcoholReceived = BigDecimal(3.9999)
+  )
+
+  val dutySuspendedFinalVolumes =
+    DutySuspendedFinalVolumes(totalLitres = BigDecimal(0.16), pureAlcohol = BigDecimal(-0.1999))
 }
