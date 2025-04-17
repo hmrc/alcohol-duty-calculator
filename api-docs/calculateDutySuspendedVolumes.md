@@ -1,25 +1,52 @@
 # Calculate Duty Suspended Volumes
 
-This endpoint takes the list of values the user has inputted on the duy suspended journey, and calculates the total litres of alcohol Duty Suspended, and total litres of pure alcohol Duty Suspended over a given period.
+This endpoint takes the list of values the user has inputted on the duty suspended journey for a specific alcohol
+regime, and calculates (1) the total litres of alcohol Duty Suspended, and (2) the litres of pure alcohol Duty Suspended
+over a given period.
 
 The calculation uses the following figures entered by the user:
+
 - Total litres delivered inside the UK
-- Pure alcohol delivered inside the UK
+- Litres of pure alcohol delivered inside the UK
 - Total litres delivered outside the UK
-- Pure alcohol delivered outside the UK
+- Litres of pure alcohol delivered outside the UK
 - Total litres received under Duty Suspense
-- Pure alcohol received under Duty Suspense
+- Litres of pure alcohol received under Duty Suspense
 
+Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be
+returned.
 
-Calls to this API must be made by an authenticated and authorised user with an ADR enrolment in order for the data to be returned.
-
-**URL**: `/calculate-duty-suspended-volumes`
+**URL**: `/alcohol-duty-calculator/calculate-duty-suspended-volumes`
 
 **Method**: `POST`
 
 **URL Params**
 
 No parameters are required
+
+**Request Body**
+
+| Field Name                    | Description                                                              | Data Type | Mandatory/Optional | Notes |
+|-------------------------------|--------------------------------------------------------------------------|-----------|--------------------|-------|
+| totalLitresDeliveredInsideUK  | The total litres of alcohol delivered inside the UK under duty suspense  | Numeric   | Mandatory          |       |
+| pureAlcoholDeliveredInsideUK  | The litres of pure alcohol delivered inside the UK under duty suspense   | Numeric   | Mandatory          |       |
+| totalLitresDeliveredOutsideUK | The total litres of alcohol delivered outside the UK under duty suspense | Numeric   | Mandatory          |       |
+| pureAlcoholDeliveredOutsideUK | The litres of pure alcohol delivered outside the UK under duty suspense  | Numeric   | Mandatory          |       |
+| totalLitresReceived           | The total litres of alcohol received under duty suspense                 | Numeric   | Mandatory          |       |
+| pureAlcoholReceived           | The litres of pure alcohol received under duty suspense                  | Numeric   | Mandatory          |       |
+
+**Request Body Examples**
+
+```json
+{
+  "totalLitresDeliveredInsideUK": 3,
+  "pureAlcoholDeliveredInsideUK": 1,
+  "totalLitresDeliveredOutsideUK": 7.26,
+  "pureAlcoholDeliveredOutsideUK": 2.8,
+  "totalLitresReceived": 10.1,
+  "pureAlcoholReceived": 3.9999
+}
+```
 
 **Required Request Headers**:
 
@@ -39,24 +66,20 @@ POST /alcohol-duty-calculator/calculate-duty-suspended-volumes
 
 **Response Body**
 
-The response body the Duty Suspended totals with the following fields
+The response body contains the Duty Suspended totals with the following fields
 
-| Field Name                         | Description                                          | Data Type  | Mandatory/Optional | Notes                                                                                                                                                                                                                                                  |
-|------------------------------------|------------------------------------------------------|------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| totalLitres                        | The total litres of alcohol under Duty Suspense      | BigDecimal | Mandatory          | Calculated by: <br/> - Adding the total litres of **alcohol** delivered in the UK under duty suspense to the total delivered outside the UK under duty suspense<br/> - Subtracting the total litres of **alcohol** received under duty suspense            |
-| pureAlcohol                        | The total litres of pure alcohol under Duty Suspense | BigDecimal | Mandatory          | Calculated by: <br/> - Adding the total litres of **pure alcohol** delivered in the UK under duty suspense to the total delivered outside the UK under duty suspense<br/> - Subtracting the total litres of **pure alcohol** received under duty suspense |
+| Field Name  | Description                                          | Data Type | Mandatory/Optional | Notes                                                                                                                                                                                                                                                     |
+|-------------|------------------------------------------------------|-----------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| totalLitres | The total litres of alcohol under Duty Suspense      | Numeric   | Mandatory          | Calculated by: <br/> - Adding the total litres of **alcohol** delivered in the UK under duty suspense to the total delivered outside the UK under duty suspense<br/> - Subtracting the total litres of **alcohol** received under duty suspense           |
+| pureAlcohol | The total litres of pure alcohol under Duty Suspense | Numeric   | Mandatory          | Calculated by: <br/> - Adding the total litres of **pure alcohol** delivered in the UK under duty suspense to the total delivered outside the UK under duty suspense<br/> - Subtracting the total litres of **pure alcohol** received under duty suspense |
 
 **Response Body Examples**
 
-***A single element (real response will contain many elements like this):***
-
 ```json
-[
-  {
-    "totalLitres": 100.55,
-    "pureAlcohol": 15.23
-  }
-]
+{
+  "totalLitres": 100.55,
+  "pureAlcohol": 15.23
+}
 ```
 
 ### Error responses
