@@ -1,6 +1,6 @@
 # Calculate Duty Suspended Volumes
 
-This endpoint takes the list of values the user has inputted on the duty suspended journey for a specific alcohol
+This endpoint takes the list of values the user has input on the duty suspended journey for a specific alcohol
 regime, and calculates (1) the total litres of alcohol Duty Suspended, and (2) the litres of pure alcohol Duty Suspended
 over a given period.
 
