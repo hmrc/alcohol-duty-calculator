@@ -18,7 +18,12 @@ package uk.gov.hmrc.alcoholdutycalculator.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class DutySuspendedFinalVolumes(totalLitres: BigDecimal, pureAlcohol: BigDecimal)
+case class DutySuspendedFinalVolumes(
+  totalLitresDelivered: BigDecimal,
+  totalLitres: BigDecimal,
+  pureAlcoholDelivered: BigDecimal,
+  pureAlcohol: BigDecimal
+)
 
 object DutySuspendedFinalVolumes {
   implicit val format: OFormat[DutySuspendedFinalVolumes] = Json.format[DutySuspendedFinalVolumes]

@@ -230,6 +230,10 @@ trait TestData {
     pureAlcoholReceived = BigDecimal(3.9999)
   )
 
-  val dutySuspendedFinalVolumes =
-    DutySuspendedFinalVolumes(totalLitres = BigDecimal(0.16), pureAlcohol = BigDecimal(-0.1999))
+  val dutySuspendedFinalVolumes = DutySuspendedFinalVolumes(
+    totalLitresDelivered = BigDecimal(10.26),
+    totalLitres = BigDecimal(0.16),
+    pureAlcoholDelivered = BigDecimal(3.8),
+    pureAlcohol = BigDecimal(-0.1999)
+  )
 }

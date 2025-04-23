@@ -25,10 +25,12 @@ import scala.concurrent.ExecutionContext
 class DutySuspendedVolumesService @Inject() (implicit val ec: ExecutionContext) {
 
   def calculateDutySuspendedVolumes(dutySuspendedQuantities: DutySuspendedQuantities): DutySuspendedFinalVolumes = {
-    val totalLitres =
-      dutySuspendedQuantities.totalLitresDeliveredInsideUK + dutySuspendedQuantities.totalLitresDeliveredOutsideUK - dutySuspendedQuantities.totalLitresReceived
-    val pureAlcohol =
-      dutySuspendedQuantities.pureAlcoholDeliveredInsideUK + dutySuspendedQuantities.pureAlcoholDeliveredOutsideUK - dutySuspendedQuantities.pureAlcoholReceived
-    DutySuspendedFinalVolumes(totalLitres, pureAlcohol)
+    val totalLitresDelivered =
+      dutySuspendedQuantities.totalLitresDeliveredInsideUK + dutySuspendedQuantities.totalLitresDeliveredOutsideUK
+    val totalLitres          = totalLitresDelivered - dutySuspendedQuantities.totalLitresReceived
+    val pureAlcoholDelivered =
+      dutySuspendedQuantities.pureAlcoholDeliveredInsideUK + dutySuspendedQuantities.pureAlcoholDeliveredOutsideUK
+    val pureAlcohol          = pureAlcoholDelivered - dutySuspendedQuantities.pureAlcoholReceived
+    DutySuspendedFinalVolumes(totalLitresDelivered, totalLitres, pureAlcoholDelivered, pureAlcohol)
   }
 }

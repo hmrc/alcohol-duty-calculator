@@ -35,7 +35,12 @@ class DutySuspendedVolumesServiceSpec extends SpecBase {
         )
 
       val result = dutySuspendedVolumesService.calculateDutySuspendedVolumes(dutySuspendedQuantities)
-      result mustBe DutySuspendedFinalVolumes(totalLitres = BigDecimal(10), pureAlcohol = BigDecimal(3))
+      result mustBe DutySuspendedFinalVolumes(
+        totalLitresDelivered = BigDecimal(10),
+        totalLitres = BigDecimal(10),
+        pureAlcoholDelivered = BigDecimal(3),
+        pureAlcohol = BigDecimal(3)
+      )
     }
 
     "calculate volumes with decimal values" in {
