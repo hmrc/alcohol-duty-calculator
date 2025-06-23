@@ -14,7 +14,6 @@ lazy val microservice = Project("alcohol-duty-calculator", file("."))
     scalafmtOnCompile := true
   )
   .settings(inConfig(Test)(testSettings): _*)
-  .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
   .settings(PlayKeys.playDefaultPort := 16003)
 
