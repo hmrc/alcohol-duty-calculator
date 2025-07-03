@@ -9,5 +9,3 @@ POST       /calculate-adjustment-duty         uk.gov.hmrc.alcoholdutycalculator.
 POST       /calculate-repackaged-duty-change  uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateRepackagedDutyChange()
 POST       /calculate-total-adjustment        uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateTotalAdjustment()
 POST       /calculate-duty-due-by-tax-type    uk.gov.hmrc.alcoholdutycalculator.controllers.DutyCalculationController.calculateTotalDutyDueByTaxType()
-
-POST       /calculate-duty-suspended-volumes  uk.gov.hmrc.alcoholdutycalculator.controllers.DutySuspendedVolumesController.calculateDutySuspendedVolumes()
