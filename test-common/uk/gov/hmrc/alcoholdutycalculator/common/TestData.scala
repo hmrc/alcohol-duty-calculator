@@ -96,6 +96,7 @@ trait TestData {
     )
   }
 
+  // TODO - need test data that includes repackaged code
   implicit val arbitraryRateBand: Arbitrary[RateBand] = Arbitrary {
     for {
       taxType       <- Gen.alphaStr

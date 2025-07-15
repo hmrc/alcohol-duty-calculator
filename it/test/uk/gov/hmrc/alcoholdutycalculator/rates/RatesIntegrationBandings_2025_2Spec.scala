@@ -228,6 +228,35 @@ class RatesIntegrationBandings_2025_2Spec extends ISpecBase {
           }
         }
       }
+
+      "For Repackaged tax code types" in {
+        val repackagedMapping: Map[String, String] = Map(
+          "351" -> "311",
+          "352" -> "312",
+          "353" -> "313",
+          "354" -> "314",
+          "355" -> "315",
+          "356" -> "321",
+          "357" -> "322",
+          "358" -> "323",
+          "359" -> "324",
+          "360" -> "325",
+          "371" -> "361",
+          "372" -> "362",
+          "373" -> "363",
+          "374" -> "364",
+          "375" -> "365",
+          "376" -> "366",
+          "377" -> "367",
+          "378" -> "368",
+          "379" -> "369",
+          "380" -> "370"
+        )
+
+        val repackagedCandidates: Seq[RateBand] = rateBandList.filter(x => repackagedMapping.contains(x.taxTypeCode))
+
+        repackagedCandidates.foreach(x => x.repackagedTaxTypeCode mustBe repackagedMapping.get(x.taxTypeCode))
+      }
     }
   }
 

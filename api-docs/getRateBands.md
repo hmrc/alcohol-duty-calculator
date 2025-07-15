@@ -53,6 +53,7 @@ The response body returns a list of details for each rate period, tax code in th
 | rangeDetails.abvRanges.minABV      | The min ABV                                                      | Numeric       | Mandatory          | Between 0 and 100                                                       |
 | rangeDetails.abvRanges.maxABV      | The max ABV                                                      | Numeric       | Mandatory          | Between 0 and 100                                                       |
 | rate                               | The rate                                                         | Numeric       | Optional           |                                                                         |
+| repackagedTaxTypeCode              | The repackaged tax code type mapping                             | String        | Optional           | Only set for repackaged draught tax code types                          |
 
 **Response Body Examples**
 
@@ -81,7 +82,8 @@ The response body returns a list of details for each rate period, tax code in th
         ]
       }
     ],
-    "rate": 19.08
+    "rate": 19.08,
+    "repackagedTaxTypeCode": "324"
   }
 ]
 ```
