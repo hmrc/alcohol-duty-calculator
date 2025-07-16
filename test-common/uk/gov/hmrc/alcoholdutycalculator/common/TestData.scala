@@ -96,24 +96,24 @@ trait TestData {
     )
   }
 
-  // TODO - need test data that includes repackaged code
   implicit val arbitraryRateBand: Arbitrary[RateBand] = Arbitrary {
     for {
-      taxType       <- Gen.alphaStr
-      description   <- Gen.alphaStr
-      rateType      <- arbitraryRateType.arbitrary
-      name          <- arbitraryAlcoholRegimeName.arbitrary
-      alcoholRegime <- Gen
-                         .nonEmptyListOf(
-                           for {
-                             name   <- arbitraryABVRangeName.arbitrary
-                             minABV <- arbitraryAlcoholByVolume.arbitrary
-                             maxABV <- arbitraryAlcoholByVolume.arbitrary
-                           } yield ABVRange(name, minABV, maxABV)
-                         )
-                         .map(ranges => RangeDetailsByRegime(name, ranges))
-      rate          <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
-    } yield RateBand(taxType, description, rateType, Set(alcoholRegime), rate)
+      taxType               <- Gen.alphaStr
+      description           <- Gen.alphaStr
+      rateType              <- arbitraryRateType.arbitrary
+      name                  <- arbitraryAlcoholRegimeName.arbitrary
+      alcoholRegime         <- Gen
+                                 .nonEmptyListOf(
+                                   for {
+                                     name   <- arbitraryABVRangeName.arbitrary
+                                     minABV <- arbitraryAlcoholByVolume.arbitrary
+                                     maxABV <- arbitraryAlcoholByVolume.arbitrary
+                                   } yield ABVRange(name, minABV, maxABV)
+                                 )
+                                 .map(ranges => RangeDetailsByRegime(name, ranges))
+      rate                  <- Gen.option(Gen.chooseNum(-99999.99, 99999.99).map(BigDecimal(_)))
+      repackagedTaxTypeCode <- Gen.option(Gen.alphaStr)
+    } yield RateBand(taxType, description, rateType, Set(alcoholRegime), rate, repackagedTaxTypeCode)
   }
 
   implicit val arbitraryListRateBand: Arbitrary[Seq[RateBand]] = Arbitrary {
