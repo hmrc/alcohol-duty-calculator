@@ -405,7 +405,7 @@
         "description": "Other fermented products like fruit ciders to 3.4 percent, eligible for draught relief",
         "rateType": "DraughtRelief",
         "rate": 8.42,
-        "repackagedTaxTypeCode": "312",
+        "repackagedTaxTypeCode": "314",
         "rangeDetails": [
           {
             "alcoholRegime": "OtherFermentedProduct",
