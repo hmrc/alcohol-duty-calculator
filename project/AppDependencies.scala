@@ -2,7 +2,7 @@ import sbt.*
 
 object AppDependencies {
 
-  private val bootstrapVersion    = "9.13.0"
+  private val bootstrapVersion    = "9.18.0"
   private val mockitoScalaVersion = "1.17.37"
 
   val compile = Seq(
