@@ -3,7 +3,7 @@ import sbt.*
 object AppDependencies {
 
   private val bootstrapVersion    = "10.1.0"
-  private val mockitoScalaVersion = "1.17.37"
+  private val mockitoScalaVersion = "2.0.0"
 
   val compile = Seq(
     "org.typelevel" %% "cats-core"                 % "2.13.0",
