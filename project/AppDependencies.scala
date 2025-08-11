@@ -2,14 +2,14 @@ import sbt.*
 
 object AppDependencies {
 
-  private val bootstrapVersion    = "9.18.0"
-  private val mockitoScalaVersion = "1.17.37"
+  private val bootstrapVersion    = "10.1.0"
+  private val mockitoScalaVersion = "2.0.0"
 
   val compile = Seq(
-    "org.typelevel" %% "cats-core"                 % "2.12.0",
+    "org.typelevel" %% "cats-core"                 % "2.13.0",
     "uk.gov.hmrc"   %% "bootstrap-backend-play-30" % bootstrapVersion,
-    "com.beachape"  %% "enumeratum"                % "1.7.4",
-    "com.beachape"  %% "enumeratum-play"           % "1.8.1"
+    "com.beachape"  %% "enumeratum"                % "1.9.0",
+    "com.beachape"  %% "enumeratum-play"           % "1.9.0"
   )
 
   val test = Seq(
