@@ -17,6 +17,7 @@
 package uk.gov.hmrc.alcoholdutycalculator.services
 
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Environment
 import play.api.libs.json.{JsArray, Json}
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase

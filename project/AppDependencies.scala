@@ -13,11 +13,9 @@ object AppDependencies {
   )
 
   val test = Seq(
-    "uk.gov.hmrc"                %% "bootstrap-test-play-30"   % bootstrapVersion    % Test,
-    "org.mockito"                %% "mockito-scala"            % mockitoScalaVersion % Test,
-    "org.mockito"                %% "mockito-scala-scalatest"  % mockitoScalaVersion % Test,
-    "org.scalatestplus"          %% "scalatestplus-scalacheck" % "3.1.0.0-RC2"       % Test,
-    "com.github.java-json-tools" %  "json-schema-validator"    % "2.2.14"
+    "uk.gov.hmrc"                %% "bootstrap-test-play-30" % bootstrapVersion % Test,
+    "org.scalatestplus"          %% "scalacheck-1-17"        % "3.2.18.0"       % Test,
+    "com.github.java-json-tools" %  "json-schema-validator"  % "2.2.14"
   )
 
   val itDependencies = Seq.empty

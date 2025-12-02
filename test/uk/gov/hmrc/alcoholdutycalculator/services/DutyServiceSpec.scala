@@ -18,12 +18,13 @@ package uk.gov.hmrc.alcoholdutycalculator.services
 
 import uk.gov.hmrc.alcoholdutycalculator.base.SpecBase
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.Underdeclaration
-import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDutyCalculationRequest, AdjustmentTotalCalculationRequest, DutyByTaxType, DutyCalculationByTaxTypeResponse, RepackagedDutyChangeRequest}
+import uk.gov.hmrc.alcoholdutycalculator.models.*
+
 class DutyServiceSpec extends SpecBase {
   val dutyService = new DutyService()
 
   "calculateAdjustmentDuty must" - {
-    "calculate a positive duty for an Underdeclaration or Repackaged adjustment type" in {
+    "calculate a positive duty for an Underdeclaration or Repackaged adjustment type" in
       forAll(arbitraryPositiveDutyAdjustmentType) { adjustmentType =>
         val adjustmentDutyCalculationRequest =
           AdjustmentDutyCalculationRequest(
@@ -35,9 +36,8 @@ class DutyServiceSpec extends SpecBase {
         val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
         result.duty mustBe BigDecimal(0.06)
       }
-    }
 
-    "calculate a negative duty for a Spoilt, Overdeclared and Drawback adjustment types" in {
+    "calculate a negative duty for a Spoilt, Overdeclared and Drawback adjustment types" in
       forAll(arbitraryNegativeDutyAdjustmentType) { adjustmentType =>
         val adjustmentDutyCalculationRequest =
           AdjustmentDutyCalculationRequest(
@@ -49,7 +49,6 @@ class DutyServiceSpec extends SpecBase {
         val result = dutyService.calculateAdjustmentDuty(adjustmentDutyCalculationRequest)
         result.duty mustBe BigDecimal(-0.08)
       }
-    }
 
     "calculate duty with decimal values" in {
       val adjustmentDutyCalculationRequest =

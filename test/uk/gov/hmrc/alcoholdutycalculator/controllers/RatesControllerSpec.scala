@@ -18,6 +18,7 @@ package uk.gov.hmrc.alcoholdutycalculator.controllers
 
 import java.time.YearMonth
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{verify, when}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
@@ -50,8 +51,8 @@ class RatesControllerSpec extends SpecBase {
 
           val urlWithParams =
             s"/rates?ratePeriod=${Json.toJson(ratePeriod).toString()}&rateType=${Json
-              .toJson(rateType)
-              .toString}&alcoholRegimes=${alcoholRegimes.mkString(",")}"
+                .toJson(rateType)
+                .toString}&alcoholRegimes=${alcoholRegimes.mkString(",")}"
 
           val requestWithParams = FakeRequest("GET", urlWithParams)
 
@@ -80,8 +81,8 @@ class RatesControllerSpec extends SpecBase {
 
           val urlWithParams                =
             s"/rates?rateType=${Json
-              .toJson(rateType)
-              .toString}&alcoholRegimes=${alcoholRegimes.mkString(",")}"
+                .toJson(rateType)
+                .toString}&alcoholRegimes=${alcoholRegimes.mkString(",")}"
           val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
           val result: Future[Result]       = controller.rates()(requestWithMissingRatePeriod)
 
@@ -104,8 +105,8 @@ class RatesControllerSpec extends SpecBase {
 
           val urlWithParams                =
             s"/rates?ratePeriod=1234&rateType=${Json
-              .toJson(rateType)
-              .toString}&alcoholRegimes=${alcoholRegimes.toString}"
+                .toJson(rateType)
+                .toString}&alcoholRegimes=${alcoholRegimes.toString}"
           val requestWithMissingRatePeriod = FakeRequest("GET", urlWithParams)
           val result: Future[Result]       = controller.rates()(requestWithMissingRatePeriod)
 
@@ -128,8 +129,8 @@ class RatesControllerSpec extends SpecBase {
 
           val urlWithParams =
             s"/rates?ratePeriod=${Json.toJson(ratePeriod).toString()}&rateType=${Json
-              .toJson(rateType)
-              .toString}"
+                .toJson(rateType)
+                .toString}"
 
           val requestWithInvalidRegimes =
             FakeRequest("GET", urlWithParams)
@@ -154,8 +155,8 @@ class RatesControllerSpec extends SpecBase {
 
           val urlWithParams =
             s"/rates?ratePeriod=${Json.toJson(ratePeriod).toString()}&rateType=${Json
-              .toJson(rateType)
-              .toString}&alcoholRegimes=1234"
+                .toJson(rateType)
+                .toString}&alcoholRegimes=1234"
 
           val requestWithInvalidRegimes =
             FakeRequest("GET", urlWithParams)
@@ -346,7 +347,7 @@ class RatesControllerSpec extends SpecBase {
 
           val urlWithParams =
             s"/rate-bands?ratePeriods=${ratePeriods.map(ratePeriod => Json.toJson(ratePeriod).toString()).mkString(",")}&taxTypeCodes=${taxTypeCodes
-              .mkString(",")}"
+                .mkString(",")}"
 
           val requestWithParams = FakeRequest("GET", urlWithParams)
 
@@ -395,7 +396,7 @@ class RatesControllerSpec extends SpecBase {
 
           val urlWithParams =
             s"/rate-bands?ratePeriods=${ratePeriods.map(ratePeriod => Json.toJson(ratePeriod).toString()).mkString(",")}&taxTypeCodes=${taxTypeCodes
-              .mkString(",")}"
+                .mkString(",")}"
 
           val requestWithParams = FakeRequest("GET", urlWithParams)
 
@@ -501,7 +502,7 @@ class RatesControllerSpec extends SpecBase {
 
         val urlWithParams =
           s"/rate-bands?ratePeriods=${ratePeriods.map(ratePeriod => Json.toJson(ratePeriod).toString()).mkString(",")}&taxTypeCodes=${taxTypeCodes
-            .mkString(",")}"
+              .mkString(",")}"
 
         val requestWithParams = FakeRequest("GET", urlWithParams)
 
@@ -525,7 +526,7 @@ class RatesControllerSpec extends SpecBase {
 
         val urlWithParams =
           s"/rate-bands?ratePeriods=${ratePeriods.map(ratePeriod => Json.toJson(ratePeriod).toString()).mkString(",")}&taxTypeCodes=${taxTypeCodes
-            .mkString(",")}"
+              .mkString(",")}"
 
         val requestWithParams = FakeRequest("GET", urlWithParams)
 
