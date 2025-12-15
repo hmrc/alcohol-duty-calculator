@@ -99,58 +99,51 @@ class RatePeriodSpec extends SpecBase {
 
   "AlcoholRate when" - {
     "creating an instance must" - {
-      "successfully save the BigDecimal value when the value is in range" in {
-        forAll(genAlcoholByVolumeValue) { validValue: BigDecimal =>
+      "successfully save the BigDecimal value when the value is in range" in
+        forAll(genAlcoholByVolumeValue) { validValue =>
           AlcoholByVolume(validValue).value mustBe validValue
         }
-      }
 
-      "throw an exception when the value is not in range" in {
-        forAll(genAlcoholByVolumeValueOutOfRange) { invalidValue: BigDecimal =>
+      "throw an exception when the value is not in range" in
+        forAll(genAlcoholByVolumeValueOutOfRange) { invalidValue =>
           val exception = intercept[IllegalArgumentException] {
             AlcoholByVolume(invalidValue)
           }
           exception.getMessage must include("Percentage must be between 0 and 100")
         }
-      }
 
-      "throw an exception when the value has more decimal points than 1" in {
-        forAll(genAlcoholByVolumeValueTooBigScale) { invalidValue: BigDecimal =>
+      "throw an exception when the value has more decimal points than 1" in
+        forAll(genAlcoholByVolumeValueTooBigScale) { invalidValue =>
           val exception = intercept[IllegalArgumentException] {
             AlcoholByVolume(invalidValue)
           }
           exception.getMessage must include("Alcohol By Volume must have maximum 1 decimal place")
         }
-      }
     }
 
     "writing to json must" - {
-      "return the correct number representation with decimal points" in {
+      "return the correct number representation with decimal points" in
         forAll(genAlcoholByVolumeValue) { validValue =>
           Json.toJson(AlcoholByVolume(validValue)) mustBe JsNumber(validValue)
         }
-      }
     }
 
     "reading from json must" - {
-      "translate from the number representation when it is a valid Alcohol By Volume value" in {
+      "translate from the number representation when it is a valid Alcohol By Volume value" in
         forAll(genAlcoholByVolumeValue) { validValue =>
           JsNumber(validValue).as[AlcoholByVolume] mustBe AlcoholByVolume(validValue)
         }
-      }
 
-      "return a JsError in response to an invalid rate value" in {
+      "return a JsError in response to an invalid rate value" in
         forAll(genAlcoholByVolumeValueTooBigScale) { invalidValue =>
           JsNumber(invalidValue).validate[AlcoholByVolume] mustBe a[JsError]
         }
-      }
 
-      "return a JsError when passed a type that is not a number" in {
+      "return a JsError when passed a type that is not a number" in
         forAll(Gen.oneOf(Gen.alphaStr, Gen.calendar)) { invalidJsValue =>
           val result = Json.fromJson[AlcoholByVolume](JsString(invalidJsValue.toString))
           result mustBe a[JsError]
         }
-      }
     }
   }
 
@@ -158,16 +151,15 @@ class RatePeriodSpec extends SpecBase {
     implicit val yearMonthFormats: Format[YearMonth]               = RatePeriod.yearMonthFormat
     implicit val optionYearMonthFormats: Format[Option[YearMonth]] = RatePeriod.optionYearMonthFormat
 
-    "serialise and deserialise YearMonth" in {
+    "serialise and deserialise YearMonth" in
       forAll { (yearMonth: YearMonth) =>
         val json   = Json.toJson(yearMonth)
         val result = json.validate[YearMonth]
         result     mustBe a[JsSuccess[_]]
         result.get mustBe yearMonth
       }
-    }
 
-    "serialise and deserialise Option[YearMonth]" in {
+    "serialise and deserialise Option[YearMonth]" in
       forAll { (optionYearMonth: Option[YearMonth]) =>
         val json   = Json.toJson(optionYearMonth)
         val result = json.validate[Option[YearMonth]]
@@ -175,6 +167,5 @@ class RatePeriodSpec extends SpecBase {
         result     mustBe a[JsSuccess[_]]
         result.get mustBe optionYearMonth
       }
-    }
   }
 }

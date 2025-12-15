@@ -97,9 +97,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 5
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -111,9 +110,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 1
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -125,9 +123,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 2
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -139,9 +136,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 4
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -153,9 +149,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 4
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -167,9 +162,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 4
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -181,9 +175,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 5
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -195,9 +188,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 1
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -209,9 +201,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 2
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -223,9 +214,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 4
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
-            }
           }
         }
 
@@ -236,9 +226,8 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
           val rangesCount: Int       = 12
 
           "service rates endpoint must" - {
-            "show the correct rate" in {
+            "show the correct rate" in
               verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, None)
-            }
           }
         }
       }

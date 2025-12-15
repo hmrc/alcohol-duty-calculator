@@ -16,9 +16,8 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.services
 
-import uk.gov.hmrc.alcoholdutycalculator.models._
+import uk.gov.hmrc.alcoholdutycalculator.models.*
 import uk.gov.hmrc.alcoholdutycalculator.models.AdjustmentType.{RepackagedDraughtProducts, Underdeclaration}
-import uk.gov.hmrc.alcoholdutycalculator.models.{AdjustmentDuty, AdjustmentTotalCalculationRequest, AdjustmentType, RepackagedDutyChangeRequest}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
