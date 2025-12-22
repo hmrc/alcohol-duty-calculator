@@ -52,7 +52,7 @@ class RatesController @Inject() (
 
       result.fold(
         error => {
-          logger.warn(s"Unable to retrieve rate bands. Error: $error")
+          logger.warn(s"[RatesController] [rates] Unable to retrieve rate bands. Error: $error")
           BadRequest(error)
         },
         rateBands => Ok(Json.toJson(rateBands))
@@ -78,7 +78,7 @@ class RatesController @Inject() (
         case Right(Some(rateBand)) => Ok(Json.toJson(rateBand))
         case Right(None)           => NotFound("RateBand not found")
         case Left(error)           =>
-          logger.warn(s"Unable to retrieve rate band. Error: $error")
+          logger.warn(s"[RatesController] [rateBand] Unable to retrieve rate band. Error: $error")
           BadRequest(error)
       }
     }
@@ -114,7 +114,7 @@ class RatesController @Inject() (
       result match {
         case Right(rateBandsMapping) => Ok(Json.toJson(rateBandsMapping))
         case Left(error)             =>
-          logger.warn(s"Unable to retrieve rate bands. Error: $error")
+          logger.warn(s"[RatesController] [rateBands] Unable to retrieve rate bands. Error: $error")
           BadRequest(error)
       }
     }
