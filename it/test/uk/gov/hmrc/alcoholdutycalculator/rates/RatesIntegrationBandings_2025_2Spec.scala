@@ -49,172 +49,186 @@ class RatesIntegrationBandings_2025_2Spec extends ISpecBase {
     )(RatePeriod.yearMonthFormat)
     .toString()
 
-  s"rates file for period $ratePeriod must" - {
-    "validate against schema" in {
-      val stream: InputStream = getClass.getResourceAsStream("/rates/alcohol-duty-rates.json")
-      val lines: String       = scala.io.Source.fromInputStream(stream).getLines().mkString
-      validateJsonAgainstSchema(lines) mustBe true
-    }
+  // Boundary test for last valid month in period where this period has been end dated and a new period created
+  // For "validityEndDate": "2026-02" where validityEndDate is 'Exclusive'
+  private lazy val periodEndYear: Int        = 2026
+  private lazy val periodEndMonth: Int       = 1
+  private lazy val closingRatePeriod: String = Json
+    .toJson(
+      YearMonth.of(periodEndYear, periodEndMonth)
+    )(RatePeriod.yearMonthFormat)
+    .toString()
 
-    "hold valid data" - {
-      lazy val rateBandList: Seq[RateBand] = getRatesFromJson(ratePeriod)
+  val periods: List[String] = List(ratePeriod, closingRatePeriod)
 
-      "for all entries" - {
-        "have the correct count of rate bands" in {
-          rateBandList.length mustBe totalNoRateBands
-        }
-
-        "have the correct count of range details" in {
-          val rangeDetails: Seq[RangeDetailsByRegime] = rateBandList.flatMap(x => x.rangeDetails)
-          rangeDetails.length mustBe totalNumberRangeDetails
-        }
-
-        "have the correct count of ranges" in {
-          val rangeDetails: Seq[RangeDetailsByRegime] = rateBandList.flatMap(x => x.rangeDetails)
-          val ranges: Seq[ABVRange]                   = rangeDetails.flatMap(y => y.abvRanges)
-          ranges.length mustBe totalNumberRanges
-        }
+  periods.foreach { validRatePeriod =>
+    s"rates file for period $validRatePeriod must" - {
+      "validate against schema" in {
+        val stream: InputStream = getClass.getResourceAsStream("/rates/alcohol-duty-rates.json")
+        val lines: String       = scala.io.Source.fromInputStream(stream).getLines().mkString
+        validateJsonAgainstSchema(lines) mustBe true
       }
 
-      "For band A" - {
-        val rate: Option[Double]   = Some(9.61d)
-        val taxTypes: Seq[String]  = Seq("311", "312", "313", "314", "315")
-        val rateCount: Int         = 5
-        val rangeDetailsCount: Int = 5
-        val rangesCount: Int       = 5
+      "hold valid data" - {
+        lazy val rateBandList: Seq[RateBand] = getRatesFromJson(validRatePeriod)
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+        "for all entries" - {
+          "have the correct count of rate bands" in {
+            rateBandList.length mustBe totalNoRateBands
+          }
+
+          "have the correct count of range details" in {
+            val rangeDetails: Seq[RangeDetailsByRegime] = rateBandList.flatMap(x => x.rangeDetails)
+            rangeDetails.length mustBe totalNumberRangeDetails
+          }
+
+          "have the correct count of ranges" in {
+            val rangeDetails: Seq[RangeDetailsByRegime] = rateBandList.flatMap(x => x.rangeDetails)
+            val ranges: Seq[ABVRange]                   = rangeDetails.flatMap(y => y.abvRanges)
+            ranges.length mustBe totalNumberRanges
+          }
         }
-      }
 
-      "For band B" - {
-        val rate: Option[Double]   = Some(21.78d)
-        val taxTypes: Seq[String]  = Seq("321")
-        val rateCount: Int         = 1
-        val rangeDetailsCount: Int = 1
-        val rangesCount: Int       = 1
+        "For band A" - {
+          val rate: Option[Double]   = Some(9.61d)
+          val taxTypes: Seq[String]  = Seq("311", "312", "313", "314", "315")
+          val rateCount: Int         = 5
+          val rangeDetailsCount: Int = 5
+          val rangesCount: Int       = 5
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band C" - {
-        val rate: Option[Double]   = Some(10.02d)
-        val taxTypes: Seq[String]  = Seq("322")
-        val rateCount: Int         = 1
-        val rangeDetailsCount: Int = 1
-        val rangesCount: Int       = 2
+        "For band B" - {
+          val rate: Option[Double]   = Some(21.78d)
+          val taxTypes: Seq[String]  = Seq("321")
+          val rateCount: Int         = 1
+          val rangeDetailsCount: Int = 1
+          val rangesCount: Int       = 1
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band D" - {
-        val rate: Option[Double]   = Some(25.67d)
-        val taxTypes: Seq[String]  = Seq("323", "324", "325")
-        val rateCount: Int         = 3
-        val rangeDetailsCount: Int = 4
-        val rangesCount: Int       = 4
+        "For band C" - {
+          val rate: Option[Double]   = Some(10.02d)
+          val taxTypes: Seq[String]  = Seq("322")
+          val rateCount: Int         = 1
+          val rangeDetailsCount: Int = 1
+          val rangesCount: Int       = 2
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band E" - {
-        val rate: Option[Double]   = Some(29.54d)
-        val taxTypes: Seq[String]  = Seq("331", "333", "334", "335")
-        val rateCount: Int         = 4
-        val rangeDetailsCount: Int = 4
-        val rangesCount: Int       = 4
+        "For band D" - {
+          val rate: Option[Double]   = Some(25.67d)
+          val taxTypes: Seq[String]  = Seq("323", "324", "325")
+          val rateCount: Int         = 3
+          val rangeDetailsCount: Int = 4
+          val rangesCount: Int       = 4
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band F" - {
-        val rate: Option[Double]   = Some(32.79d)
-        val taxTypes: Seq[String]  = Seq("341", "343", "344", "345")
-        val rateCount: Int         = 4
-        val rangeDetailsCount: Int = 4
-        val rangesCount: Int       = 4
+        "For band E" - {
+          val rate: Option[Double]   = Some(29.54d)
+          val taxTypes: Seq[String]  = Seq("331", "333", "334", "335")
+          val rateCount: Int         = 4
+          val rangeDetailsCount: Int = 4
+          val rangesCount: Int       = 4
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band G" - {
-        val rate: Option[Double]   = Some(8.28d)
-        val taxTypes: Seq[String]  = Seq("351", "352", "353", "354", "355")
-        val rateCount: Int         = 5
-        val rangeDetailsCount: Int = 5
-        val rangesCount: Int       = 5
+        "For band F" - {
+          val rate: Option[Double]   = Some(32.79d)
+          val taxTypes: Seq[String]  = Seq("341", "343", "344", "345")
+          val rateCount: Int         = 4
+          val rangeDetailsCount: Int = 4
+          val rangesCount: Int       = 4
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band H" - {
-        val rate: Option[Double]   = Some(18.76d)
-        val taxTypes: Seq[String]  = Seq("356")
-        val rateCount: Int         = 1
-        val rangeDetailsCount: Int = 1
-        val rangesCount: Int       = 1
+        "For band G" - {
+          val rate: Option[Double]   = Some(8.28d)
+          val taxTypes: Seq[String]  = Seq("351", "352", "353", "354", "355")
+          val rateCount: Int         = 5
+          val rangeDetailsCount: Int = 5
+          val rangesCount: Int       = 5
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band I" - {
-        val rate: Option[Double]   = Some(8.63d)
-        val taxTypes: Seq[String]  = Seq("357")
-        val rateCount: Int         = 1
-        val rangeDetailsCount: Int = 1
-        val rangesCount: Int       = 2
+        "For band H" - {
+          val rate: Option[Double]   = Some(18.76d)
+          val taxTypes: Seq[String]  = Seq("356")
+          val rateCount: Int         = 1
+          val rangeDetailsCount: Int = 1
+          val rangesCount: Int       = 1
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band J" - {
-        val rate: Option[Double]   = Some(18.76d)
-        val taxTypes: Seq[String]  = Seq("358", "359", "360")
-        val rateCount: Int         = 3
-        val rangeDetailsCount: Int = 4
-        val rangesCount: Int       = 4
+        "For band I" - {
+          val rate: Option[Double]   = Some(8.63d)
+          val taxTypes: Seq[String]  = Seq("357")
+          val rateCount: Int         = 1
+          val rangeDetailsCount: Int = 1
+          val rangesCount: Int       = 2
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
         }
-      }
 
-      "For band K" - {
-        val taxTypes: Seq[String]  = Seq("371", "372", "373", "374", "375", "376", "377", "378", "379", "380")
-        val rateCount: Int         = 10
-        val rangeDetailsCount: Int = 11
-        val rangesCount: Int       = 12
+        "For band J" - {
+          val rate: Option[Double]   = Some(18.76d)
+          val taxTypes: Seq[String]  = Seq("358", "359", "360")
+          val rateCount: Int         = 3
+          val rangeDetailsCount: Int = 4
+          val rangesCount: Int       = 4
 
-        "service rates endpoint must" - {
-          "show the correct rate" in
-            verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, None)
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, rate)
+          }
+        }
+
+        "For band K" - {
+          val taxTypes: Seq[String]  = (361 to 380).map(_.toString)
+          val rateCount: Int         = 20
+          val rangeDetailsCount: Int = 22
+          val rangesCount: Int       = 24
+
+          "service rates endpoint must" - {
+            "show the correct rate" in
+              verify(rateBandList, taxTypes, rateCount, rangeDetailsCount, rangesCount, None)
+          }
         }
       }
     }

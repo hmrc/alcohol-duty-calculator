@@ -220,10 +220,10 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
         }
 
         "For band K" - {
-          val taxTypes: Seq[String]  = Seq("371", "372", "373", "374", "375", "376", "377", "378", "379", "380")
-          val rateCount: Int         = 10
-          val rangeDetailsCount: Int = 11
-          val rangesCount: Int       = 12
+          val taxTypes: Seq[String]  = (361 to 380).map(_.toString)
+          val rateCount: Int         = 20
+          val rangeDetailsCount: Int = 22
+          val rangesCount: Int       = 24
 
           "service rates endpoint must" - {
             "show the correct rate" in
