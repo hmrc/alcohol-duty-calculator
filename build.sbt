@@ -44,4 +44,4 @@ lazy val it = project
     automateHeaderSettings(Test)
   )
 
-addCommandAlias("runAllChecks", ";clean;compile;it/compile;scalafmtAll;coverage;test;it/test;coverageReport")
+addCommandAlias("scalafmtAll", "all scalafmtSbt scalafmt Test/scalafmt it/Test/scalafmt")
