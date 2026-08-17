@@ -16,32 +16,33 @@
 
 package uk.gov.hmrc.alcoholdutycalculator.rates
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.github.fge.jackson.JsonLoader
-import com.github.fge.jsonschema.core.report.ProcessingReport
-import com.github.fge.jsonschema.main.{JsonSchema, JsonSchemaFactory}
+import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
+import com.networknt.schema.{Schema, SchemaRegistry, SpecificationVersion}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.alcoholdutycalculator.base.ISpecBase
 import uk.gov.hmrc.alcoholdutycalculator.controllers.routes
-import uk.gov.hmrc.alcoholdutycalculator.models._
+import uk.gov.hmrc.alcoholdutycalculator.models.*
 
 import java.io.InputStream
 import java.time.YearMonth
+import scala.io.Source
 import scala.util.Random
 
 class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
 
-  val schemaUri: String                                 = getClass.getResource("/alcohol-duty-rates-schema.json").toURI.toString
-  private lazy val jsonSchemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault
-  private lazy val jsonSchema: JsonSchema               = jsonSchemaFactory.getJsonSchema(schemaUri)
-  private lazy val totalNoRateBands: Int                = 48
-  private lazy val totalNumberRangeDetails: Int         = 52
-  private lazy val totalNumberRanges: Int               = 56
-  private lazy val periodYear: Int                      = 2023
-  private lazy val periodStartMonthInclusive: Int       = 1
-  private lazy val periodEndMonthExclusive: Int         = 13
-  private lazy val periodMonth: Int                     = Random.between(periodStartMonthInclusive, periodEndMonthExclusive)
+  private lazy val schemaJson: String             =
+    Source.fromInputStream(getClass.getResourceAsStream("/alcohol-duty-rates-schema.json")).mkString
+  private lazy val schemaRegistry: SchemaRegistry =
+    SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_4)
+  private lazy val jsonSchema: Schema             = schemaRegistry.getSchema(schemaJson)
+  private lazy val totalNoRateBands: Int          = 48
+  private lazy val totalNumberRangeDetails: Int   = 52
+  private lazy val totalNumberRanges: Int         = 56
+  private lazy val periodYear: Int                = 2023
+  private lazy val periodStartMonthInclusive: Int = 1
+  private lazy val periodEndMonthExclusive: Int   = 13
+  private lazy val periodMonth: Int               = Random.between(periodStartMonthInclusive, periodEndMonthExclusive)
 
   private lazy val ratePeriod: String = Json
     .toJson(
@@ -267,8 +268,9 @@ class RatesIntegrationBandings_2023_1Spec extends ISpecBase {
   }
 
   private def validateJsonAgainstSchema(inputDoc: String): Boolean = {
-    val inputJson: JsonNode      = JsonLoader.fromString(inputDoc)
-    val report: ProcessingReport = jsonSchema.validate(inputJson)
-    report.isSuccess
+    val schemaMapper: ObjectMapper = new ObjectMapper()
+    val inputJson: JsonNode        = schemaMapper.readTree(inputDoc)
+    val result                     = jsonSchema.validate(inputJson)
+    result.isEmpty
   }
 }
