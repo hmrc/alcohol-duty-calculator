@@ -14,8 +14,7 @@ object AppDependencies {
   val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-test-play-30" % bootstrapVersion % Test,
     "org.scalatestplus" %% "scalacheck-1-17"        % "3.2.18.0"       % Test,
-    ("com.networknt"     % "json-schema-validator"  % "2.0.4") exclude ("com.fasterxml.jackson.core", "jackson-databind"),
-    "org.mozilla"        % "rhino"                  % "1.9.1"
+    ("com.networknt"     % "json-schema-validator"  % "2.0.4") exclude ("com.fasterxml.jackson.core", "jackson-databind")
   )
 
   val itDependencies: Seq[Nothing] = Seq.empty
